@@ -30,7 +30,7 @@
                     class="btn btn-outline-primary"
                     @click="$refs.fullpage.api.moveSectionDown()"
                   >
-                    <i class="fa fa-hand-o-right fa-fw"></i>
+                    <i class="far fa-hand-point-right fa-fw"></i>
                     Learn About Us
                   </button>
                 </div>
