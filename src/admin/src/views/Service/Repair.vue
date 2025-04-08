@@ -61,7 +61,7 @@
           </div>
         </div>
         <div class="d-flex flex p-3 mr-auto justify-content-end">
-          <div class="text-muted">© Copyright 2019-2019. ECUST-CIC</div>
+          <div class="text-muted">© Copyright 2019-{{ new Date().getFullYear() }}. ECUST-CIC</div>
         </div>
       </div>
     </footer>

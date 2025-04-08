@@ -62,7 +62,7 @@
             <div class="card-body" style="background:#e7f7fe;">
               <h5 class="card-title">服务部</h5>
               <p class="card-text">服务部提供免费的电脑设备维修服务。</p>
-              <a href="#" class="btn btn-primary btn-lg">前往报修>></a>
+              <a href="/service/repair" class="btn btn-primary btn-lg">前往报修>></a>
             </div>
           </div>
         </div>

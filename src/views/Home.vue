@@ -53,7 +53,7 @@
           </router-link>
         </div>
         <div class="col-md-6 mb-3">
-          <router-link class="tdn" to="/e-sports">
+          <router-link class="tdn" to="/e_sports">
             <div class="hover media shadow-sm wow fadeInRight">
               <img src="@/assets/img/Home/game.png" class="mr-3" alt="电竞" width="100" height="100" />
               <div class="media-body">

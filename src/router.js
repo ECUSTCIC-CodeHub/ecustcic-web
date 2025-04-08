@@ -10,6 +10,9 @@ import Activity from "@/views/Activity.vue";
 // 技术
 // import Tech from '@/views/Tech.vue'
 
+// 电竞
+import E_sports from '@/views/E-sports.vue'
+
 // 服务
 import Service from "@/views/Service/Service.vue";
 import ServiceHome from "@/views/Service/Home.vue";
@@ -75,6 +78,15 @@ const router = new Router({
     //   },
     //   component: Tech
     // },
+    // 电竞
+    {
+      path: "/e-sports",
+      name: "e-sports",
+      component: E_sports,
+      meta: {
+        title: "CIC-电竞"
+      }
+    },
     // 服务
     {
       path: "/service",

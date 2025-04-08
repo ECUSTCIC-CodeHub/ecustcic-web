@@ -37,7 +37,7 @@
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/service">
-                <i class="fa fa-group fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-users fa-fw" aria-hidden="true"></i>
                 服务
               </router-link>
             </li>
@@ -69,7 +69,7 @@
               <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-other">
                 <li>
                   <a class="dropdown-item" href="/others/sign">
-                    <i class="fa fa-calendar-check-o fa-fw mr-2"></i>签到
+                    <i class="far fa-calendar-check fa-fw mr-2"></i>签到
                   </a>
                 </li>
                 <li data-stop-propagation>
@@ -82,18 +82,18 @@
                       aria-expanded="false"
                       data-submenu
                     >
-                      <i class="fa fa-circle-o fa-fw mr-2"></i>OCR
+                      <i class="far fa-circle fa-fw mr-2"></i>OCR
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-ocr">
                       <li>
                         <a class="dropdown-item" href="/others/ocr?tab=general">
-                          <i class="fa fa-dot-circle-o fa-fw"></i>
+                          <i class="far fa-dot-circle fa-fw"></i>
                           通用文字识别
                         </a>
                       </li>
                       <li>
                         <a class="dropdown-item" href="/others/ocr?tab=idcard">
-                          <i class="fa fa-dot-circle-o fa-fw"></i>
+                          <i class="far fa-dot-circle fa-fw"></i>
                           身份证识别
                         </a>
                       </li>
@@ -116,7 +116,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-face">
                       <a class="dropdown-item" href="#">
-                        <i class="fa fa-circle-o fa-fw mr-2"></i>
+                        <i class="far fa-circle fa-fw mr-2"></i>
                       </a>
                     </div>
                   </div>
@@ -136,7 +136,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-face">
                       <a class="dropdown-item" href="#">
-                        <i class="fa fa-circle-o fa-fw mr-2"></i>
+                        <i class="far fa-circle fa-fw mr-2"></i>
                       </a>
                     </div>
                   </div>
@@ -156,7 +156,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-face">
                       <a class="dropdown-item" href="#">
-                        <i class="fa fa-circle-o fa-fw mr-2"></i>
+                        <i class="far fa-circle fa-fw mr-2"></i>
                       </a>
                     </div>
                   </div>
@@ -236,7 +236,7 @@
           <ul class="list-inline my-0">
             <li class="list-inline-item">
               <a href="//github.com/ecustcic" target="_blank">
-                <i class="fa fa-github fa-fw"></i>
+                <i class="fab fa-github fa-fw"></i>
               </a>
             </li>
             <li class="list-inline-item" id="wechat">
@@ -250,21 +250,27 @@
                 data-html="true"
                 data-content="<img src='/img/cic_qrcode.jpg' width='86'>"
               >
-                <i class="fa fa-weixin fa-fw"></i>
+                <i class="fab fa-weixin fa-fw"></i>
               </a>
             </li>
-            <li class="list-inline-item">
+            <li class="list-inline-item" id="qq">
               <a
-                target="_blank"
-                href="//shang.qq.com/wpa/qunwpa?idkey=af607f76d7922e9451289720bb66388bae6906fb605390e9c5c0d4b6b0304399"
+                href="javascript:void(0);"
+                data-toggle="popover"
+                data-animation="true"
+                data-container="#qq"
+                data-placement="top"
+                data-trigger="manual"
+                data-html="true"
+                data-content="<img src='/img/cic_qq.jpeg' width='86'>"
               >
-                <i class="fa fa-qq fa-fw"></i>
+                <i class="fab fa-qq fa-fw"></i>
               </a>
             </li>
           </ul>
-          <p class="mb-1">CopyRight &copy; 2019-2019 ECUST-CIC. All Rights Reserved</p>
-          <ul class="list-inline my-0">
-            <!-- <li class="list-inline-item">
+          <p class="mb-1">CopyRight &copy; 2019-{{ new Date().getFullYear() }} ECUST-CIC. All Rights Reserved</p>
+          <!-- <ul class="list-inline my-0">
+            <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">Privacy</a>
             </li>
             <li class="list-inline-item">
@@ -272,11 +278,11 @@
             </li>
             <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">Support</a>
-            </li>-->
+            </li>
             <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">沪ICP备18036740号</a>
             </li>
-          </ul>
+          </ul>-->
         </div>
       </div>
     </footer>

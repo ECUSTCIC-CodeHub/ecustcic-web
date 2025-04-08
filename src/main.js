@@ -26,7 +26,8 @@ import "bootstrap-select/dist/css/bootstrap-select.min.css";
 import "bootstrap-dropdown-hover/dist/jquery.bootstrap-dropdown-hover.min.js";
 
 // font-awesome
-import "font-awesome/css/font-awesome.min.css";
+// import "font-awesome/css/font-awesome.min.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 // jquery.magnific-popup.js
 import "./assets/css/magnific-popup.css";
