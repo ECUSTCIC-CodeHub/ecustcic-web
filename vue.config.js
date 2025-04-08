@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 
 module.exports = {
+  publicPath: '/',
   lintOnSave: process.env.NODE_ENV !== 'production',
 
   configureWebpack: {

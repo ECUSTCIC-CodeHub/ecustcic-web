@@ -11,6 +11,14 @@
     <meta name="keywords" content="华东理工大学,华理,ECUST,计算机,计算机协会">
     <meta name="location" content="province=上海;city=上海">
     <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+    <script>
+      // 从 sessionStorage 恢复原始路径
+      if (sessionStorage.redirect) {
+        const redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        window.history.replaceState({}, '', redirect);
+      }
+    </script>    
   </head>
 
   <body>
