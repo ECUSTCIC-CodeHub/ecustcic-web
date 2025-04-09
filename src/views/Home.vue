@@ -210,7 +210,7 @@ export default {
     setTimeout(function() {
       $(".wow").css("opacity", "1");
     }, 100);
-    this.getActivities();
+    // this.getActivities();
   }
 };
 </script>

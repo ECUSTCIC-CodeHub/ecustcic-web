@@ -88,6 +88,18 @@ export const baseGroups = [
       description: '英雄联盟/LOL/League of Legends',
       url: 'https://qm.qq.com/q/DhxYVixujS'
     },
+    {
+      group_id: 832114258,
+      category: 'game', 
+      description: 'bang dream/邦',
+      url: 'https://qm.qq.com/q/Q5cFhk3lK2'
+    },
+    {
+      group_id: 555293784,
+      category: 'game', 
+      description: 'fgo/命运-冠位指定/Fate/Grand Order',
+      url: 'https://qm.qq.com/q/2ECTtUmEza'
+    },
     // {
     //   group_id: ,
     //   category: 'game', 
