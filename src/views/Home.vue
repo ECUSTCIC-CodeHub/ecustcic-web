@@ -180,18 +180,19 @@ export default {
       activities: []
     };
   },
-  methods: {
-    getActivities: function() {
-      this.$ajax
-        .get("/api/activity/all", { params: { page: 1, limit: 9 } })
-        .then(res => {
-          this.activities = res.data.data.activities;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  },
+  // 暂时注释activity，只保留纯静态
+  // methods: {
+  //   getActivities: function() {
+  //     this.$ajax
+  //       .get("/api/activity/all", { params: { page: 1, limit: 9 } })
+  //       .then(res => {
+  //         this.activities = res.data.data.activities;
+  //       })
+  //       .catch(error => {
+  //         console.log(error);
+  //       });
+  //   }
+  // },
   mounted() {
     // 循环文字特效
     $(".tlt").textillate({
