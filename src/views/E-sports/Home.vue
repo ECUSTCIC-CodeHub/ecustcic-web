@@ -79,13 +79,15 @@
                     <h3>{{game.name}}</h3>
                     <p>{{game.description}}</p>
                     <p class="game-category text-muted mb-3">
-                      <i class="fas fa-tags"></i> {{game.category}}
+                      <span class="info-item">
+                        <i class="fas fa-tags"></i> {{game.category}}
+                      </span>
                     </p>
-                    <div class="game-info">
+                    <!-- <div class="game-info">
                       <span class="info-item"><i class="fas fa-users"></i> {{game.playerCount}} 名玩家</span>
                       <span class="info-item"><i class="fas fa-trophy"></i> {{game.tournaments}} 场活动</span>
-                      <!-- <span class="info-item"><i class="fas fa-calendar-alt"></i> 每周 {{game.activityDays}}</span> -->
-                    </div>
+                      <span class="info-item"><i class="fas fa-calendar-alt"></i> 每周 {{game.activityDays}}</span>
+                    </div> -->
                     <a 
                       :href="game.qqGroup" 
                       target="_blank"
@@ -130,45 +132,15 @@
 </template>
 
 <script>
+import { esportsGames } from '@/data/esportsGames';
+import { esportsEvents } from '@/data/esportsEvents';
+
 export default {
   name: "Esports",
   data() {
     return {
-      games: [
-        {
-          id: 'mc',
-          name: '我的世界',
-          logo: 'https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/logos/Global-Header_MCCB-Logo_300x51.svg',
-          banner: 'https://pic6.zhimg.com/80/v2-acb61183e22a905b4477918d9c727678_1440w.png',
-          description: '《我的世界》是一款风靡全球的沙盒建造游戏，由瑞典开发商Mojang Studios开发。玩家可以在一个由方块组成的开放世界中自由探索、采集资源、建造建筑、合成工具，并与生物互动。游戏提供多种模式，包括创造模式（无限资源，专注建造）、生存模式（对抗怪物，管理生命值和饥饿值）以及冒险模式等。凭借极高的自由度和丰富的玩法，《我的世界》成为史上最畅销的游戏之一，并持续吸引着各年龄段的玩家。',
-          category: '平台：PC/主机/手机等 | 特色：像素风、无限创造、多人联机',
-          playerCount: '85',
-          tournaments: '12',
-          qqGroup: 'https://qm.qq.com/q/jqFxBzF8gU',
-        },
-        {
-          id: 'lol',
-          name: '英雄联盟',
-          logo: 'https://game.gtimg.cn/images/lol/v3/logo-public.png',
-          banner: 'https://game.gtimg.cn/images/lol/lolstrategy/bg-dhjjc.jpg',
-          description: '《英雄联盟》（简称“LOL”）是由美国拳头游戏（Riot Games）开发、中国大陆地区腾讯游戏代理运营的英雄对战MOBA竞技网游。游戏里拥有数百个个性英雄，并拥有排位系统、符文系统等特色系统。玩家在游戏中可扮演一个召唤师，每个召唤师拥有一个英雄角色，每个英雄都有自己独特的技能和攻击方式。玩家在游戏中可扮演一个召唤师，每个召唤师拥有一个英雄角色，每个英雄都有自己独特的技能和攻击方式。',
-          category: '平台：PC/主机/手机等 | 特色：MOBA、竞技、多人联机',
-          playerCount: '721',
-          tournaments: '12',
-          qqGroup: 'https://qm.qq.com/q/DhxYVixujS',
-        }
-      ],
-      events: [
-        {
-          id: 1,
-          title: 'test',
-          game: '英雄联盟',
-          day: '15',
-          month: '4月',
-          time: '14:00 - 18:00',
-          location: 'test'
-        }
-      ]
+      games: esportsGames,
+      events: esportsEvents
     }
   }
 }
@@ -350,7 +322,7 @@ export default {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.game-info {
+.game-category {
   margin: 20px 0;
 }
 
