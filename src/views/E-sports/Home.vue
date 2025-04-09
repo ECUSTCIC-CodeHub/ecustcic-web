@@ -145,6 +145,17 @@ export default {
           playerCount: '85',
           tournaments: '12',
           qqGroup: 'https://qm.qq.com/q/jqFxBzF8gU',
+        },
+        {
+          id: 'lol',
+          name: '英雄联盟',
+          logo: 'https://game.gtimg.cn/images/lol/v3/logo-public.png',
+          banner: 'https://game.gtimg.cn/images/lol/lolstrategy/bg-dhjjc.jpg',
+          description: '《英雄联盟》（简称“LOL”）是由美国拳头游戏（Riot Games）开发、中国大陆地区腾讯游戏代理运营的英雄对战MOBA竞技网游。游戏里拥有数百个个性英雄，并拥有排位系统、符文系统等特色系统。玩家在游戏中可扮演一个召唤师，每个召唤师拥有一个英雄角色，每个英雄都有自己独特的技能和攻击方式。玩家在游戏中可扮演一个召唤师，每个召唤师拥有一个英雄角色，每个英雄都有自己独特的技能和攻击方式。',
+          category: '平台：PC/主机/手机等 | 特色：MOBA、竞技、多人联机',
+          playerCount: '721',
+          tournaments: '12',
+          qqGroup: 'https://qm.qq.com/q/DhxYVixujS',
         }
       ],
       events: [
