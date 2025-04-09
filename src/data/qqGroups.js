@@ -52,6 +52,42 @@ export const baseGroups = [
       description: '日本麻将',
       url: 'https://qm.qq.com/q/hfNwJ1SUk8'
     },
+    {
+      group_id: 795053381,
+      category: 'game', 
+      description: '金铲铲之战/云顶之弈',
+      url: 'https://qm.qq.com/q/ciqGSTLoX0'
+    },
+    {
+      group_id: 537333957,
+      category: 'game', 
+      description: '重返未来:1999',
+      url: 'https://qm.qq.com/q/MpJEDEsCmm'
+    },
+    {
+      group_id: 619091353,
+      category: 'game', 
+      description: 'APEX',
+      url: 'https://qm.qq.com/q/N4fnrAF52s'
+    },
+    {
+      group_id: 529565361,
+      category: 'game', 
+      description: '术力口•pjsk',
+      url: 'https://qm.qq.com/q/egBTXKKHiE'
+    },
+    {
+      group_id: 639366489,
+      category: 'game', 
+      description: '无畏契约/VALORANT',
+      url: 'https://qm.qq.com/q/tjno9DdRw4'
+    },
+    {
+      group_id: 532365245,
+      category: 'game', 
+      description: '英雄联盟/LOL/League of Legends',
+      url: 'https://qm.qq.com/q/DhxYVixujS'
+    },
     // {
     //   group_id: ,
     //   category: 'game', 
