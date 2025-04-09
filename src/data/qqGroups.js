@@ -3,12 +3,14 @@ export const baseGroups = [
     { 
       group_id: 615374518, 
       category: 'study', 
-      description: 'CIC计算机信息交流协会①群'
+      description: 'CIC计算机信息交流协会①群',
+      url: 'https://qm.qq.com/q/EgVxJiI9TG'
     },
     { 
       group_id: 681561592, 
       category: 'study', 
-      description: 'CIC计算机信息交流协会②群'
+      description: 'CIC计算机信息交流协会②群',
+      url: 'https://qm.qq.com/q/q9AVYWQ0UK'
     },
     { 
       group_id: 287554113, 
@@ -26,6 +28,36 @@ export const baseGroups = [
       category: 'game', 
       description: '守望先锋'
     },
+    {
+      group_id: 858930629,
+      category: 'game', 
+      description: '卡拉彼丘',
+      url: 'https://qm.qq.com/q/wali8w3iV2'
+    },
+    {
+      group_id: 477120987,
+      category: 'game', 
+      description: '绝区零',
+      url: 'https://qm.qq.com/q/92rVXtfQg8'
+    },
+    {
+      group_id: 312064523,
+      category: 'game', 
+      description: 'CSGO',
+      url: 'https://qm.qq.com/q/QxPdnxOPgO'
+    },
+    {
+      group_id: 98327207,
+      category: 'game', 
+      description: '日本麻将',
+      url: 'https://qm.qq.com/q/hfNwJ1SUk8'
+    },
+    // {
+    //   group_id: ,
+    //   category: 'game', 
+    //   description: '',
+    //   url: ''
+    // },
     { 
       group_id: 810562752, 
       category: 'tech', 

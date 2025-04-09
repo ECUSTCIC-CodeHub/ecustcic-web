@@ -255,7 +255,7 @@
             </li>
             <li class="list-inline-item" id="qq">
               <a
-                href="javascript:void(0);"
+                href="https://qm.qq.com/q/EgVxJiI9TG"
                 data-toggle="popover"
                 data-animation="true"
                 data-container="#qq"
