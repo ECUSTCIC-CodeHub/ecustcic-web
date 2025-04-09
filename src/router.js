@@ -11,7 +11,8 @@ import Activity from "@/views/Activity.vue";
 // import Tech from '@/views/Tech.vue'
 
 // 电竞
-import E_sports from '@/views/E-sports.vue'
+import E_sports from '@/views/E-sports/Home.vue'
+import E_sports_detail from '@/views/E-sports/Detail.vue'
 
 // 服务
 import Service from "@/views/Service/Service.vue";
@@ -86,6 +87,15 @@ const router = new Router({
       component: E_sports,
       meta: {
         title: "CIC-电竞"
+      }
+    },
+    // 交流群
+    {
+      path: "/e-sports-detail",
+      name: "e-sports-detail",
+      component: E_sports_detail,
+      meta: {
+        title: "CIC-电竞交流群"
       }
     },
     // 服务

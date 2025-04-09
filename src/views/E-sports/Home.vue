@@ -2,7 +2,7 @@
   <div class="esports-container">
     <!-- 电竞部英雄背景图 -->
     <div class="hero-banner">
-      <img src="@/assets/img/Service/bg.png" alt="电竞部背景" class="hero-image">
+      <img src="@/assets/img/Home/bg-th3.png" alt="电竞部背景" class="hero-image" width="100%">
       <div class="hero-overlay">
         <h1>电竞部</h1>
         <p>丰富校园生活 · 培养竞技精神 · 创造精彩瞬间</p>
@@ -84,7 +84,7 @@
                     <div class="game-info">
                       <span class="info-item"><i class="fas fa-users"></i> {{game.playerCount}} 名玩家</span>
                       <span class="info-item"><i class="fas fa-trophy"></i> {{game.tournaments}} 场活动</span>
-                      <span class="info-item"><i class="fas fa-calendar-alt"></i> 每周 {{game.activityDays}}</span>
+                      <!-- <span class="info-item"><i class="fas fa-calendar-alt"></i> 每周 {{game.activityDays}}</span> -->
                     </div>
                     <a 
                       :href="game.qqGroup" 
@@ -100,6 +100,7 @@
           </div>
         </div>
       </section>
+      <router-link to="/e-sports-detail" class="view-all-events">查看全部交流群 <i class="fas fa-chevron-right"></i></router-link>
 
       <!-- 最新赛事 -->
       <section class="events-section">
@@ -143,48 +144,7 @@ export default {
           category: '平台：PC/主机/手机等 | 特色：像素风、无限创造、多人联机',
           playerCount: '85',
           tournaments: '12',
-          activityDays: '不定期活动',
           qqGroup: 'https://qm.qq.com/q/jqFxBzF8gU',
-        },
-        {
-          id: 'lol',
-          name: '英雄联盟',
-          logo: require('@/assets/logo.png'),
-          banner: require('@/assets/logo.png'),
-          description: '《英雄联盟》是由Riot Games开发的5v5多人在线战斗竞技游戏，拥有庞大的英雄池和丰富的战术体系。我们电竞部拥有两支校级战队，定期组织训练和校内联赛。',
-          playerCount: '85',
-          tournaments: '12',
-          activityDays: '二、四、六'
-        },
-        {
-          id: 'dota2',
-          name: 'DOTA 2',
-          logo: require('@/assets/logo.png'),
-          banner: require('@/assets/logo.png'),
-          description: '《DOTA 2》是Valve公司开发的经典MOBA游戏，以其高竞技性和深度策略著称。我们电竞部的DOTA2战队在省内高校联赛中屡获佳绩。',
-          playerCount: '42',
-          tournaments: '8',
-          activityDays: '一、三、五'
-        },
-        {
-          id: 'csgo',
-          name: 'CS:GO',
-          logo: require('@/assets/logo.png'),
-          banner: require('@/assets/logo.png'),
-          description: '《反恐精英：全球攻势》是Valve开发的第一人称射击游戏，强调团队配合和战术执行。我们定期举办校内CS:GO锦标赛和娱乐赛。',
-          playerCount: '63',
-          tournaments: '10',
-          activityDays: '三、五、日'
-        },
-        {
-          id: 'valorant',
-          name: '无畏契约',
-          logo: require('@/assets/logo.png'),
-          banner: require('@/assets/logo.png'),
-          description: '《无畏契约》是Riot Games开发的战术射击游戏，融合了FPS和英雄技能元素。我们电竞部新成立的Valorant战队正在招募队员。',
-          playerCount: '37',
-          tournaments: '5',
-          activityDays: '二、六'
         }
       ],
       events: [
