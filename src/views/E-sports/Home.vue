@@ -88,13 +88,23 @@
                       <span class="info-item"><i class="fas fa-trophy"></i> {{game.tournaments}} 场活动</span>
                       <span class="info-item"><i class="fas fa-calendar-alt"></i> 每周 {{game.activityDays}}</span>
                     </div> -->
-                    <a 
-                      :href="game.qqGroup" 
-                      target="_blank"
-                      class="btn btn-outline-primary btn-join-game"
-                    >
-                      加入{{game.name}}群
-                    </a>
+                    <div class="btn-container">
+                      <a 
+                        :href="game.qqGroup" 
+                        target="_blank"
+                        class="btn btn-outline-primary btn-join-game"
+                      >
+                        加入{{game.name}}群
+                      </a>
+                      <a 
+                        v-if="game.url"
+                        :href="game.url" 
+                        target="_blank"
+                        class="btn btn-outline-primary btn-join-game"
+                      >
+                        查看网站
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -256,6 +266,10 @@ export default {
 .join-card .card-title {
   color: #2c3e50;
   font-weight: 700;
+}
+
+.btn-container > a:not(:last-child) {
+  margin-right: 8px;
 }
 
 .btn-join {
