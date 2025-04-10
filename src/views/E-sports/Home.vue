@@ -2,7 +2,7 @@
   <div class="esports-container">
     <!-- 电竞部英雄背景图 -->
     <div class="hero-banner">
-      <img src="@/assets/img/Home/bg-th3.png" alt="电竞部背景" class="hero-image" width="100%">
+      <img src="@/assets/img/Home/bg-th3.png" alt="电竞部背景" class="hero-image">
       <div class="hero-overlay">
         <h1>电竞部</h1>
         <p>丰富校园生活 · 培养竞技精神 · 创造精彩瞬间</p>
@@ -16,20 +16,20 @@
           <div class="col-md-8">
             <h2 class="section-title">关于我们</h2>
             <p class="intro-text">
-              校园电竞部成立于致力于为校园内的游戏爱好者提供交流平台，组织各类电竞赛事活动，
+              电竞部致力于为校园内的游戏爱好者提供交流平台，组织各类电竞赛事活动，
               培养团队协作精神和竞技意识，同时倡导健康游戏理念。
             </p>
             <div class="achievements">
               <div class="achievement-item">
-                <span class="achievement-number">100+</span>
-                <span class="achievement-text">场赛事</span>
+                <span class="achievement-number">25+</span>
+                <span class="achievement-text">年</span>
               </div>
               <div class="achievement-item">
                 <span class="achievement-number">1700+</span>
                 <span class="achievement-text">活跃成员</span>
               </div>
               <div class="achievement-item">
-                <span class="achievement-number">300+</span>
+                <span class="achievement-number">100+</span>
                 <span class="achievement-text">场活动</span>
               </div>
             </div>
@@ -39,10 +39,17 @@
               <div class="card-body">
                 <h5 class="card-title">加入我们</h5>
                 <p class="card-text">无论你是休闲玩家还是竞技高手，电竞部都欢迎你的加入！</p>
-                <a 
-                  href="/img/cic_qq.jpeg" 
+                <a
+                  href="https://qm.qq.com/q/EgVxJiI9TG"
                   target="_blank"
                   class="btn btn btn-primary btn-join"
+                  data-toggle="popover"
+                  data-animation="true"
+                  data-container="#qq"
+                  data-placement="top"
+                  data-trigger="manual"
+                  data-html="true"
+                  data-content="<img src='/img/cic_qq.jpeg' width='100%'>"
                 >
                   立即加入
                 </a>

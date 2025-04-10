@@ -248,7 +248,7 @@
                 data-placement="top"
                 data-trigger="manual"
                 data-html="true"
-                data-content="<img src='/img/cic_qrcode.jpg' width='86'>"
+                data-content="<img src='/img/cic_qrcode.jpg' width='100%'>"
               >
                 <i class="fab fa-weixin fa-fw"></i>
               </a>
@@ -262,7 +262,7 @@
                 data-placement="top"
                 data-trigger="manual"
                 data-html="true"
-                data-content="<img src='/img/cic_qq.jpeg' width='86'>"
+                data-content="<img src='/img/cic_qq.jpeg' width='100%'>"
               >
                 <i class="fab fa-qq fa-fw"></i>
               </a>
