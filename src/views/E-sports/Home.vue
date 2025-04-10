@@ -119,7 +119,7 @@
           </div>
         </div>
       </section>
-      <router-link to="/e-sports-detail" class="view-all-events">查看全部交流群 <i class="fas fa-chevron-right"></i></router-link>
+      <router-link to="/e-sports/detail" class="view-all-events">查看全部交流群 <i class="fas fa-chevron-right"></i></router-link>
 
       <!-- 最新赛事 -->
       <section class="events-section">
@@ -153,7 +153,7 @@ import { esportsGames } from '@/data/esportsGames';
 import { esportsEvents } from '@/data/esportsEvents';
 
 export default {
-  name: "Esports",
+  name: "e-sports",
   data() {
     return {
       games: esportsGames,

@@ -11,7 +11,8 @@ import Activity from "@/views/Activity.vue";
 // import Tech from '@/views/Tech.vue'
 
 // 电竞
-import E_sports from '@/views/E-sports/Home.vue'
+import E_sports from '@/views/E-sports/E-sports.vue'
+import E_sports_Home from '@/views/E-sports/Home.vue'
 import E_sports_detail from '@/views/E-sports/Detail.vue'
 
 // 服务
@@ -83,20 +84,30 @@ const router = new Router({
     // 电竞
     {
       path: "/e-sports",
-      name: "e-sports",
       component: E_sports,
-      meta: {
-        title: "CIC-电竞"
-      }
+      children: [
+        {
+          path: "detail",
+          name: "e-sports-detail",
+          component: E_sports_detail,
+          meta: {
+            title: "CIC-电竞交流群"
+          }
+        },
+        {
+          path: "",
+          name: "e-sports",
+          component: E_sports_Home,
+          meta: {
+            title: "CIC-电竞"
+          }
+        }
+      ]
     },
-    // 交流群
+    // 电竞历史遗留问题
     {
-      path: "/e-sports-detail",
-      name: "e-sports-detail",
-      component: E_sports_detail,
-      meta: {
-        title: "CIC-电竞交流群"
-      }
+      path: '/e-sports-detail',
+      redirect: '/e-sports/detail'
     },
     // 服务
     {
