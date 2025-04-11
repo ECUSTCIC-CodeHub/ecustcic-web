@@ -115,7 +115,8 @@ export const baseGroups = [
     { 
       group_id: 810562752, 
       category: 'tech', 
-      description: 'CIC学习交流' 
+      description: 'CIC学习交流',
+      url: 'https://qm.qq.com/q/G3Q3lMziAU'
     },
     { 
       group_id: 922527299, 

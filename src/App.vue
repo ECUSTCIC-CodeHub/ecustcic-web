@@ -268,7 +268,7 @@
               </a>
             </li>
           </ul>
-          <p class="mb-1">CopyRight &copy; 2019-{{ new Date().getFullYear() }} ECUST-CIC. All Rights Reserved</p>
+          <p class="mb-1">CopyRight &copy; 1998-{{ new Date().getFullYear() }} ECUST-CIC. All Rights Reserved</p>
           <!-- <ul class="list-inline my-0">
             <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">Privacy</a>
