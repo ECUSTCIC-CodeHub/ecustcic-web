@@ -100,6 +100,12 @@ export const baseGroups = [
       description: 'fgo/命运-冠位指定/Fate/Grand Order',
       url: 'https://qm.qq.com/q/2ECTtUmEza'
     },
+    {
+      group_id: 785670425,
+      category: 'game', 
+      description: '永劫无间/Naraka: Bladepoint',
+      url: 'https://qm.qq.com/q/fujUT0KsRa'
+    },
     // {
     //   group_id: ,
     //   category: 'game', 
