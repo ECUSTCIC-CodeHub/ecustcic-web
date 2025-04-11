@@ -1,5 +1,21 @@
 # www-ecust-cic-com
 
+## 修改内容
+电竞活动
+```
+/src/data/esportsEvents.js
+```
+
+电竞热门游戏
+```
+/src/data/esportsGames.js
+```
+
+交流群
+```
+/src/data/qqGroups.js
+```
+
 ## Project setup
 ```
 npm install
