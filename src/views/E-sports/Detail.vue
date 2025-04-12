@@ -64,6 +64,7 @@
                   {{ group.group_name }}
                   <span v-if="!group.api_success" class="badge bg-warning">API信息获取失败</span>
                 </h3>
+                <p class="group-id">{{ group.group_id }}</p>
                 <p class="group-desc">{{ group.description }}</p>
                 <div class="group-meta" v-if="group.api_success">
                   <span><i class="fas fa-users"></i> {{ group.member_count }}人/{{ group.max_member_count }}人</span>
@@ -357,13 +358,19 @@ export default {
   color: #2c3e50;
 }
 
+.group-id {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  margin-bottom: 0px;
+}
+
 .group-desc {
   font-size: 0.9rem;
   color: #7f8c8d;
   margin-bottom: 10px;
   display: -webkit-box;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
