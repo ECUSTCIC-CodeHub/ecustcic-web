@@ -39,20 +39,36 @@
               <div class="card-body">
                 <h5 class="card-title">加入我们</h5>
                 <p class="card-text">无论你是休闲玩家还是竞技高手，电竞部都欢迎你的加入！</p>
-                <a
-                  href="https://qm.qq.com/q/EgVxJiI9TG"
-                  target="_blank"
-                  class="btn btn btn-primary btn-join"
-                  data-toggle="popover"
-                  data-animation="true"
-                  data-container="#qq"
-                  data-placement="top"
-                  data-trigger="manual"
-                  data-html="true"
-                  data-content="<img src='/img/cic_qq.jpeg' width='100%'>"
-                >
-                  立即加入
-                </a>
+                <div class="d-flex flex-column" style="gap: 12px">
+                  <a
+                    href="https://open.weixin.qq.com/qr/code?username=gh_5814cf630585"
+                    target="_blank"
+                    class="btn btn-primary btn-join"
+                    data-toggle="popover"
+                    data-animation="true"
+                    data-container="#wechat"
+                    data-placement="top"
+                    data-trigger="manual"
+                    data-html="true"
+                    data-content="<img src='https://open.weixin.qq.com/qr/code?username=gh_5814cf630585' width='100%'>"
+                  >
+                    <i class="fab fa-weixin fa-fw"></i> 微信公众号
+                  </a>
+                  <a
+                    href="https://qm.qq.com/q/meIj5H3Ov0"
+                    target="_blank"
+                    class="btn btn-primary btn-join"
+                    data-toggle="popover"
+                    data-animation="true"
+                    data-container="#qq"
+                    data-placement="top"
+                    data-trigger="manual"
+                    data-html="true"
+                    data-content="<img src='/img/E-sports/qq.jpg' width='100%'>"
+                  >
+                    <i class="fab fa-qq fa-fw"></i> 立即加入
+                  </a>
+                </div>
               </div>
             </div>
           </div>

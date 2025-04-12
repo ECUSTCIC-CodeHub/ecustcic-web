@@ -57,12 +57,12 @@
               class="group-card"
             >
               <div class="group-avatar">
-                <img :src="group.avatar || defaultAvatar" :alt="group.group_name">
+                <img :src="'https://p.qlogo.cn/gh/' + group.group_id + '/' + group.group_id + '/640'" :alt="group.group_name">
               </div>
               <div class="group-info">
                 <h3>
                   {{ group.group_name }}
-                  <span v-if="!group.api_success" class="badge bg-warning">信息获取失败</span>
+                  <span v-if="!group.api_success" class="badge bg-warning">API信息获取失败</span>
                 </h3>
                 <p class="group-desc">{{ group.description }}</p>
                 <div class="group-meta" v-if="group.api_success">
@@ -116,7 +116,7 @@ export default {
       showCopySuccess: false,
       copiedGroupNumber: '',
       loading: true,
-      defaultAvatar: 'https://qzonestyle.gtimg.cn/qzone/qzact/act/external/tiqq/logo.png',
+      // defaultAvatar: 'https://qzonestyle.gtimg.cn/qzone/qzact/act/external/tiqq/logo.png',
       categories: categories, // 使用导入的分类数据
       groups: [],
       baseGroups: baseGroups // 使用导入的基础群组数据
@@ -186,7 +186,7 @@ export default {
         return info ? {
           ...baseGroup,
           group_name: info.group_name,
-          avatar: info.avatar,
+          // avatar: info.avatar,
           member_count: info.member_count,
           max_member_count: info.max_member_count,
           api_success: true  // 标记API是否成功
