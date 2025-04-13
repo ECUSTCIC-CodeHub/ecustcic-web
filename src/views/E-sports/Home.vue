@@ -120,7 +120,7 @@
         <h2 class="section-title">最新公告</h2>
         <div class="news-list">
           <div class="news-card"
-            v-for="news in newsData.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6)"
+            v-for="news in newsData.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3)"
             :key="news.id">
             <div class="news-date">
               <span class="date-day">{{ getDay(news.date) }}</span>
@@ -136,9 +136,30 @@
         <a href="https://ecustegame.top/#/news" class="view-all-events">查看全部公告 <i class="fas fa-chevron-right"></i></a>
       </section>
 
+      <!-- 最新活动 -->
+      <section class="news-section">
+        <h2 class="section-title">最新活动</h2>
+        <div class="news-list">
+          <div class="news-card" 
+            v-for="activity in huodong.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3)"
+            :key="activity.id">
+            <div class="news-date">
+              <span class="date-day">{{ getDay(activity.date) }}</span>
+              <span class="date-month">{{ getMonth(activity.date) }}</span>
+            </div>
+            <div class="news-content">
+              <h4>{{activity.title}}</h4>
+              <p class="news-content">{{ activity.description }}</p>
+            </div>
+            <a :href="`https://ecustegame.top/#${activity.path}`" target="_blank" class="btn btn-sm btn-outline-primary">查看详情</a>
+          </div>
+        </div>
+        <a href="https://ecustegame.top/#/events" class="view-all-events">查看全部活动 <i class="fas fa-chevron-right"></i></a>
+      </section>
+
       <!-- 最新赛事 -->
       <section class="events-section">
-        <h2 class="section-title">最新活动/赛事</h2>
+        <h2 class="section-title">最新赛事</h2>
         <div class="event-list">
           <div class="event-card" v-for="event in events.slice(0, 3)" :key="event.title">
             <div class="event-date">
@@ -155,7 +176,7 @@
             </div>
           </div>
         </div>
-        <a href="https://ecustegame.top/games.html" class="view-all-events">查看全部活动/赛事 <i class="fas fa-chevron-right"></i></a>
+        <a href="https://ecustegame.top/games.html" class="view-all-events">查看全部赛事 <i class="fas fa-chevron-right"></i></a>
       </section>
     </div>
   </div>
@@ -171,12 +192,14 @@ export default {
   data() {
     return {
       games: esportsGames,
-      events: [],
-      newsData: []
+      newsData: [],
+      huodong: [],
+      events: []
     }
   },
   mounted() {
     this.fetchNewsData();
+    this.fetchHuodong();
     this.fetchEvents();
   },
   methods: {
@@ -194,6 +217,19 @@ export default {
         if (newsDataMatch) {
           const parseData = new Function(`return ${newsDataMatch[1]}`);
           this.newsData = parseData();
+        }
+      } catch (err) {
+        console.error("加载失败:", err);
+      }
+    },
+    async fetchHuodong() {
+      try {
+        const response = await fetch('https://ecustegame.top/assets/index.js');
+        const jsContent = await response.text();
+        const huodongMatch = jsContent.match(/const events = (\[.*?\])/s);
+        if (huodongMatch) {
+          const parseData = new Function(`return ${huodongMatch[1]}`);
+          this.huodong = parseData();
         }
       } catch (err) {
         console.error("加载失败:", err);
@@ -426,7 +462,7 @@ export default {
 
 /* 公告部分 */
 .news-section {
-  padding: 50px 0;
+  padding: 50px 0 0 0;
 }
 
 .news-list {
@@ -509,7 +545,7 @@ export default {
 
 /* 赛事部分 */
 .events-section {
-  padding: 0px 0 20px;
+  padding: 50px 0 20px 0;
 }
 
 .event-list {
