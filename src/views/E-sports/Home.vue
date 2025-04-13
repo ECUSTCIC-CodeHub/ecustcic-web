@@ -18,6 +18,8 @@
             <p class="intro-text">
               电竞部致力于为校园内的游戏爱好者提供交流平台，组织各类电竞赛事活动，
               培养团队协作精神和竞技意识，同时倡导健康游戏理念。
+              <br>
+              官方网站: <a href="https://ecustegame.top/" target="_blank">https://ecustegame.top/</a>
             </p>
             <div class="achievements">
               <div class="achievement-item">
@@ -29,7 +31,7 @@
                 <span class="achievement-text">活跃成员</span>
               </div>
               <div class="achievement-item">
-                <span class="achievement-number">100+</span>
+                <span class="achievement-number">5+</span>
                 <span class="achievement-text">场活动</span>
               </div>
             </div>
@@ -40,6 +42,9 @@
                 <h5 class="card-title">加入我们</h5>
                 <p class="card-text">无论你是休闲玩家还是竞技高手，电竞部都欢迎你的加入！</p>
                 <div class="d-flex flex-column" style="gap: 12px">
+                  <a href="https://ecustegame.top/" target="_blank" class="btn btn-primary btn-join">
+                    <i class="fa fa-home fa-fw"></i> 官方网站
+                  </a>
                   <a
                     href="https://open.weixin.qq.com/qr/code?username=gh_5814cf630585"
                     target="_blank"
