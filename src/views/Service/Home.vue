@@ -254,6 +254,37 @@
     width: 100%;
     min-width: auto;
   }
+
+  .row {
+    flex-direction: column;
+  }
+  
+  .col-md-3, .col-md-9 {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  
+  .card {
+    width: 100% !important;
+    margin-bottom: 2rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-body .btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .rounded-circle {
+    width: 80px !important;
+    height: 80px !important;
+  }
 }
 
 .meta-item i {
