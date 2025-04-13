@@ -1,10 +1,6 @@
 # www-ecust-cic-com
 
 ## 修改内容
-电竞活动
-```
-/src/data/esportsEvents.js
-```
 
 电竞热门游戏
 ```
