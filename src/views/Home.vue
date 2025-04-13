@@ -71,7 +71,7 @@
           <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">ACTIVITIES</li>
         </ul>
       </div>
-      <div class="text-muted lead">更新时间：2019年11月4日</div>
+      <div class="text-muted lead">更新时间：{{ buildTime || '2019年11月4日' }}</div>
       <div class="text-muted">
         <a href="#">查看更多>></a>
       </div>
@@ -160,6 +160,7 @@ export default {
   },
   data() {
     return {
+      buildTime: process.env.BUILD_TIME,
       slides: [
         {
           img: require("@/assets/img/Home/bg-th1.png"),
