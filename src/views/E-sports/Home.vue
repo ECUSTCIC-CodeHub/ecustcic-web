@@ -140,23 +140,22 @@
       <section class="events-section">
         <h2 class="section-title">最新活动/赛事</h2>
         <div class="event-list">
-          <div class="event-card" v-for="event in events" :key="event.id">
+          <div class="event-card" v-for="event in events.slice(0, 3)" :key="event.title">
             <div class="event-date">
-              <span class="date-day">{{event.day}}</span>
-              <span class="date-month">{{event.month}}</span>
+              <span class="date-day">{{event.year}}</span>
+              <span class="date-month">年</span>
             </div>
             <div class="event-details">
               <h4>{{event.title}}</h4>
               <p class="event-game"><i class="fas fa-gamepad"></i> {{event.game}}</p>
-              <p class="event-time"><i class="far fa-clock"></i> {{event.time}}</p>
-              <p class="event-location"><i class="fas fa-map-marker-alt"></i> {{event.location}}</p>
+              <p class="event-content">{{event.desc}}</p>
             </div>
             <div class="event-actions">
-              <button class="btn btn-sm btn-outline-secondary">详情</button>
+              <a :href="event.link" class="btn btn-sm btn-outline-secondary">详情</a>
             </div>
           </div>
         </div>
-        <a href="#" class="view-all-events">查看全部活动/赛事 <i class="fas fa-chevron-right"></i></a>
+        <a href="https://ecustegame.top/games.html" class="view-all-events">查看全部活动/赛事 <i class="fas fa-chevron-right"></i></a>
       </section>
     </div>
   </div>
@@ -164,19 +163,21 @@
 
 <script>
 import { esportsGames } from '@/data/esportsGames';
-import { esportsEvents } from '@/data/esportsEvents';
+// 已使用外部数据
+// import { esportsEvents } from '@/data/esportsEvents';
 
 export default {
   name: "e-sports",
   data() {
     return {
       games: esportsGames,
-      events: esportsEvents,
+      events: [],
       newsData: []
     }
   },
   mounted() {
     this.fetchNewsData();
+    this.fetchEvents();
   },
   methods: {
     getDay(dateStr) {
@@ -193,6 +194,19 @@ export default {
         if (newsDataMatch) {
           const parseData = new Function(`return ${newsDataMatch[1]}`);
           this.newsData = parseData();
+        }
+      } catch (err) {
+        console.error("加载失败:", err);
+      }
+    },
+    async fetchEvents() {
+      try {
+        const response = await fetch('https://ecustegame.top/assets/games.js');
+        const jsContent = await response.text();
+        const EventsMatch = jsContent.match(/const games = (\[.*?\])/s);
+        if (EventsMatch) {
+          const parseData = new Function(`return ${EventsMatch[1]}`);
+          this.events = parseData();
         }
       } catch (err) {
         console.error("加载失败:", err);
@@ -631,6 +645,10 @@ export default {
   
   .game-detail .row {
     flex-direction: column;
+  }
+  
+  .join-card {
+    margin-top: 30px;
   }
   
   .game-detail .col-md-4 {

@@ -1,4 +1,4 @@
-// 活动赛事数据
+// 活动赛事数据（不再使用）
 export const esportsEvents = [
     {
       id: 1,

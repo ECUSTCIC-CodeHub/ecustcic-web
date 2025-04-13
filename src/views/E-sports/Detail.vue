@@ -99,6 +99,13 @@
       </div>
     </div>
 
+    <!-- 返回链接 -->
+    <div class="text-center mt-5">
+      <router-link to="/e-sports" class="view-all-events">
+        <i class="fas fa-chevron-left"></i> 返回 CIC-电竞
+      </router-link>
+    </div>
+
     <!-- 复制成功提示 -->
     <div v-if="showCopySuccess" class="copy-notification">
       已复制群号 {{ copiedGroupNumber }} 到剪贴板
@@ -480,4 +487,27 @@ export default {
     margin-bottom: 0;
   }
 }
+
+.view-all-events {
+  color: #3498db;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.view-all-events:hover {
+  color: #2980b9;
+  transform: translateX(-5px);
+}
+
+.view-all-events i {
+  margin-right: 5px;
+  transition: all 0.3s;
+}
+
+.view-all-events:hover i {
+  transform: translateX(-5px);
+}
+
 </style>
