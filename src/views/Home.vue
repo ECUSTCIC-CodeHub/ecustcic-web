@@ -160,7 +160,6 @@ export default {
   },
   data() {
     return {
-      buildTime: process.env.BUILD_TIME,
       slides: [
         {
           img: require("@/assets/img/Home/bg-th1.png"),
