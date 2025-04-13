@@ -45,32 +45,15 @@
                   <a href="https://ecustegame.top/" target="_blank" class="btn btn-primary btn-join">
                     <i class="fa fa-home fa-fw"></i> 官方网站
                   </a>
-                  <a
-                    href="https://open.weixin.qq.com/qr/code?username=gh_5814cf630585"
-                    target="_blank"
-                    class="btn btn-primary btn-join"
-                    data-toggle="popover"
-                    data-animation="true"
-                    data-container="#wechat"
-                    data-placement="top"
-                    data-trigger="manual"
-                    data-html="true"
-                    data-content="<img src='https://open.weixin.qq.com/qr/code?username=gh_5814cf630585' width='100%'>"
-                  >
+                  <a href="https://open.weixin.qq.com/qr/code?username=gh_5814cf630585" target="_blank"
+                    class="btn btn-primary btn-join" data-toggle="popover" data-animation="true"
+                    data-container="#wechat" data-placement="top" data-trigger="manual" data-html="true"
+                    data-content="<img src='https://open.weixin.qq.com/qr/code?username=gh_5814cf630585' width='100%'>">
                     <i class="fab fa-weixin fa-fw"></i> 微信公众号
                   </a>
-                  <a
-                    href="https://qm.qq.com/q/meIj5H3Ov0"
-                    target="_blank"
-                    class="btn btn-primary btn-join"
-                    data-toggle="popover"
-                    data-animation="true"
-                    data-container="#qq"
-                    data-placement="top"
-                    data-trigger="manual"
-                    data-html="true"
-                    data-content="<img src='/img/E-sports/qq.jpg' width='100%'>"
-                  >
+                  <a href="https://qm.qq.com/q/meIj5H3Ov0" target="_blank" class="btn btn-primary btn-join"
+                    data-toggle="popover" data-animation="true" data-container="#qq" data-placement="top"
+                    data-trigger="manual" data-html="true" data-content="<img src='/img/E-sports/qq.jpg' width='100%'>">
                     <i class="fab fa-qq fa-fw"></i> 立即加入
                   </a>
                 </div>
@@ -86,18 +69,16 @@
         <div class="game-tabs">
           <ul class="nav nav-tabs" id="gameTabs" role="tablist">
             <li class="nav-item" v-for="(game, index) in games" :key="game.id">
-              <a class="nav-link" :class="{active: index === 0}" 
-                 :id="`game-${game.id}-tab`" data-toggle="tab" 
-                 :href="`#game-${game.id}`" role="tab">
+              <a class="nav-link" :class="{active: index === 0}" :id="`game-${game.id}-tab`" data-toggle="tab"
+                :href="`#game-${game.id}`" role="tab">
                 <img :src="game.logo" :alt="game.name" class="game-logo">
                 {{game.name}}
               </a>
             </li>
           </ul>
           <div class="tab-content" id="gameTabsContent">
-            <div class="tab-pane fade" :class="{show: index === 0, active: index === 0}" 
-                 v-for="(game, index) in games" :key="game.id" 
-                 :id="`game-${game.id}`" role="tabpanel">
+            <div class="tab-pane fade" :class="{show: index === 0, active: index === 0}" v-for="(game, index) in games"
+              :key="game.id" :id="`game-${game.id}`" role="tabpanel">
               <div class="game-detail">
                 <div class="row">
                   <div class="col-md-4">
@@ -117,19 +98,10 @@
                       <span class="info-item"><i class="fas fa-calendar-alt"></i> 每周 {{game.activityDays}}</span>
                     </div> -->
                     <div class="btn-container">
-                      <a 
-                        :href="game.qqGroup" 
-                        target="_blank"
-                        class="btn btn-outline-primary btn-join-game"
-                      >
+                      <a :href="game.qqGroup" target="_blank" class="btn btn-outline-primary btn-join-game">
                         加入{{game.name}}群
                       </a>
-                      <a 
-                        v-if="game.url"
-                        :href="game.url" 
-                        target="_blank"
-                        class="btn btn-outline-primary btn-join-game"
-                      >
+                      <a v-if="game.url" :href="game.url" target="_blank" class="btn btn-outline-primary btn-join-game">
                         查看网站
                       </a>
                     </div>
@@ -140,7 +112,29 @@
           </div>
         </div>
       </section>
-      <router-link to="/e-sports/detail" class="view-all-events">查看全部交流群 <i class="fas fa-chevron-right"></i></router-link>
+      <router-link to="/e-sports/detail" class="view-all-events">查看全部交流群 <i
+          class="fas fa-chevron-right"></i></router-link>
+
+      <!-- 最新公告 -->
+      <section class="news-section">
+        <h2 class="section-title">最新公告</h2>
+        <div class="news-list">
+          <div class="news-card"
+            v-for="news in newsData.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6)"
+            :key="news.id">
+            <div class="news-date">
+              <span class="date-day">{{ getDay(news.date) }}</span>
+              <span class="date-month">{{ getMonth(news.date) }}</span>
+            </div>
+            <div class="news-content">
+              <h4>{{news.title}}</h4>
+              <p class="news-content">{{ news.content }}</p>
+            </div>
+            <a :href="`https://ecustegame.top/#/news/${news.id}`" target="_blank" class="btn btn-sm btn-outline-primary">查看详情</a>
+          </div>
+        </div>
+        <a href="https://ecustegame.top/#/news" class="view-all-events">查看全部公告 <i class="fas fa-chevron-right"></i></a>
+      </section>
 
       <!-- 最新赛事 -->
       <section class="events-section">
@@ -159,7 +153,6 @@
             </div>
             <div class="event-actions">
               <button class="btn btn-sm btn-outline-secondary">详情</button>
-              <button class="btn btn-sm btn-primary">报名</button>
             </div>
           </div>
         </div>
@@ -178,7 +171,32 @@ export default {
   data() {
     return {
       games: esportsGames,
-      events: esportsEvents
+      events: esportsEvents,
+      newsData: []
+    }
+  },
+  mounted() {
+    this.fetchNewsData();
+  },
+  methods: {
+    getDay(dateStr) {
+      return new Date(dateStr).getDate()
+    },
+    getMonth(dateStr) {
+      return new Date(dateStr).toLocaleString('zh-CN', { month: 'long' })
+    },
+    async fetchNewsData() {
+      try {
+        const response = await fetch('https://ecustegame.top/assets/index.js');
+        const jsContent = await response.text();
+        const newsDataMatch = jsContent.match(/const newsData = (\[.*?\])/s);
+        if (newsDataMatch) {
+          const parseData = new Function(`return ${newsDataMatch[1]}`);
+          this.newsData = parseData();
+        }
+      } catch (err) {
+        console.error("加载失败:", err);
+      }
     }
   }
 }
@@ -392,9 +410,92 @@ export default {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* 公告部分 */
+.news-section {
+  padding: 50px 0;
+}
+
+.news-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.news-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.news-date {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.news-date .date-day {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #3498db;
+  line-height: 1;
+}
+
+.news-date .date-month {
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin-left: 5px;
+}
+
+.news-content {
+  flex: 1;
+}
+
+.news-content h4 {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.news-content p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.news-card .btn {
+  align-self: flex-end;
+  transition: all 0.3s ease;
+}
+
+.news-card .btn:hover {
+  background-color: #3498db;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
 /* 赛事部分 */
 .events-section {
-  padding: 50px 0;
+  padding: 0px 0 20px;
 }
 
 .event-list {
@@ -492,6 +593,36 @@ export default {
 @media (max-width: 768px) {
   .hero-overlay h1 {
     font-size: 2.5rem;
+  }
+
+  /* 公告卡片移动端优化 */
+  .news-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .news-card {
+    padding: 15px;
+  }
+
+  .news-date {
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  .news-date .date-day {
+    font-size: 1.5rem;
+  }
+
+  .news-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .news-content p {
+    font-size: 0.9rem;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
   }
   
   .hero-overlay p {
