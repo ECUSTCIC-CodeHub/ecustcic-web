@@ -279,14 +279,14 @@
             <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">Support</a>
             </li> -->
-            <li class="list-inline-item">
+            <!-- <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">沪ICP备18036740号</a>
             </li>
             <li class="list-inline-item">
-              <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31012102000135" id="policeLink">
-                <img src="https://beian.mps.gov.cn/img/ghs.png">沪公网安备31012102000135号
+              <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=" id="policeLink">
+                <img src="https://beian.mps.gov.cn/img/ghs.png">沪公网安备号
               </a>
-            </li>
+            </li> -->
           </ul>
           <span id="ipv4"></span><span id="ipv6"></span>
         </div>
