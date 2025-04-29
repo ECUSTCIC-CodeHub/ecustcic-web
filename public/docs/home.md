@@ -14,3 +14,8 @@
 1. 在 `public/docs` 目录下创建 Markdown 文件
 2. 在 `src/data/menu.js` 的 `menuItems` 数组中添加对应的菜单项
 3. 点击左侧菜单即可查看对应文档 
+
+## 项目地址
+> 理论上，CNB仓库会自动（非实时）推送到 GitHub 、 Gitcode 和 Gitee 仓库
+- [GitHub: https://github.com/ECUSTCIC-CodeHub/ecustcic-web](https://github.com/ECUSTCIC-CodeHub/ecustcic-web)
+- [CNB: https://cnb.cool/ecustcic/ecustcic-web](https://cnb.cool/ecustcic/ecustcic-web)
