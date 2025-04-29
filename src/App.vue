@@ -269,8 +269,8 @@
             </li>
           </ul>
           <p class="mb-1">CopyRight &copy; 1998-{{ new Date().getFullYear() }} ECUST-CIC. All Rights Reserved</p>
-          <!-- <ul class="list-inline my-0">
-            <li class="list-inline-item">
+          <ul class="list-inline my-0">
+            <!-- <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">Privacy</a>
             </li>
             <li class="list-inline-item">
@@ -278,11 +278,17 @@
             </li>
             <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">Support</a>
-            </li>
+            </li> -->
             <li class="list-inline-item">
               <a href="javascript:void(0);" target="_blank">沪ICP备18036740号</a>
             </li>
-          </ul>-->
+            <li class="list-inline-item">
+              <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31012102000135" id="policeLink">
+                <img src="https://beian.mps.gov.cn/img/ghs.png">沪公网安备31012102000135号
+              </a>
+            </li>
+          </ul>
+          <span id="ipv4"></span><span id="ipv6"></span>
         </div>
       </div>
     </footer>

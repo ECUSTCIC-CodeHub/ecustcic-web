@@ -8,7 +8,7 @@ import Home from "@/views/Home.vue";
 import Activity from "@/views/Activity.vue";
 
 // 技术
-// import Tech from '@/views/Tech.vue'
+import Tech from '@/views/Tech.vue'
 
 // 电竞
 import E_sports from '@/views/E-sports/E-sports.vue'
@@ -73,14 +73,14 @@ const router = new Router({
       }
     },
     // 技术
-    // {
-    //   path: '/tech',
-    //   name: 'tech',
-    //   meta: {
-    //     title: 'CIC-技术'
-    //   },
-    //   component: Tech
-    // },
+    {
+      path: '/tech',
+      name: 'tech',
+      meta: {
+        title: 'CIC-技术'
+      },
+      component: Tech
+    },
     // 电竞
     {
       path: "/e-sports",
