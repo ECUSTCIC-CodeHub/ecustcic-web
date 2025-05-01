@@ -9,6 +9,11 @@ export const menuItems = [
     path: '/docs/quickstart.md',
     icon: 'fa-rocket'
   },
+  {
+    title: 'ecust-CourseShare', 
+    path: 'https://cnb.ecustvr.top/ecustcic/ecust-CourseShare/-/git/raw/master/Readme.md',
+    icon: 'fa-book'
+  },
   { 
     title: '组件文档', 
     icon: 'fa-puzzle-piece',
