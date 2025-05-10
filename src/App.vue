@@ -280,7 +280,7 @@
               <a href="javascript:void(0);" target="_blank">Support</a>
             </li> -->
             <li class="list-inline-item">
-              <a href="javascript:void(0);" target="_blank">浙ICP备2025169668号-1
+              <a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2025169668号-1
               </a>
             </li>
             <!-- <li class="list-inline-item">
