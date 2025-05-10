@@ -10,6 +10,27 @@ export const menuItems = [
     icon: 'fa-rocket'
   },
   {
+    title: '网络和信息系统常见问题',
+    icon: 'fa-book',
+    children: [
+      {
+        title: 'FAQ总览',
+        path: '/docs/faq/index.md',
+        icon: 'fa-list'
+      },
+      // {
+      //   title: '基本问题',
+      //   path: '/docs/faq/basic/index.md',
+      //   icon: 'fa-question-circle'
+      // },
+      {
+        title: '浏览器/网络问题',
+        path: '/docs/faq/network.md',
+        icon: 'fa-wifi'
+      }
+    ]
+  },
+  {
     title: 'ecust-CourseShare', 
     path: '/docs/ecust-CourseShare.md',
     icon: 'fa-book'
