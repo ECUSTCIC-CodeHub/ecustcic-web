@@ -80,8 +80,29 @@ export default {
     }
   },
   mounted() {
-    // 默认加载首页
-    this.loadMarkdown(this.menuItems[0].path)
+    // 检查URL参数中是否有文档路径
+    const urlParams = new URLSearchParams(window.location.search)
+    const docPath = urlParams.get('doc')
+    
+    if (docPath) {
+      // 如果URL中有文档路径，加载该文档
+      this.loadMarkdown(docPath)
+    } else {
+      // 否则加载默认文档
+      this.loadMarkdown(this.menuItems[0].path)
+    }
+    
+    // 添加事件监听器来处理浏览器的前进/后退按钮操作
+    window.addEventListener('popstate', () => {
+      const newUrlParams = new URLSearchParams(window.location.search)
+      const newDocPath = newUrlParams.get('doc')
+      
+      if (newDocPath) {
+        this.loadMarkdown(newDocPath)
+      } else {
+        this.loadMarkdown(this.menuItems[0].path)
+      }
+    })
   },
   methods: {
     async loadMarkdown(path) {
@@ -89,6 +110,12 @@ export default {
         const response = await axios.get(path)
         this.content = response.data
         this.currentPath = path
+        
+        // 更新URL查询参数，不刷新页面
+        const url = new URL(window.location)
+        url.searchParams.set('doc', path)
+        window.history.pushState({}, '', url)
+        
         // 移动端点击菜单项后自动关闭菜单
         if (window.innerWidth <= 768) {
           this.menuOpen = false
@@ -96,6 +123,12 @@ export default {
       } catch (error) {
         console.error('加载 Markdown 文件失败:', error)
         this.content = '# 加载失败\n\n文件不存在或无法访问。'
+        
+        // 如果路径无效且不是默认路径，尝试加载默认文档
+        if (path !== this.menuItems[0].path) {
+          console.log('尝试加载默认文档')
+          this.loadMarkdown(this.menuItems[0].path)
+        }
       }
     },
     toggleMenu() {
