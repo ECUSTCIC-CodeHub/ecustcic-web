@@ -20,6 +20,8 @@
               培养团队协作精神和竞技意识，同时倡导健康游戏理念。
               <br>
               官方网站: <a href="https://ecustegame.top/" target="_blank">https://ecustegame.top/</a>
+              <br>
+              查看全部交流群:  <a href="/e-sports/detail" target="_blank">点击查看</a>
             </p>
             <div class="achievements">
               <div class="achievement-item">
