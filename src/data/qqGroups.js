@@ -107,6 +107,12 @@ export const baseGroups = [
       url: 'https://qm.qq.com/q/fujUT0KsRa'
     },
     {
+      group_id: 681752107,
+      category: 'game', 
+      description: 'Nintendo Switch/NS/Switch',
+      url: 'https://qm.qq.com/q/kPbi3RzgKA'
+    },
+    {
       group_id: 926265440,
       category: 'game', 
       description: '英勇之地/Brawl Stars'
