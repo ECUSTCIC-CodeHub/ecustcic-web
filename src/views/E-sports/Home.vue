@@ -47,6 +47,9 @@
                   <a href="https://ecustegame.top/" target="_blank" class="btn btn-primary btn-join">
                     <i class="fa fa-home fa-fw"></i> 官方网站
                   </a>
+                  <a href="/e-sports/detail" target="_blank" class="btn btn-primary btn-join">
+                    <i class="fab fa-qq fa-fw"></i> 查看全部交流群
+                  </a>
                   <a href="https://open.weixin.qq.com/qr/code?username=gh_5814cf630585" target="_blank"
                     class="btn btn-primary btn-join" data-toggle="popover" data-animation="true"
                     data-container="#wechat" data-placement="top" data-trigger="manual" data-html="true"
