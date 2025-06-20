@@ -175,7 +175,7 @@ export default {
     },
     async fetchGroupInfo(groupId) {
       try {
-        const response = await fetch(`https://qqapi.ecustvr.top/api/get.info.group?group=${groupId}&token=p26JQ7j0woje0JnYLGti7Q`)
+        const response = await fetch(`https://qqapi.ecustvr.top/api/get.info.group?group=${groupId}`)
         const data = await response.json()
         if (data.code === 200) {
           return data.data
