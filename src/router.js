@@ -23,6 +23,7 @@ import Repair from "@/views/Service/Repair.vue";
 // 组织宣传
 import Publicity from "@/views/Publicity/Publicity.vue";
 import PublicityHome from "@/views/Publicity/Home.vue";
+import Certificate from "@/views/Publicity/Certificate.vue";
 
 // 其他
 import Others from "@/views/Others/Others.vue";
@@ -96,6 +97,14 @@ const router = new Router({
           component: PublicityHome,
           meta: {
             title: "CIC-组宣"
+          }
+        },
+        {
+          path: "certificate",
+          name: "certificate",
+          component: Certificate,
+          meta: {
+            title: "CIC-荣誉证书领取"
           }
         }
       ]

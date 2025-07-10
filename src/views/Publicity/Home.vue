@@ -86,7 +86,7 @@ export default {
         {
           title: "荣誉证书领取",
           date: "2025-07-10",
-          link: "https://www.baidu.com"
+          link: "/publicity/certificate"
         }
       ],
       activities: [
