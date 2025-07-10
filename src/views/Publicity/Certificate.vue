@@ -236,7 +236,7 @@ export default {
         : 'ep-Qq0aaRBjgQVS'; // 竖版证书模板ID
       
       // 调用证书生成API，设置responseType为blob以接收二进制数据
-      axios.post('http://ciczs.bestzyq.cn/', apiData, {
+      axios.post('https://ciczs.bestzyq.cn/', apiData, {
         headers: {
           'Content-Type': 'application/json',
           'OE-TEMPLATE-ID': templateId
