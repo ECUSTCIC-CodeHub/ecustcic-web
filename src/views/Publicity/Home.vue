@@ -13,39 +13,42 @@
       <div class="row">
         <!-- 左侧内容区域 -->
         <div class="col-md-8">
-          <!-- 快讯区域 -->
-          <section class="news-section">
-            <h2 class="section-title">快讯</h2>
-            <div class="news-links">
-              <div class="news-item" v-for="(news, index) in newsData" :key="index">
-                <a href="#" class="news-link">
-                  <span class="news-date">{{ news.date }}</span>
-                  <span class="news-title">{{ news.title }}</span>
-                </a>
-              </div>
-            </div>
-          </section>
-
-          <!-- 活动回顾 -->
-          <section class="activities-section">
-            <h2 class="section-title">活动回顾</h2>
-            <div class="activities-container">
-              <div class="activity-card" v-for="(activity, index) in activities" :key="index">
-                <img :src="activity.image" :alt="activity.title" class="activity-image">
-                <div class="activity-overlay">
-                  <h4>{{activity.title}}</h4>
-                  <p>{{activity.date}}</p>
+            <!-- 快讯区域 -->
+            <section class="news-section">
+                <h2 class="section-title">快讯</h2>
+                <div class="news-container">
+                <div class="news-links">
+                    <div class="news-item" v-for="(news, index) in newsData" :key="index">
+                    <a :href="news.link" target="_blank" class="news-link">
+                        <span class="news-date">{{ news.date }}</span>
+                        <span class="news-title">{{ news.title }}</span>
+                    </a>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </section>
+                </div>
+            </section>
+
+            <!-- 活动回顾 -->
+            <section class="activities-section">
+                <h2 class="section-title">活动回顾</h2>
+                <div class="activities-container">
+                    <div class="activity-card" v-for="(activity, index) in activities" :key="index">
+                        <a :href="activity.link" target="_blank" class="activity-link">
+                            <img :src="activity.image" :alt="activity.title" class="activity-image">
+                            <div class="activity-overlay">
+                                <h4>{{activity.title}}</h4>
+                                <p>{{activity.date}}</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
         </div>
         
         <!-- 右侧边栏 -->
         <div class="col-md-4">
           <!-- 传播矩阵 -->
           <section class="sidebar-section">
-            <h2 class="section-title">传播矩阵</h2>
             <div class="qr-card">
               <img src="/img/cic_qqcode.png" alt="QQ群二维码" class="qr-image">
               <h4>QQ交流群</h4>
@@ -64,8 +67,8 @@
       <section class="join-section">
         <h2 class="section-title">加入我们</h2>
         <div class="join-container">
-          <p class="join-text">欢迎加入组宣部QQ群，与我们一起交流、学习、成长！</p>
-          <a href="#" class="btn btn-primary btn-join">
+          <p class="join-text">欢迎加入QQ群，与我们一起交流、学习、成长！</p>
+          <a href="https://qm.qq.com/q/EgVxJiI9TG" class="btn btn-primary btn-join" target="_blank">
             <i class="fab fa-qq fa-fw"></i> 加入QQ群
           </a>
         </div>
@@ -81,36 +84,17 @@ export default {
     return {
       newsData: [
         {
-          title: "组宣部招新公告",
-          content: "组宣部现正招募新成员，欢迎对宣传、设计、文案感兴趣的同学加入我们！",
-          date: "2023-09-01"
-        },
-        {
-          title: "社团宣传片制作中",
-          content: "组宣部正在筹备新一期的社团宣传片，敬请期待！",
-          date: "2023-08-15"
-        },
-        {
-          title: "海报设计大赛",
-          content: "组宣部将举办海报设计大赛，欢迎各位同学踊跃参与！",
-          date: "2023-07-20"
+          title: "荣誉证书领取",
+          date: "2025-07-10",
+          link: "https://www.baidu.com"
         }
       ],
       activities: [
         {
-          title: "迎新晚会",
-          date: "2023-09-20",
-          image: "https://via.placeholder.com/400x300?text=迎新晚会"
-        },
-        {
-          title: "社团文化节",
-          date: "2023-06-15",
-          image: "https://via.placeholder.com/400x300?text=社团文化节"
-        },
-        {
-          title: "宣传技能培训",
-          date: "2023-04-10",
-          image: "https://via.placeholder.com/400x300?text=宣传技能培训"
+          title: "MC服务器上线",
+          date: "2024-04-20",
+          image: "https://pic6.zhimg.com/80/v2-e7a35d536823255c4c5664a528d6a9ef_1440w.jpeg",
+          link: "https://mc.ecustcic.com/Gallery/%E6%96%87%E9%87%8E%E3%81%AE%E6%97%85%E7%A8%8B.html"
         }
       ]
     }
@@ -194,6 +178,14 @@ export default {
   padding: 30px 0;
 }
 
+.news-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
 .news-links {
   display: flex;
   flex-direction: column;
@@ -203,6 +195,11 @@ export default {
 .news-item {
   border-bottom: 1px dashed #ddd;
   padding-bottom: 10px;
+}
+
+.news-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .news-link {
@@ -280,7 +277,15 @@ export default {
 
 /* 活动回顾 */
 .activities-section {
-  padding: 50px 0;
+  padding: 30px 0;
+}
+
+.activities-wrapper {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  margin-bottom: 30px;
 }
 
 .activities-container {
@@ -391,7 +396,6 @@ export default {
   
   .qr-card {
     width: 100%;
-    max-width: 300px;
   }
 }
 </style>
