@@ -20,6 +20,10 @@ import Service from "@/views/Service/Service.vue";
 import ServiceHome from "@/views/Service/Home.vue";
 import Repair from "@/views/Service/Repair.vue";
 
+// 组织宣传
+import Publicity from "@/views/Publicity/Publicity.vue";
+import PublicityHome from "@/views/Publicity/Home.vue";
+
 // 其他
 import Others from "@/views/Others/Others.vue";
 // 签到
@@ -80,6 +84,21 @@ const router = new Router({
         title: 'CIC-技术'
       },
       component: Tech
+    },
+    // 组宣
+    {
+      path: "/publicity",
+      component: Publicity,
+      children: [
+        {
+          path: "",
+          name: "publicity",
+          component: PublicityHome,
+          meta: {
+            title: "CIC-组宣"
+          }
+        }
+      ]
     },
     // 电竞
     {
