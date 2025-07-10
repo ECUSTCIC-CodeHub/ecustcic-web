@@ -44,6 +44,8 @@
                       <option value="优秀群友">优秀群友</option>
                       <option value="优秀群主">优秀群主</option>
                       <option value="优秀管理员">优秀管理员</option>
+                      <option value="优秀机器人">优秀机器人</option>
+                      <option value="优秀复读机">优秀复读机</option>
                       <option value="优秀志愿者">优秀志愿者</option>
                       <option value="custom">自定义...</option>
                     </select>
