@@ -68,7 +68,7 @@
                     required
                     rows="2"
                   ></textarea>
-                  <small class="form-text text-muted">示例：在二零二四到二零二五学年表现优秀，在活跃群聊气氛方面发挥了先锋模范作用，被评为我群</small>
+                  <small class="form-text text-muted">示例：在二零二四到二零二五学年表现优秀，在活跃社团群聊气氛方面发挥了先锋模范作用，被评为我社</small>
                 </div>
                 
                 <div class="form-group">
@@ -81,6 +81,38 @@
                     rows="2"
                   ></textarea>
                   <small class="form-text text-muted">示例：，特发此证，以资鼓励</small>
+                </div>
+
+                <div class="form-group">
+                  <label>证书方向 <span class="required">*</span></label>
+                  <div class="certificate-orientation">
+                    <div class="form-check form-check-inline">
+                      <input 
+                        class="form-check-input" 
+                        type="radio" 
+                        name="orientation" 
+                        id="horizontal" 
+                        value="horizontal" 
+                        v-model="certificateOrientation"
+                      >
+                      <label class="form-check-label" for="horizontal">
+                        横版证书
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input 
+                        class="form-check-input" 
+                        type="radio" 
+                        name="orientation" 
+                        id="vertical" 
+                        value="vertical" 
+                        v-model="certificateOrientation"
+                      >
+                      <label class="form-check-label" for="vertical">
+                        竖版证书
+                      </label>
+                    </div>
+                  </div>
                 </div>
                 
                 <div class="form-submit">
@@ -136,10 +168,11 @@ export default {
       formData: {
         name: "",
         descriptionTitle: "",
-        descriptionPrefix: "在二零二四到二零二五学年表现优秀，在活跃群聊气氛方面发挥了先锋模范作用，被评为我群",
+        descriptionPrefix: "在二零二四到二零二五学年表现优秀，在活跃社团群聊气氛方面发挥了先锋模范作用，被评为我社",
         descriptionSuffix: "，特发此证，以资鼓励"
       },
       selectedTitle: "",
+      certificateOrientation: "horizontal", // 默认选择横版证书
       isSubmitting: false,
       certificateUrl: null,
       apiError: null
@@ -159,8 +192,9 @@ export default {
     submitForm() {
       // 表单验证
       if (!this.formData.name || !this.formData.descriptionTitle || 
-          !this.formData.descriptionPrefix || !this.formData.descriptionSuffix) {
-        this.apiError = "请填写所有必填字段";
+          !this.formData.descriptionPrefix || !this.formData.descriptionSuffix ||
+          !this.certificateOrientation) {
+        this.apiError = "请填写所有必填字段并选择证书方向";
         return;
       }
       
@@ -172,6 +206,13 @@ export default {
         URL.revokeObjectURL(this.certificateUrl);
       }
       
+      // 获取当前日期并格式化为中文格式（年月日）
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1; // 月份从0开始，需要+1
+      const day = today.getDate();
+      const formattedDate = `${year}年${month}月${day}日`;
+      
       // 构建API请求数据
       const apiData = {
         title: "荣誉证书",
@@ -181,17 +222,22 @@ export default {
         descriptionPrefix: this.formData.descriptionPrefix,
         descriptionSuffix: this.formData.descriptionSuffix,
         descriptionTitle: this.formData.descriptionTitle,
-        signatureName1: "2025年7月10日",
+        signatureName1: formattedDate,
         signatureTitle1: "日期",
         signatureName2: "CIC计算机信息交流协会",
         signatureTitle2: "发证单位"
       };
       
+      // 根据选择的证书方向确定模板ID
+      const templateId = this.certificateOrientation === 'horizontal' 
+        ? 'ep-KmswvuJyDYRF'  // 横版证书模板ID
+        : 'ep-Qq0aaRBjgQVS'; // 竖版证书模板ID
+      
       // 调用证书生成API，设置responseType为blob以接收二进制数据
       axios.post('http://ciczs.bestzyq.cn/', apiData, {
         headers: {
           'Content-Type': 'application/json',
-          'OE-TEMPLATE-ID': 'ep-KmswvuJyDYRF'
+          'OE-TEMPLATE-ID': templateId
         },
         responseType: 'blob' // 设置响应类型为blob，用于接收二进制图片数据
       })
@@ -221,10 +267,11 @@ export default {
       this.formData = {
         name: "",
         descriptionTitle: "",
-        descriptionPrefix: "在二零二四到二零二五学年表现优秀，在活跃群聊气氛方面发挥了先锋模范作用，被评为我群",
+        descriptionPrefix: "在二零二四到二零二五学年表现优秀，在活跃社团群聊气氛方面发挥了先锋模范作用，被评为我社",
         descriptionSuffix: "，特发此证，以资鼓励"
       };
       this.selectedTitle = ""; // 重置下拉框选择
+      this.certificateOrientation = "horizontal"; // 重置证书方向为横版
       this.certificateUrl = null;
       this.apiError = null;
     },
