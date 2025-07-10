@@ -10,53 +10,55 @@
     </div>
 
     <div class="container">
-      <!-- 快讯区域 -->
-      <section class="news-section">
-        <h2 class="section-title">快讯</h2>
-        <div class="news-list">
-          <div class="news-card" v-for="(news, index) in newsData" :key="index">
-            <div class="news-date">
-              <span class="date-day">{{ getDay(news.date) }}</span>
-              <span class="date-month">{{ getMonth(news.date) }}</span>
+      <div class="row">
+        <!-- 左侧内容区域 -->
+        <div class="col-md-8">
+          <!-- 快讯区域 -->
+          <section class="news-section">
+            <h2 class="section-title">快讯</h2>
+            <div class="news-links">
+              <div class="news-item" v-for="(news, index) in newsData" :key="index">
+                <a href="#" class="news-link">
+                  <span class="news-date">{{ news.date }}</span>
+                  <span class="news-title">{{ news.title }}</span>
+                </a>
+              </div>
             </div>
-            <div class="news-content">
-              <h4>{{news.title}}</h4>
-              <p>{{ news.content }}</p>
-            </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <!-- 传播矩阵 -->
-      <section class="matrix-section">
-        <h2 class="section-title">传播矩阵</h2>
-        <div class="matrix-container">
-          <div class="qr-card">
-            <img src="/img/cic_qrcode.jpg" alt="微信公众号二维码" class="qr-image">
-            <h4>微信公众号</h4>
-            <p>扫码关注，获取最新资讯</p>
-          </div>
-          <div class="qr-card">
-            <img src="/img/cic_qq.jpeg" alt="QQ群二维码" class="qr-image">
-            <h4>QQ交流群</h4>
-            <p>扫码加入，与我们交流互动</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- 活动回顾 -->
-      <section class="activities-section">
-        <h2 class="section-title">活动回顾</h2>
-        <div class="activities-container">
-          <div class="activity-card" v-for="(activity, index) in activities" :key="index">
-            <img :src="activity.image" :alt="activity.title" class="activity-image">
-            <div class="activity-overlay">
-              <h4>{{activity.title}}</h4>
-              <p>{{activity.date}}</p>
+          <!-- 活动回顾 -->
+          <section class="activities-section">
+            <h2 class="section-title">活动回顾</h2>
+            <div class="activities-container">
+              <div class="activity-card" v-for="(activity, index) in activities" :key="index">
+                <img :src="activity.image" :alt="activity.title" class="activity-image">
+                <div class="activity-overlay">
+                  <h4>{{activity.title}}</h4>
+                  <p>{{activity.date}}</p>
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
-      </section>
+        
+        <!-- 右侧边栏 -->
+        <div class="col-md-4">
+          <!-- 传播矩阵 -->
+          <section class="sidebar-section">
+            <h2 class="section-title">传播矩阵</h2>
+            <div class="qr-card">
+              <img src="/img/cic_qqcode.png" alt="QQ群二维码" class="qr-image">
+              <h4>QQ交流群</h4>
+              <p>扫码加入，与我们交流互动</p>
+            </div>
+            <div class="qr-card">
+              <img src="/img/cic_qrcode.jpg" alt="微信公众号二维码" class="qr-image">
+              <h4>微信公众号</h4>
+              <p>扫码关注，获取最新资讯</p>
+            </div>
+          </section>
+        </div>
+      </div>
 
       <!-- 加入我们 -->
       <section class="join-section">
@@ -133,7 +135,7 @@ export default {
 /* 顶部区域 */
 .top-banner {
   position: relative;
-  height: 300px;
+  height: 400px;
   overflow: hidden;
   margin-bottom: 30px;
 }
@@ -187,97 +189,63 @@ export default {
   background: linear-gradient(to right, #3498db, #9b59b6);
 }
 
-/* 快讯区域 */
+/* 快讯区域 - 文字链接形式 */
 .news-section {
-  padding: 50px 0;
+  padding: 30px 0;
 }
 
-.news-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.news-card {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  transition: all 0.3s ease;
+.news-links {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  gap: 12px;
 }
 
-.news-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+.news-item {
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 10px;
+}
+
+.news-link {
+  display: flex;
+  justify-content: space-between;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.news-link:hover {
+  color: #3498db;
+  transform: translateX(5px);
 }
 
 .news-date {
-  text-align: left;
-  margin-bottom: 15px;
-}
-
-.news-date .date-day {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #3498db;
-  line-height: 1;
-}
-
-.news-date .date-month {
-  font-size: 1rem;
   color: #7f8c8d;
-  margin-left: 5px;
+  font-size: 0.9rem;
+  min-width: 100px;
 }
 
-.news-content {
-  flex: 1;
+.news-title {
+  flex-grow: 1;
+  font-weight: 500;
 }
 
-.news-content h4 {
-  color: #2c3e50;
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  line-height: 1.4;
-}
-
-.news-content p {
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 15px;
-  display: -webkit-box;
-  line-clamp: 3;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* 传播矩阵 */
-.matrix-section {
-  padding: 50px 0;
-}
-
-.matrix-container {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
+/* 右侧边栏 */
+.sidebar-section {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .qr-card {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  padding: 25px;
+  padding: 20px;
   text-align: center;
   transition: all 0.3s ease;
-  width: 250px;
+  margin-bottom: 20px;
 }
 
 .qr-card:hover {
@@ -286,8 +254,9 @@ export default {
 }
 
 .qr-image {
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  max-width: 180px;
+  height: auto;
   object-fit: cover;
   margin-bottom: 15px;
   border-radius: 8px;
@@ -303,6 +272,10 @@ export default {
 .qr-card p {
   color: #666;
   font-size: 0.9rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
 }
 
 /* 活动回顾 */
