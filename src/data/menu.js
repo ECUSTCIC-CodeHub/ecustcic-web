@@ -31,8 +31,13 @@ export const menuItems = [
     ]
   },
   {
+    title: '图书数据库的使用',
+    path: '',
+    icon: 'fa-database'
+  },
+  {
     title: 'ecust-CourseShare', 
-    path: '/docs/ecust-CourseShare.md',
+    path: 'https://cnb.ecustvr.top/ecustcic/ecust-CourseShare/-/git/raw/master/Readme.md',
     icon: 'fa-book'
   },
   {

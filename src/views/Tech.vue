@@ -215,9 +215,9 @@ export default {
 }
 
 /* 菜单组样式 */
-.menu-group {
+/* .menu-group {
   margin-bottom: 5px;
-}
+} */
 
 .menu-group-title {
   display: flex;
@@ -235,11 +235,11 @@ export default {
 }
 
 .menu-group-items {
-  padding-left: 20px;
+  padding-left: 12px;
 }
 
 .menu-group-item {
-  padding-left: 24px;
+  padding-left: 16px;
 }
 
 @media (max-width: 768px) {
