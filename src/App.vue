@@ -53,6 +53,12 @@
                 电竞
               </router-link>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://wiki.ecustvr.top/" target="_blank">
+                <i class="fa fa-book fa-fw" aria-hidden="true"></i>
+                Wiki
+              </a>
+            </li>
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
