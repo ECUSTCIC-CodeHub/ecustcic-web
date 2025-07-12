@@ -14,10 +14,15 @@
     <script src="https://net.sjtu.edu.cn/script/jquery.min.js"></script>
     <script src="https://net.sjtu.edu.cn/script/nav.js"></script>
     <script>
+      // 处理从404.html重定向过来的请求
       if (sessionStorage.redirect) {
         const redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
+        // 使用完整的URL（包括路径和查询参数）
         window.history.replaceState({}, '', redirect);
+        
+        // 记录日志，帮助调试
+        console.log('从404.html重定向: ' + redirect);
       }
     </script>
   </head>

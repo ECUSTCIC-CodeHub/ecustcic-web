@@ -80,48 +80,134 @@ export default {
     }
   },
   mounted() {
-    // 检查URL参数中是否有文档路径
-    const urlParams = new URLSearchParams(window.location.search)
-    const docPath = urlParams.get('doc')
+    // 检查是否是从404.html重定向过来的
+    console.log('Tech组件已挂载，检查URL参数')
     
-    if (docPath) {
-      // 如果URL中有文档路径，加载该文档
-      this.loadMarkdown(docPath, true)
+    // 检查URL参数中是否有文档标题
+    const urlParams = new URLSearchParams(window.location.search)
+    const docTitle = urlParams.get('doc') // URLSearchParams.get()已经会自动解码
+    
+    if (docTitle) {
+      console.log('从URL获取的文档标题:', docTitle)
+      
+      // 尝试根据标题找到对应的路径
+      const docPath = this.getDocPath(docTitle)
+      
+      if (docPath) {
+        // 如果找到了路径，加载该文档
+        console.log('找到对应路径:', docPath)
+        this.loadMarkdown(docPath, true)
+      } else {
+        // 如果标题不匹配任何菜单项，可能是直接使用的路径
+        // 尝试直接使用作为路径
+        console.log('未找到对应路径，尝试直接使用:', docTitle)
+        this.loadMarkdown(docTitle, true)
+      }
     } else {
       // 否则加载默认文档
+      console.log('加载默认文档')
       this.loadMarkdown(this.menuItems[0].path, true)
     }
     
     // 添加事件监听器来处理浏览器的前进/后退按钮操作
     window.addEventListener('popstate', () => {
       const newUrlParams = new URLSearchParams(window.location.search)
-      const newDocPath = newUrlParams.get('doc')
+      const newDocTitle = newUrlParams.get('doc') // URLSearchParams.get()已经会自动解码
       
-      if (newDocPath) {
-        this.loadMarkdown(newDocPath, true)
+      if (newDocTitle) {
+        const newDocPath = this.getDocPath(newDocTitle)
+        if (newDocPath) {
+          this.loadMarkdown(newDocPath, true)
+        } else {
+          // 尝试直接使用作为路径
+          this.loadMarkdown(newDocTitle, true)
+        }
       } else {
         this.loadMarkdown(this.menuItems[0].path, true)
       }
     })
   },
   methods: {
+    // 根据路径获取文档标题（包含父菜单信息）
+    getDocTitle(path) {
+      // 先检查顶层菜单项
+      for (const item of this.menuItems) {
+        if (item.path === path) {
+          return item.title
+        }
+        
+        // 检查子菜单项
+        if (item.children) {
+          for (const child of item.children) {
+            if (child.path === path) {
+              // 对于子菜单项，返回"父菜单/子菜单"格式
+              return `${item.title}/${child.title}`
+            }
+          }
+        }
+      }
+      
+      // 如果找不到匹配的标题，返回路径的最后部分
+      const pathParts = path.split('/')
+      return pathParts[pathParts.length - 1].replace('.md', '')
+    },
+    
+    // 根据标题获取文档路径
+    getDocPath(titlePath) {
+      // 检查是否包含斜杠，表示是"父菜单/子菜单"格式
+      if (titlePath.includes('/')) {
+        const [parentTitle, childTitle] = titlePath.split('/')
+        
+        // 查找匹配的父菜单
+        for (const item of this.menuItems) {
+          if (item.title === parentTitle && item.children) {
+            // 在子菜单中查找匹配的项
+            for (const child of item.children) {
+              if (child.title === childTitle) {
+                return child.path
+              }
+            }
+          }
+        }
+      } else {
+        // 如果没有斜杠，则是顶层菜单项
+        for (const item of this.menuItems) {
+          if (item.title === titlePath) {
+            return item.path
+          }
+        }
+      }
+      
+      // 如果找不到匹配的路径，返回null
+      return null
+    },
+    
     async loadMarkdown(path, isInitialLoad = false) {
       try {
         const response = await axios.get(path)
         this.content = response.data
         this.currentPath = path
         
-        // 更新URL查询参数，不刷新页面
-        const url = new URL(window.location)
-        url.searchParams.set('doc', path)
+        // 获取文档标题（可能包含父菜单/子菜单格式）
+        const docTitle = this.getDocTitle(path)
         
-        // 只有在非初始加载时才更新历史记录
-        // 这样可以避免刷新页面时重复添加历史记录
-        if (!isInitialLoad) {
-          window.history.pushState({}, '', url)
-        } else {
-          // 在初始加载时，只替换当前的历史记录
-          window.history.replaceState({}, '', url)
+        // 检查是否是外部URL
+        const isExternalUrl = path.startsWith('http://') || path.startsWith('https://')
+        
+        // 只有对内部路径更新URL查询参数
+        if (!isExternalUrl) {
+          // 更新URL查询参数，使用标题而不是路径
+          const url = new URL(window.location)
+          url.searchParams.set('doc', docTitle)
+          
+          // 只有在非初始加载时才更新历史记录
+          // 这样可以避免刷新页面时重复添加历史记录
+          if (!isInitialLoad) {
+            window.history.pushState({}, '', url)
+          } else {
+            // 在初始加载时，只替换当前的历史记录
+            window.history.replaceState({}, '', url)
+          }
         }
         
         // 自动展开包含当前文档的菜单组

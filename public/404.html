@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>Redirecting...</title>
     <script>
-      // 存储当前路径并重定向到首页
-      sessionStorage.redirect = location.pathname;
+      // 保存完整的URL，包括路径和查询参数
+      sessionStorage.redirect = location.pathname + location.search;
       window.location.replace('/');
     </script>
   </head>
