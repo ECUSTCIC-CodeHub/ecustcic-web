@@ -32,7 +32,7 @@ export const menuItems = [
   },
   {
     title: '图书数据库的使用',
-    path: '',
+    path: '/docs/library.md',
     icon: 'fa-database'
   },
   {

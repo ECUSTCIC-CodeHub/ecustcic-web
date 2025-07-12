@@ -86,10 +86,10 @@ export default {
     
     if (docPath) {
       // 如果URL中有文档路径，加载该文档
-      this.loadMarkdown(docPath)
+      this.loadMarkdown(docPath, true)
     } else {
       // 否则加载默认文档
-      this.loadMarkdown(this.menuItems[0].path)
+      this.loadMarkdown(this.menuItems[0].path, true)
     }
     
     // 添加事件监听器来处理浏览器的前进/后退按钮操作
@@ -98,14 +98,14 @@ export default {
       const newDocPath = newUrlParams.get('doc')
       
       if (newDocPath) {
-        this.loadMarkdown(newDocPath)
+        this.loadMarkdown(newDocPath, true)
       } else {
-        this.loadMarkdown(this.menuItems[0].path)
+        this.loadMarkdown(this.menuItems[0].path, true)
       }
     })
   },
   methods: {
-    async loadMarkdown(path) {
+    async loadMarkdown(path, isInitialLoad = false) {
       try {
         const response = await axios.get(path)
         this.content = response.data
@@ -114,7 +114,18 @@ export default {
         // 更新URL查询参数，不刷新页面
         const url = new URL(window.location)
         url.searchParams.set('doc', path)
-        window.history.pushState({}, '', url)
+        
+        // 只有在非初始加载时才更新历史记录
+        // 这样可以避免刷新页面时重复添加历史记录
+        if (!isInitialLoad) {
+          window.history.pushState({}, '', url)
+        } else {
+          // 在初始加载时，只替换当前的历史记录
+          window.history.replaceState({}, '', url)
+        }
+        
+        // 自动展开包含当前文档的菜单组
+        this.expandMenuForPath(path)
         
         // 移动端点击菜单项后自动关闭菜单
         if (window.innerWidth <= 768) {
@@ -127,9 +138,25 @@ export default {
         // 如果路径无效且不是默认路径，尝试加载默认文档
         if (path !== this.menuItems[0].path) {
           console.log('尝试加载默认文档')
-          this.loadMarkdown(this.menuItems[0].path)
+          this.loadMarkdown(this.menuItems[0].path, isInitialLoad)
         }
       }
+    },
+    
+    // 查找并展开包含当前文档的菜单组
+    expandMenuForPath(path) {
+      // 重置已打开的菜单组
+      // this.openGroups = []
+      
+      // 查找包含当前路径的菜单组
+      this.menuItems.forEach((item, index) => {
+        if (item.children) {
+          const hasPath = item.children.some(child => child.path === path)
+          if (hasPath && !this.openGroups.includes(index)) {
+            this.openGroups.push(index)
+          }
+        }
+      })
     },
     toggleMenu() {
       this.menuOpen = !this.menuOpen
