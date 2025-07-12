@@ -76,7 +76,7 @@ npm run lint
 
 ### 修改技术文档数据
 
-编辑 `/src/data/menu.js` 文件。
+编辑 `/src/data/menu.js` 以修改目录结构，`public\docs` 目录下存放文档内容。
 
 ### 修改交流群信息
 
