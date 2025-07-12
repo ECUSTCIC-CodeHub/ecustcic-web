@@ -30,3 +30,5 @@ npm run serve
 ## 其他命令（可选）
 - 构建生产版本: ```npm run build```
 - 运行测试: ```npm run test```
+
+获取更多信息请访问项目仓库：[https://cnb.cool/ecustcic/ecustcic-web](https://cnb.cool/ecustcic/ecustcic-web)
