@@ -24,8 +24,8 @@ export const menuItems = [
       //   icon: 'fa-question-circle'
       // },
       {
-        title: '浏览器/网络问题',
-        path: '/docs/faq/network.md',
+        title: '搬迁徐汇校区网络问题',
+        path: '/docs/faq/xuhuinetwork.md',
         icon: 'fa-wifi'
       }
     ]
