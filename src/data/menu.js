@@ -5,7 +5,7 @@ export const menuItems = [
     icon: 'fa-home'
   },
   { 
-    title: '本网站项目', 
+    title: '本网站快速入门指南', 
     path: '/docs/quickstart.md',
     icon: 'fa-rocket'
   },
