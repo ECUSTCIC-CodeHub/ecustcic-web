@@ -89,7 +89,7 @@ npm run lint
 ## 贡献指南
 
 > 中心仓库为 CNB仓库：[https://cnb.cool/ecustcic/ecustcic-web](https://cnb.cool/ecustcic/ecustcic-web)，[GitHub](https://github.com/ECUSTCIC-CodeHub/ecustcic-web/)、[Gitcode](https://gitcode.com/ECUSTCIC-CodeHub/ecustcic-web/)、[Gitee](https://gitee.com/ecustcic/ecustcic-web)镜像仓库。  
-⚠️修改请至 CNB仓库，GitHub、Gitcode、Gitee 镜像仓库仅用于同步。后续可能考虑建立 Github-CNB 双向同步。
+⚠️修改请至 CNB仓库，GitHub、Gitcode、Gitee 镜像仓库仅用于同步。后续可能考虑建立 Github-CNB 双向同步（待定）。
 
 1. Fork 本仓库
 2. 创建你的特性分支 (`git checkout -b feature/amazing-feature`)
