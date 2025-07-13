@@ -1,0 +1,19 @@
+main:
+  push:
+    - imports:
+        - https://cnb.cool/ecustcic/key/-/blob/main/env.yml
+      stages:
+        - name: sync to github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/ECUSTCIC-CodeHub/ecustcic-web.git
+            auth_type: https
+            username: ${GITHUB_USERNAME}
+            password: ${GITHUB_ACCESS_TOKEN}
+        - name: sync to gitee
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://gitee.com/ecustcic/ecustcic-web.git
+            auth_type: https
+            username: ${GITEE_USERNAME}
+            password: ${GITEE_ACCESS_TOKEN}
