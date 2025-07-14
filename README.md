@@ -68,6 +68,11 @@ npm run lint
 
 ## 数据修改指南
 
+中心仓库为 CNB仓库：[https://cnb.cool/ecustcic/ecustcic-web](https://cnb.cool/ecustcic/ecustcic-web)，[GitHub](https://github.com/ECUSTCIC-CodeHub/ecustcic-web/)、[Gitcode](https://gitcode.com/ECUSTCIC-CodeHub/ecustcic-web/)、[Gitee](https://gitee.com/ecustcic/ecustcic-web)镜像仓库。  
+⚠️修改请至 CNB仓库/GitHub，Gitcode、Gitee 镜像仓库仅用于同步。已建立 Github-CNB 双向同步。
+
+![结构图](cic-web.png)
+
 ### 修改电竞热门游戏数据
 
 > 电竞部公共/赛事/活动直接调用[电竞部独立网站](https://ecustegame.top/)，不在本站修改，附上电竞部网站[Github仓库](https://github.com/hearthewind9/ecustegame-website)
@@ -86,16 +91,9 @@ npm run lint
 
 编辑 `/src/data/publicityData.js` 文件。
 
-## 贡献指南
+### 贡献方式
 
-> 中心仓库为 CNB仓库：[https://cnb.cool/ecustcic/ecustcic-web](https://cnb.cool/ecustcic/ecustcic-web)，[GitHub](https://github.com/ECUSTCIC-CodeHub/ecustcic-web/)、[Gitcode](https://gitcode.com/ECUSTCIC-CodeHub/ecustcic-web/)、[Gitee](https://gitee.com/ecustcic/ecustcic-web)镜像仓库。  
-⚠️修改请至 CNB仓库/GitHub，Gitcode、Gitee 镜像仓库仅用于同步。已建立 Github-CNB 双向同步。
-
-1. Fork 本仓库
-2. 创建你的特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交你的更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 开启一个 Pull Request
+开启一个 Pull Request
 
 ## 自定义配置
 
