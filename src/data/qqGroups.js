@@ -120,7 +120,14 @@ export const baseGroups = [
     {
       group_id: 552750103,
       category: 'game', 
-      description: '三角洲行动/Delta Force'
+      description: '三角洲行动/Delta Force',
+      url: 'https://qm.qq.com/q/naXgHoeA48'
+    },
+    {
+      group_id: 792529306,
+      category: 'game', 
+      description: '三角洲行动/Delta Force（有游戏官方的群）',
+      url: 'https://qm.qq.com/q/okL7o715ew'
     },
     {
       group_id: 343683662,
