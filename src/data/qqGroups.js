@@ -204,6 +204,16 @@ export const baseGroups = [
       category: 'game', 
       description: '使命召唤/Call of Duty'
     },
+    {
+      group_id: 643445252,
+      category: 'game', 
+      description: '崩坏：星穹铁道'
+    },
+    {
+      group_id: 760221941,
+      category: 'game', 
+      description: '中文虚拟歌姬（海湾三校）'
+    },
     // {
     //   group_id: ,
     //   category: 'game', 
@@ -222,6 +232,12 @@ export const baseGroups = [
       description: 'VR俱乐部',
       url: 'https://qm.qq.com/q/1G5bk4m0CA'
     },
+    {
+      group_id: 1142352205,
+      category: 'social',
+      description: "华理创客空间",
+      url: 'https://qm.qq.com/q/sZ1qXTtswE'
+    },
     { 
       group_id: 599611214, 
       category: 'social', 
@@ -233,124 +249,129 @@ export const baseGroups = [
       description: '自行车协会'
     },
     {
-        "group_id": 866917340,
-        "category": "area",
-        "description": "北京"
+      group_id: 318771884,
+      category: 'social',
+      description: '汽车协会/汽协'
     },
     {
-        "group_id": 141051938,
-        "category": "area",
-        "description": "天津"
+      group_id: 866917340,
+      category: 'area',
+      description: '北京'
     },
     {
-        "group_id": 747525205,
-        "category": "area",
-        "description": "河北"
+      group_id: 141051938,
+      category: 'area',
+      description: '天津'
     },
     {
-        "group_id": 432234523,
-        "category": "area",
-        "description": "辽宁"
+      group_id: 747525205,
+      category: 'area',
+      description: '河北'
     },
     {
-        "group_id": 330117479,
-        "category": "area",
-        "description": "吉林"
+      group_id: 432234523,
+      category: 'area',
+      description: '辽宁'
     },
     {
-        "group_id": 54565490,
-        "category": "area",
-        "description": "黑龙江"
+      group_id: 330117479,
+      category: 'area',
+      description: '吉林'
     },
     {
-        "group_id": 820163315,
-        "category": "area",
-        "description": "上海"
+      group_id: 54565490,
+      category: 'area',
+      description: '黑龙江'
     },
     {
-        "group_id": 734826683,
-        "category": "area",
-        "description": "江苏"
+      group_id: 820163315,
+      category: 'area',
+      description: '上海'
     },
     {
-        "group_id": 794728461,
-        "category": "area",
-        "description": "浙江"
+      group_id: 734826683,
+      category: 'area',
+      description: '江苏'
     },
     {
-        "group_id": 391466610,
-        "category": "area",
-        "description": "安徽"
+      group_id: 794728461,
+      category: 'area',
+      description: '浙江'
     },
     {
-        "group_id": 867620811,
-        "category": "area",
-        "description": "福建"
+      group_id: 391466610,
+      category: 'area',
+      description: '安徽'
     },
     {
-        "group_id": 816812991,
-        "category": "area",
-        "description": "江西"
+      group_id: 867620811,
+      category: 'area',
+      description: '福建'
     },
     {
-        "group_id": 84808097,
-        "category": "area",
-        "description": "山东"
+      group_id: 816812991,
+      category: 'area',
+      description: '江西'
     },
     {
-        "group_id": 928113034,
-        "category": "area",
-        "description": "河南"
+      group_id: 84808097,
+      category: 'area',
+      description: '山东'
     },
     {
-        "group_id": 231962770,
-        "category": "area",
-        "description": "湖北"
+      group_id: 928113034,
+      category: 'area',
+      description: '河南'
     },
     {
-        "group_id": 743399952,
-        "category": "area",
-        "description": "湖南"
+      group_id: 231962770,
+      category: 'area',
+      description: '湖北'
     },
     {
-        "group_id": 106195152,
-        "category": "area",
-        "description": "四川"
+      group_id: 743399952,
+      category: 'area',
+      description: '湖南'
     },
     {
-        "group_id": 179761360,
-        "category": "area",
-        "description": "贵州"
+      group_id: 106195152,
+      category: 'area',
+      description: '四川'
     },
     {
-        "group_id": 739821317,
-        "category": "area",
-        "description": "云南"
+      group_id: 179761360,
+      category: 'area',
+      description: '贵州'
     },
     {
-        "group_id": 452096779,
-        "category": "area",
-        "description": "陕西"
+      group_id: 739821317,
+      category: 'area',
+      description: '云南'
     },
     {
-        "group_id": 639380166,
-        "category": "area",
-        "description": "甘肃"
+      group_id: 452096779,
+      category: 'area',
+      description: '陕西'
     },
     {
-        "group_id": 126199521,
-        "category": "area",
-        "description": "青海"
+      group_id: 639380166,
+      category: 'area',
+      description: '甘肃'
     },
     {
-        "group_id": 86640877,
-        "category": "area",
-        "description": "宁夏"
+      group_id: 126199521,
+      category: 'area',
+      description: '青海'
     },
     {
-        "group_id": 814698028,
-        "category": "area",
-        "description": "新疆"
+      group_id: 86640877,
+      category: 'area',
+      description: '宁夏'
+    },
+    {
+      group_id: 814698028,
+      category: 'area',
+      description: '新疆'
     }
   ];
   

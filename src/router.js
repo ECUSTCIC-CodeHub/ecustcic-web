@@ -119,7 +119,7 @@ const router = new Router({
           name: "e-sports-detail",
           component: E_sports_detail,
           meta: {
-            title: "CIC-电竞交流群"
+            title: "CIC-交流群"
           }
         },
         {
