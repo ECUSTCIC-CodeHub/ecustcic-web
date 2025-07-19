@@ -29,6 +29,18 @@ export const baseGroups = [
       description: '守望先锋/Overwatch'
     },
     {
+      group_id: 552750103,
+      category: 'game', 
+      description: '三角洲行动/Delta Force',
+      url: 'https://qm.qq.com/q/naXgHoeA48'
+    },
+    {
+      group_id: 792529306,
+      category: 'game', 
+      description: '三角洲行动/Delta Force（有游戏官方的群）',
+      url: 'https://qm.qq.com/q/okL7o715ew'
+    },
+    {
       group_id: 858930629,
       category: 'game', 
       description: '卡拉彼丘/Karapichu',
@@ -118,18 +130,6 @@ export const baseGroups = [
       description: '英勇之地/Brawl Stars'
     },
     {
-      group_id: 552750103,
-      category: 'game', 
-      description: '三角洲行动/Delta Force',
-      url: 'https://qm.qq.com/q/naXgHoeA48'
-    },
-    {
-      group_id: 792529306,
-      category: 'game', 
-      description: '三角洲行动/Delta Force（有游戏官方的群）',
-      url: 'https://qm.qq.com/q/okL7o715ew'
-    },
-    {
       group_id: 343683662,
       category: 'game', 
       description: '绝地求生/PUBG/PlayerUnknown\'s Battlegrounds'
@@ -213,6 +213,12 @@ export const baseGroups = [
       group_id: 760221941,
       category: 'game', 
       description: '中文虚拟歌姬（海湾三校）'
+    },
+    {
+      group_id: 663176075,
+      category: 'game', 
+      description: '蔚蓝档案/Blue Archive/BA',
+      url: 'https://qm.qq.com/q/Tj2OQZNfis'
     },
     // {
     //   group_id: ,
