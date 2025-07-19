@@ -85,7 +85,9 @@ npm run lint
 
 ### 修改交流群信息
 
-编辑 `/src/data/qqGroups.js` 文件。
+添加新群请直接提交[表单](https://n0ytxc474x.feishu.cn/share/base/form/shrcn5SJVIvKbkfDZxQsn0djtng)，已存在群聊需要增加群链接可提 issue / 提交新表单。为保证网站信息安全可靠，新群信息需要人工审核，非实时同步网站。如太久未更新，可提 issue。
+
+![交流群申请表单](ECUSTjiaoliuqun_Application_Form.png)
 
 ### 修改组宣新闻和活动
 

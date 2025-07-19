@@ -105,7 +105,7 @@
         <i class="fas fa-chevron-left"></i> 返回 CIC-电竞
       </router-link>
     </div>
-
+    
     <!-- 复制成功提示 -->
     <div v-if="showCopySuccess" class="copy-notification">
       已复制群号 {{ copiedGroupNumber }} 到剪贴板
@@ -114,7 +114,6 @@
 </template>
 
 <script>
-import { categories } from '@/data/qqGroups';
 export default {
   name: 'e-sports-detail',
   data() {
@@ -125,7 +124,13 @@ export default {
       copiedGroupNumber: '',
       loading: true,
       // defaultAvatar: 'https://qzonestyle.gtimg.cn/qzone/qzact/act/external/tiqq/logo.png',
-      categories: categories, // 使用导入的分类数据
+      categories: [
+        { id: 'game', name: '休闲娱乐', icon: 'fas fa-gamepad' },
+        { id: 'study', name: '学习交流', icon: 'fas fa-book' },
+        { id: 'tech', name: '技术讨论', icon: 'fas fa-code' },
+        { id: 'social', name: '友好社团', icon: 'fas fa-users' },
+        { id: 'area', name: '区域性交流群', icon: 'fas fa-globe' }
+      ],
       groups: [],
       appId: 'cli_a8f1d48265fc500e',
       appSecret: 'u2NfRSgPlrI4KUhba3389eyj3LSa4aGR',
@@ -625,5 +630,4 @@ export default {
 .view-all-events:hover i {
   transform: translateX(-5px);
 }
-
 </style>
