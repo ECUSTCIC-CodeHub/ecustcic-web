@@ -106,6 +106,15 @@
       </router-link>
     </div>
     
+    <div class="form-prompt">
+      <p>群信息维护 <span class="text-muted">|</span> 请通过官方表单提交更新</p>
+      <a href="https://n0ytxc474x.feishu.cn/share/base/form/shrcn5SJVIvKbkfDZxQsn0djtng" 
+        target="_blank" 
+        class="link-underline">
+        立即填写表单 →
+      </a>
+    </div>
+        
     <!-- 复制成功提示 -->
     <div v-if="showCopySuccess" class="copy-notification">
       已复制群号 {{ copiedGroupNumber }} 到剪贴板
@@ -607,6 +616,15 @@ export default {
     margin-right: 10px;
     margin-bottom: 0;
   }
+  
+  /* 移动端群信息维护样式优化 */
+  .form-prompt {
+    width: calc(100% - 30px);
+    margin-left: 15px;
+    margin-right: 15px;
+    max-width: none;
+    padding: 15px;
+  }
 }
 
 .view-all-events {
@@ -629,5 +647,62 @@ export default {
 
 .view-all-events:hover i {
   transform: translateX(-5px);
+}
+
+/* 群信息维护样式 */
+.form-prompt {
+  background-color: #f1f8fe;
+  border: 1px solid #d0e3f7;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 40px auto 20px;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.form-prompt:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.form-prompt p {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.form-prompt .text-muted {
+  color: #95a5a6;
+  margin: 0 8px;
+}
+
+.link-underline {
+  color: #3498db;
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+  transition: all 0.3s;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #3498db;
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover {
+  color: #2980b9;
+}
+
+.link-underline:hover::after {
+  width: 100%;
 }
 </style>
