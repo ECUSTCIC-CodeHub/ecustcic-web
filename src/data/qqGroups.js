@@ -231,6 +231,126 @@ export const baseGroups = [
       group_id: 691245130,
       category: 'social',
       description: '自行车协会'
+    },
+    {
+        "group_id": 866917340,
+        "category": "area",
+        "description": "北京"
+    },
+    {
+        "group_id": 141051938,
+        "category": "area",
+        "description": "天津"
+    },
+    {
+        "group_id": 747525205,
+        "category": "area",
+        "description": "河北"
+    },
+    {
+        "group_id": 432234523,
+        "category": "area",
+        "description": "辽宁"
+    },
+    {
+        "group_id": 330117479,
+        "category": "area",
+        "description": "吉林"
+    },
+    {
+        "group_id": 54565490,
+        "category": "area",
+        "description": "黑龙江"
+    },
+    {
+        "group_id": 820163315,
+        "category": "area",
+        "description": "上海"
+    },
+    {
+        "group_id": 734826683,
+        "category": "area",
+        "description": "江苏"
+    },
+    {
+        "group_id": 794728461,
+        "category": "area",
+        "description": "浙江"
+    },
+    {
+        "group_id": 391466610,
+        "category": "area",
+        "description": "安徽"
+    },
+    {
+        "group_id": 867620811,
+        "category": "area",
+        "description": "福建"
+    },
+    {
+        "group_id": 816812991,
+        "category": "area",
+        "description": "江西"
+    },
+    {
+        "group_id": 84808097,
+        "category": "area",
+        "description": "山东"
+    },
+    {
+        "group_id": 928113034,
+        "category": "area",
+        "description": "河南"
+    },
+    {
+        "group_id": 231962770,
+        "category": "area",
+        "description": "湖北"
+    },
+    {
+        "group_id": 743399952,
+        "category": "area",
+        "description": "湖南"
+    },
+    {
+        "group_id": 106195152,
+        "category": "area",
+        "description": "四川"
+    },
+    {
+        "group_id": 179761360,
+        "category": "area",
+        "description": "贵州"
+    },
+    {
+        "group_id": 739821317,
+        "category": "area",
+        "description": "云南"
+    },
+    {
+        "group_id": 452096779,
+        "category": "area",
+        "description": "陕西"
+    },
+    {
+        "group_id": 639380166,
+        "category": "area",
+        "description": "甘肃"
+    },
+    {
+        "group_id": 126199521,
+        "category": "area",
+        "description": "青海"
+    },
+    {
+        "group_id": 86640877,
+        "category": "area",
+        "description": "宁夏"
+    },
+    {
+        "group_id": 814698028,
+        "category": "area",
+        "description": "新疆"
     }
   ];
   
@@ -238,5 +358,6 @@ export const baseGroups = [
     { id: 'game', name: '休闲娱乐', icon: 'fas fa-gamepad' },
     { id: 'study', name: '学习交流', icon: 'fas fa-book' },
     { id: 'tech', name: '技术讨论', icon: 'fas fa-code' },
-    { id: 'social', name: '友好社团', icon: 'fas fa-users' }
+    { id: 'social', name: '友好社团', icon: 'fas fa-users' },
+    { id: 'area', name: '区域性交流群', icon: 'fas fa-globe' }
   ];
