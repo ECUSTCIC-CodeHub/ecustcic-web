@@ -203,6 +203,9 @@ export default {
     
     async fetchGroupsFromFeishu() {
       this.loading = true
+      let allGroups = []
+      let pageToken = null
+      let hasMore = true
       
       try {
         // 获取访问令牌
@@ -212,63 +215,88 @@ export default {
           return
         }
         
-        // 获取飞书表格数据
-        const response = await fetch('https://cors-anywhere.herokuapp.com/https://feishuapi.bestzyq.cn/open-apis/bitable/v1/apps/Y9HBbtQoxawALxs3XK8cOY9pn8g/tables/tblVq51wR2ZPVax4/records?page_size=100', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+        // 循环获取所有页的数据
+        while (hasMore) {
+          // 构建请求体，包含页码令牌（如果有）
+          const requestBody = pageToken ? { page_token: pageToken } : {}
+          
+          // 获取飞书表格数据 - 使用新的API端点和POST方法
+          const response = await fetch('https://feishuapi.bestzyq.cn/open-apis/bitable/v1/apps/Y9HBbtQoxawALxs3XK8cOY9pn8g/tables/tblVq51wR2ZPVax4/records/search?page_size=50', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+          })
+          
+          const data = await response.json()
+          if (data.code === 0) {
+            // 处理数据，只保留"是否可信"为true的记录
+            const pageGroups = data.data.items
+              .filter(item => item.fields['是否可信'] === true)
+              .map(item => {
+                // 将飞书数据映射到我们需要的格式
+                const groupId = item.fields['QQ群号']
+                // 避免使用可选链操作符，改用传统方式检查属性
+                const url = (item.fields['加群链接'] && item.fields['加群链接'].link) || null
+                
+                // 处理描述字段，现在是一个对象数组
+                let description = '暂无描述'
+                if (item.fields['描述'] && Array.isArray(item.fields['描述']) && item.fields['描述'].length > 0) {
+                  // 将所有文本片段连接起来
+                  description = item.fields['描述']
+                    .filter(desc => desc.type === 'text')
+                    .map(desc => desc.text)
+                    .join('')
+                }
+                
+                return {
+                  group_id: String(groupId), // 确保群号是字符串
+                  group_name: `群组(${groupId})`, // 默认名称
+                  description: description,
+                  category: this.mapCategoryFromFeishu(item.fields['类别']),
+                  url: url,
+                  api_success: false, // 默认API未成功
+                  member_count: 0,
+                  max_member_count: 0
+                }
+              })
+            
+            // 将当前页的群组添加到总列表中
+            allGroups = [...allGroups, ...pageGroups]
+            
+            // 检查是否有更多页
+            hasMore = data.data.has_more
+            pageToken = data.data.page_token
+          } else {
+            console.error('获取飞书数据失败:', data)
+            hasMore = false
+          }
+        }
+        
+        // 获取群组详细信息
+        const promises = allGroups.map(async group => {
+          try {
+            const response = await fetch(`https://qqapi.ecustvr.top/api/get.info.group?group=${group.group_id}`)
+            const data = await response.json()
+            if (data.code === 200) {
+              return {
+                ...group,
+                group_name: data.data.group_name,
+                member_count: data.data.member_count,
+                max_member_count: data.data.max_member_count,
+                api_success: true
+              }
+            }
+            return group
+          } catch (error) {
+            console.error(`获取群 ${group.group_id} 信息失败:`, error)
+            return group
           }
         })
         
-        const data = await response.json()
-        if (data.code === 0) {
-          // 处理数据，只保留"是否可信"为true的记录
-          const groups = data.data.items
-            .filter(item => item.fields['是否可信'] === true)
-            .map(item => {
-              // 将飞书数据映射到我们需要的格式
-              const groupId = item.fields['QQ群号']
-              // 避免使用可选链操作符，改用传统方式检查属性
-              const url = (item.fields['加群链接'] && item.fields['加群链接'].link) || null
-              
-              return {
-                group_id: groupId,
-                group_name: `群组(${groupId})`, // 默认名称
-                description: item.fields['描述'] || '暂无描述',
-                category: this.mapCategoryFromFeishu(item.fields['类别']),
-                url: url,
-                api_success: false, // 默认API未成功
-                member_count: 0,
-                max_member_count: 0
-              }
-            })
-          
-          // 获取群组详细信息
-          const promises = groups.map(async group => {
-            try {
-              const response = await fetch(`https://qqapi.ecustvr.top/api/get.info.group?group=${group.group_id}`)
-              const data = await response.json()
-              if (data.code === 200) {
-                return {
-                  ...group,
-                  group_name: data.data.group_name,
-                  member_count: data.data.member_count,
-                  max_member_count: data.data.max_member_count,
-                  api_success: true
-                }
-              }
-              return group
-            } catch (error) {
-              console.error(`获取群 ${group.group_id} 信息失败:`, error)
-              return group
-            }
-          })
-          
-          this.groups = await Promise.all(promises)
-        } else {
-          console.error('获取飞书数据失败:', data)
-        }
+        this.groups = await Promise.all(promises)
       } catch (error) {
         console.error('获取群组信息出错:', error)
       } finally {
