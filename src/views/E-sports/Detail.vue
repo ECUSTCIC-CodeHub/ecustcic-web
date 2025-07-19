@@ -217,17 +217,20 @@ export default {
         
         // 循环获取所有页的数据
         while (hasMore) {
-          // 构建请求体，包含页码令牌（如果有）
-          const requestBody = pageToken ? { page_token: pageToken } : {}
+          // 构建URL，将page_token作为查询参数添加（而不是放在请求体中）
+          let url = 'https://feishuapi.bestzyq.cn/open-apis/bitable/v1/apps/Y9HBbtQoxawALxs3XK8cOY9pn8g/tables/tblVq51wR2ZPVax4/records/search?page_size=100'
+          if (pageToken) {
+            url += `&page_token=${pageToken}`
+          }
           
           // 获取飞书表格数据 - 使用新的API端点和POST方法
-          const response = await fetch('https://feishuapi.bestzyq.cn/open-apis/bitable/v1/apps/Y9HBbtQoxawALxs3XK8cOY9pn8g/tables/tblVq51wR2ZPVax4/records/search?page_size=50', {
+          const response = await fetch(url, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({}) // 空请求体，page_token已经在URL中
           })
           
           const data = await response.json()
@@ -269,6 +272,11 @@ export default {
             // 检查是否有更多页
             hasMore = data.data.has_more
             pageToken = data.data.page_token
+            
+            // 如果没有更多数据或没有返回页码令牌，则停止循环
+            if (!hasMore || !pageToken) {
+              break
+            }
           } else {
             console.error('获取飞书数据失败:', data)
             hasMore = false
