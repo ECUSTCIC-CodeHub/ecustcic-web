@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { baseGroups, categories } from '@/data/qqGroups';
+import { categories } from '@/data/qqGroups';
 export default {
   name: 'e-sports-detail',
   data() {
@@ -127,7 +127,9 @@ export default {
       // defaultAvatar: 'https://qzonestyle.gtimg.cn/qzone/qzact/act/external/tiqq/logo.png',
       categories: categories, // 使用导入的分类数据
       groups: [],
-      baseGroups: baseGroups // 使用导入的基础群组数据
+      appId: 'cli_a8f1d48265fc500e',
+      appSecret: 'u2NfRSgPlrI4KUhba3389eyj3LSa4aGR',
+      accessToken: null
     }
   },
   computed: {
@@ -173,44 +175,122 @@ export default {
         this.showCopySuccess = false
       }, 3000)
     },
-    async fetchGroupInfo(groupId) {
+    async getTenantAccessToken() {
       try {
-        const response = await fetch(`https://qqapi.ecustvr.top/api/get.info.group?group=${groupId}`)
+        const response = await fetch('https://feishuapi.bestzyq.cn/open-apis/auth/v3/tenant_access_token/internal', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            app_id: this.appId,
+            app_secret: this.appSecret
+          })
+        })
         const data = await response.json()
-        if (data.code === 200) {
-          return data.data
+        if (data.code === 0) {
+          this.accessToken = data.tenant_access_token
+          return data.tenant_access_token
+        } else {
+          console.error('获取飞书访问令牌失败:', data)
+          return null
         }
-        return null
       } catch (error) {
-        console.error('获取群信息失败:', error)
+        console.error('获取飞书访问令牌出错:', error)
         return null
       }
     },
-    async fetchAllGroupsInfo() {
+    
+    async fetchGroupsFromFeishu() {
       this.loading = true
-      const promises = this.baseGroups.map(async baseGroup => {
-        const info = await this.fetchGroupInfo(baseGroup.group_id)
-        // 即使API失败也返回基础信息
-        return info ? {
-          ...baseGroup,
-          group_name: info.group_name,
-          // avatar: info.avatar,
-          member_count: info.member_count,
-          max_member_count: info.max_member_count,
-          api_success: true  // 标记API是否成功
-        } : {
-          ...baseGroup,
-          group_name: `群组(${baseGroup.group_id})`,
-          api_success: false  // 标记API失败
-        }
-      })
       
-      this.groups = await Promise.all(promises)
-      this.loading = false
+      try {
+        // 获取访问令牌
+        const token = await this.getTenantAccessToken()
+        if (!token) {
+          this.loading = false
+          return
+        }
+        
+        // 获取飞书表格数据
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://feishuapi.bestzyq.cn/open-apis/bitable/v1/apps/Y9HBbtQoxawALxs3XK8cOY9pn8g/tables/tblVq51wR2ZPVax4/records?page_size=100', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        const data = await response.json()
+        if (data.code === 0) {
+          // 处理数据，只保留"是否可信"为true的记录
+          const groups = data.data.items
+            .filter(item => item.fields['是否可信'] === true)
+            .map(item => {
+              // 将飞书数据映射到我们需要的格式
+              const groupId = item.fields['QQ群号']
+              // 避免使用可选链操作符，改用传统方式检查属性
+              const url = (item.fields['加群链接'] && item.fields['加群链接'].link) || null
+              
+              return {
+                group_id: groupId,
+                group_name: `群组(${groupId})`, // 默认名称
+                description: item.fields['描述'] || '暂无描述',
+                category: this.mapCategoryFromFeishu(item.fields['类别']),
+                url: url,
+                api_success: false, // 默认API未成功
+                member_count: 0,
+                max_member_count: 0
+              }
+            })
+          
+          // 获取群组详细信息
+          const promises = groups.map(async group => {
+            try {
+              const response = await fetch(`https://qqapi.ecustvr.top/api/get.info.group?group=${group.group_id}`)
+              const data = await response.json()
+              if (data.code === 200) {
+                return {
+                  ...group,
+                  group_name: data.data.group_name,
+                  member_count: data.data.member_count,
+                  max_member_count: data.data.max_member_count,
+                  api_success: true
+                }
+              }
+              return group
+            } catch (error) {
+              console.error(`获取群 ${group.group_id} 信息失败:`, error)
+              return group
+            }
+          })
+          
+          this.groups = await Promise.all(promises)
+        } else {
+          console.error('获取飞书数据失败:', data)
+        }
+      } catch (error) {
+        console.error('获取群组信息出错:', error)
+      } finally {
+        this.loading = false
+      }
+    },
+    
+    mapCategoryFromFeishu(feishuCategory) {
+      // 将飞书中的类别映射到我们的类别ID
+      const categoryMap = {
+        '学习交流': 'study',
+        '休闲娱乐': 'game',
+        '技术讨论': 'tech',
+        '友好社团': 'social',
+        '区域性交流群': 'area'
+      }
+      
+      return categoryMap[feishuCategory] || 'social' // 默认为social类别
     }
   },
   created() {
-    this.fetchAllGroupsInfo()
+    this.fetchGroupsFromFeishu()
   }
 }
 </script>
