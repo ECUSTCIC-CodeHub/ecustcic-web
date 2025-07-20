@@ -108,7 +108,7 @@
     
     <div class="form-prompt">
       <p>群信息维护 <span class="text-muted">|</span> 请通过官方表单提交更新</p>
-      <a href="https://n0ytxc474x.feishu.cn/share/base/form/shrcn5SJVIvKbkfDZxQsn0djtng" 
+      <a href="https://ecustcic.feishu.cn/share/base/form/shrcn5SJVIvKbkfDZxQsn0djtng" 
         target="_blank" 
         class="link-underline">
         立即填写表单 →
@@ -138,7 +138,8 @@ export default {
         { id: 'study', name: '学习交流', icon: 'fas fa-book' },
         { id: 'tech', name: '技术讨论', icon: 'fas fa-code' },
         { id: 'social', name: '友好社团', icon: 'fas fa-users' },
-        { id: 'area', name: '区域性交流群', icon: 'fas fa-globe' }
+        { id: 'area', name: '区域性交流群', icon: 'fas fa-globe' },
+        { id: 'school', name: '学院群', icon: 'fas fa-university' }
       ],
       groups: [],
       appId: 'cli_a8f1d48265fc500e',
@@ -333,7 +334,8 @@ export default {
         '休闲娱乐': 'game',
         '技术讨论': 'tech',
         '友好社团': 'social',
-        '区域性交流群': 'area'
+        '区域性交流群': 'area',
+        '学院群': 'school'
       }
       
       return categoryMap[feishuCategory] || 'social' // 默认为social类别
