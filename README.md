@@ -26,8 +26,7 @@
 src/data/
 ├── esportsGames.js  # 电竞热门游戏数据
 ├── menu.js          # 技术文档数据
-├── publicityData.js # 组宣新闻和活动数据
-└── qqGroups.js      # QQ交流群数据
+└── publicityData.js # 组宣新闻和活动数据
 ```
 
 ## 开发指南

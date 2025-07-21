@@ -1,3 +1,4 @@
+// 已废弃，请勿修改
 // src/data/qqGroups.js
 export const baseGroups = [
     { 
