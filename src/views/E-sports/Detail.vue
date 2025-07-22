@@ -232,13 +232,13 @@ export default {
         
         // 循环获取所有页的数据
         while (hasMore) {
-          // 构建URL，将page_token作为查询参数添加（而不是放在请求体中）
+          // 构建URL，将page_token作为查询参数添加
           let url = 'https://feishuapi.bestzyq.cn/open-apis/bitable/v1/apps/Y9HBbtQoxawALxs3XK8cOY9pn8g/tables/tblVq51wR2ZPVax4/records/search?page_size=100'
           if (pageToken) {
             url += `&page_token=${pageToken}`
           }
           
-          // 获取飞书表格数据 - 使用新的API端点和POST方法
+          // 获取飞书表格数据
           const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -269,15 +269,54 @@ export default {
                     .join('')
                 }
                 
+                // 处理群名称字段
+                let groupName = `群组(${groupId})`
+                let hasValidGroupName = false
+                if (item.fields['群名称'] && Array.isArray(item.fields['群名称']) && item.fields['群名称'].length > 0) {
+                  const nameText = item.fields['群名称']
+                    .filter(name => name.type === 'text')
+                    .map(name => name.text)
+                    .join('')
+                  
+                  if (nameText.trim() !== '') {
+                    groupName = nameText
+                    hasValidGroupName = true
+                  }
+                }
+                
+                // 处理群人数字段
+                let memberCount = 0
+                let maxMemberCount = 0
+                let hasValidMemberCount = false
+                if (item.fields['群人数'] && Array.isArray(item.fields['群人数']) && item.fields['群人数'].length > 0) {
+                  const memberText = item.fields['群人数']
+                    .filter(member => member.type === 'text')
+                    .map(member => member.text)
+                    .join('')
+                  
+                  // 解析格式为 "1773 / 2000" 的字符串
+                  const parts = memberText.split('/')
+                  if (parts.length === 2) {
+                    memberCount = parseInt(parts[0].trim(), 10) || 0
+                    maxMemberCount = parseInt(parts[1].trim(), 10) || 0
+                    if (memberCount > 0 && maxMemberCount > 0) {
+                      hasValidMemberCount = true
+                    }
+                  }
+                }
+                
+                // 只有当群名称和群人数都有效时，才将 api_success 标记为 true
+                const apiSuccess = hasValidGroupName && hasValidMemberCount
+                
                 return {
                   group_id: String(groupId), // 确保群号是字符串
-                  group_name: `群组(${groupId})`, // 默认名称
+                  group_name: groupName,
                   description: description,
                   category: this.mapCategoryFromFeishu(item.fields['类别']),
                   url: url,
-                  api_success: false, // 默认API未成功
-                  member_count: 0,
-                  max_member_count: 0
+                  api_success: apiSuccess, // 根据群名称和群人数是否有效来决定
+                  member_count: memberCount,
+                  max_member_count: maxMemberCount
                 }
               })
             
@@ -298,28 +337,7 @@ export default {
           }
         }
         
-        // 获取群组详细信息
-        const promises = allGroups.map(async group => {
-          try {
-            const response = await fetch(`https://qqapi.ecustvr.top/api/get.info.group?group=${group.group_id}`)
-            const data = await response.json()
-            if (data.code === 200) {
-              return {
-                ...group,
-                group_name: data.data.group_name,
-                member_count: data.data.member_count,
-                max_member_count: data.data.max_member_count,
-                api_success: true
-              }
-            }
-            return group
-          } catch (error) {
-            console.error(`获取群 ${group.group_id} 信息失败:`, error)
-            return group
-          }
-        })
-        
-        this.groups = await Promise.all(promises)
+        this.groups = allGroups
       } catch (error) {
         console.error('获取群组信息出错:', error)
       } finally {
