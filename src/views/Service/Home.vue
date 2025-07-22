@@ -42,7 +42,7 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="card" style="width: 18rem;">
+          <div class="card">
             <br />
             <img
               src="../../assets/img/Home/serve.png"
@@ -93,12 +93,17 @@
 }
 
 .service-info-card {
-  background: white;
+  background: hsla(var(--primary), 80%, 60%, 0.08);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   margin-bottom: 2rem;
-  border-left: 4px solid var(--primary);
+}
+
+.service-info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
 .info-content {
@@ -181,12 +186,12 @@
 }
 
 .service-tile {
-  background: white;
+  background: hsla(var(--hue), 80%, 60%, 0.08);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   transition: all 0.3s ease;
-  border-top: 4px solid hsl(var(--hue), 80%, 60%);
+  border: 2px solid hsla(var(--hue), 80%, 60%, 0.4);
 }
 
 .service-tile:hover {
@@ -242,6 +247,16 @@
 .meta-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card {
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
 @media (max-width: 768px) {
