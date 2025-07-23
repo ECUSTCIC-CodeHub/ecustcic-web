@@ -151,14 +151,14 @@
             </li>
             <li class="list-inline-item" id="qq">
               <a
-                href="https://qm.qq.com/q/EgVxJiI9TG"
+                href="https://qm.qq.com/q/E35YnehMqY"
                 data-toggle="popover"
                 data-animation="true"
                 data-container="#qq"
                 data-placement="top"
                 data-trigger="manual"
                 data-html="true"
-                data-content="<img src='/img/cic_qq.jpeg' width='100%'>"
+                data-content="<img src='/img/cic_qq_new.jpg' width='100%'>"
               >
                 <i class="fab fa-qq fa-fw"></i>
               </a>

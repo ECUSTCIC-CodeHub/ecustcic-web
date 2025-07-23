@@ -50,7 +50,7 @@
           <!-- 传播矩阵 -->
           <section class="sidebar-section">
             <div class="qr-card">
-              <img src="/img/cic_qqcode.png" alt="QQ群二维码" class="qr-image">
+              <img src="/img/cic_qqcode_new.png" alt="QQ群二维码" class="qr-image">
               <h4>QQ交流群</h4>
               <p>扫码加入，与我们交流互动</p>
             </div>
@@ -68,7 +68,7 @@
         <h2 class="section-title">加入我们</h2>
         <div class="join-container">
           <p class="join-text">欢迎加入QQ群，与我们一起交流、学习、成长！</p>
-          <a href="https://qm.qq.com/q/EgVxJiI9TG" class="btn btn-primary btn-join" target="_blank">
+          <a href="https://qm.qq.com/q/E35YnehMqY" class="btn btn-primary btn-join" target="_blank">
             <i class="fab fa-qq fa-fw"></i> 加入QQ群
           </a>
         </div>
