@@ -59,116 +59,6 @@
                 Wiki
               </a>
             </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                id="dropdown-other"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-                data-dropdown-hover
-              >
-                <i class="fa fa-wrench fa-fw" aria-hidden="true"></i>
-                其他
-              </a>
-              <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-other">
-                <li>
-                  <a class="dropdown-item" href="/others/sign">
-                    <i class="far fa-calendar-check fa-fw mr-2"></i>签到
-                  </a>
-                </li>
-                <li data-stop-propagation>
-                  <div class="dropdown dropright dropdown-submenu">
-                    <a
-                      class="dropdown-item"
-                      role="button"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      data-submenu
-                    >
-                      <i class="far fa-circle fa-fw mr-2"></i>OCR
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-ocr">
-                      <li>
-                        <a class="dropdown-item" href="/others/ocr?tab=general">
-                          <i class="far fa-dot-circle fa-fw"></i>
-                          通用文字识别
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="/others/ocr?tab=idcard">
-                          <i class="far fa-dot-circle fa-fw"></i>
-                          身份证识别
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-
-                <!-- <li data-stop-propagation>
-                  <div class="dropdown dropright dropdown-submenu">
-                    <a
-                      class="dropdown-item"
-                      role="button"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      aria-labelledby="dropdown-face"
-                      data-submenu
-                    >
-                      <i class="fa fa-meh-o fa-fw mr-2"></i>人脸识别
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-face">
-                      <a class="dropdown-item" href="#">
-                        <i class="far fa-circle fa-fw mr-2"></i>
-                      </a>
-                    </div>
-                  </div>
-                </li>
-                <li data-stop-propagation>
-                  <div class="dropdown dropright dropdown-submenu">
-                    <a
-                      class="dropdown-item"
-                      role="button"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      aria-labelledby="dropdown-face"
-                      data-submenu
-                    >
-                      <i class="fa fa-image fa-fw mr-2"></i>图片特效
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-face">
-                      <a class="dropdown-item" href="#">
-                        <i class="far fa-circle fa-fw mr-2"></i>
-                      </a>
-                    </div>
-                  </div>
-                </li>
-                <li data-stop-propagation>
-                  <div class="dropdown dropright dropdown-submenu">
-                    <a
-                      class="dropdown-item"
-                      role="button"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      aria-labelledby="dropdown-face"
-                      data-submenu
-                    >
-                      <i class="fa fa-camera-retro fa-fw mr-2"></i>图片识别
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-face">
-                      <a class="dropdown-item" href="#">
-                        <i class="far fa-circle fa-fw mr-2"></i>
-                      </a>
-                    </div>
-                  </div>
-                </li>-->
-              </ul>
-            </li>
             <li class="nav-item" id="nav-about">
               <router-link class="nav-link" to="/about">
                 <i class="fa fa-info-circle fa-fw" aria-hidden="true"></i>
@@ -179,7 +69,7 @@
 
           <div class="my-2 my-lg-0">
             <ul class="navbar-nav mr-auto">
-              <template v-if="token">
+              <!-- <template v-if="token">
                 <li class="nav-item dropdown" id="dropmenu">
                   <a
                     role="button"
@@ -212,8 +102,8 @@
                     </a>
                   </div>
                 </li>
-              </template>
-              <template v-else>
+              </template> -->
+              <!-- <template v-else>
                 <li class="nav-item">
                   <router-link class="user-link" to="/user/login">
                     <i class="fa fa-sign-in fa-fw" aria-hidden="true"></i>登录
@@ -224,7 +114,7 @@
                     <i class="fa fa-edit fa-fw" aria-hidden="true"></i>注册
                   </router-link>
                 </li>
-              </template>
+              </template> -->
             </ul>
           </div>
         </div>
