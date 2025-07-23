@@ -117,28 +117,6 @@
                       <div class="card-body">自1998年成立以来，多次获得五星级社团、十佳社团荣誉</div>
                     </div>
                   </div>
-                  <!-- <div class="card">
-                    <div class="card-header" role="tab" id="headerThree">
-                      <div class="card-title">
-                        <a
-                          class="card-title-text font-weight-bold text-decoration-none collapsed"
-                          data-toggle="collapse"
-                          href="#collapseThree"
-                          aria-expanded="false"
-                          aria-controls="collapseThree"
-                        >Exceptional Frontend Framework</a>
-                      </div>
-                    </div>
-                    <div
-                      class="card-collapse collapse"
-                      id="collapseThree"
-                      role="tabpanel"
-                      data-parent="#history-card"
-                      aria-labelledby="headerThree"
-                    >
-                      <div class="card-body">hhhhhhhhhhhh</div>
-                    </div>
-                  </div>-->
                 </div>
               </div>
             </div>
@@ -749,7 +727,6 @@ export default {
         fitToSection: false,
         loopBottom: true,
         responsiveWidth: 768
-        // scrollOverflow: true
       },
       history: history,
       tech: tech,
@@ -761,7 +738,6 @@ export default {
   mounted() {
     $(".footer").css("display", "none");
 
-    // magnific-popup
     $(".image-popup").magnificPopup({
       type: "image"
     });

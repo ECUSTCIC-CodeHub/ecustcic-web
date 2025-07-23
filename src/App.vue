@@ -31,8 +31,8 @@
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/tech">
-                <i class="fa fa-code fa-fw" aria-hidden="true"></i>
-                技术
+                <i class="fa fa-flag fa-fw" aria-hidden="true"></i>
+                指南
               </router-link>
             </li>
             <li class="nav-item">
