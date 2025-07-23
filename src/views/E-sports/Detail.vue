@@ -62,7 +62,7 @@
               <div class="group-info">
                 <h3>
                   {{ group.group_name }}
-                  <span v-if="!group.api_success" class="badge bg-warning">API信息获取失败</span>
+                  <span v-if="!group.api_success" class="badge bg-warning">信息不完整</span>
                 </h3>
                 <p class="group-id">{{ group.group_id }}</p>
                 <p class="group-desc">{{ group.description }}</p>
