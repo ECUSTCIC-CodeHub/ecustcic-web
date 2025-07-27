@@ -19,14 +19,14 @@ master:
             auth_type: https
             username: ${GITEE_USERNAME}
             password: ${GITEE_ACCESS_TOKEN}
-    - name: edgeone
-      imports: https://cnb.cool/ecustcic/key/-/blob/main/env.yml
-      stages:
-        # 构建当前项目
-        - name: Build Current Project
-          image: node:20
-          script: node -v && npm install && npm run build
-        # 将构建输出部署到 EdgeOne Pages
-        - name: Deploy to EdgeOne Pages
-          image: node:20
-          script: npx edgeone pages deploy ./dist -n ecustcic -t $EDGEONE_API_TOKEN
+    # - name: edgeone
+    #   imports: https://cnb.cool/ecustcic/key/-/blob/main/env.yml
+    #   stages:
+    #     # 构建当前项目
+    #     - name: Build Current Project
+    #       image: node:20
+    #       script: node -v && npm install && npm run build
+    #     # 将构建输出部署到 EdgeOne Pages
+    #     - name: Deploy to EdgeOne Pages
+    #       image: node:20
+    #       script: npx edgeone pages deploy ./dist -n ecustcic -t $EDGEONE_API_TOKEN
