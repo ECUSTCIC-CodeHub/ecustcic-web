@@ -121,7 +121,7 @@
           class="fas fa-chevron-right"></i></router-link>
 
       <!-- 最新公告 -->
-      <section class="news-section">
+      <!-- <section class="news-section">
         <h2 class="section-title">最新公告</h2>
         <div class="news-list">
           <div class="news-card"
@@ -139,10 +139,10 @@
           </div>
         </div>
         <a href="https://ecustegame.top/#/news" class="view-all-events">查看全部公告 <i class="fas fa-chevron-right"></i></a>
-      </section>
+      </section> -->
 
       <!-- 最新活动 -->
-      <section class="news-section">
+      <!-- <section class="news-section">
         <h2 class="section-title">最新活动</h2>
         <div class="news-list">
           <div class="news-card" 
@@ -160,10 +160,10 @@
           </div>
         </div>
         <a href="https://ecustegame.top/#/events" class="view-all-events">查看全部活动 <i class="fas fa-chevron-right"></i></a>
-      </section>
+      </section> -->
 
       <!-- 最新赛事 -->
-      <section class="events-section">
+      <!-- <section class="events-section">
         <h2 class="section-title">最新赛事</h2>
         <div class="event-list">
           <div class="event-card" v-for="event in events.slice(0, 3)" :key="event.title">
@@ -182,7 +182,7 @@
           </div>
         </div>
         <a href="https://ecustegame.top/games.html" class="view-all-events">查看全部赛事 <i class="fas fa-chevron-right"></i></a>
-      </section>
+      </section> -->
     </div>
   </div>
 </template>
@@ -197,16 +197,16 @@ export default {
   data() {
     return {
       games: esportsGames,
-      newsData: [],
-      huodong: [],
-      events: []
+      // newsData: [],
+      // huodong: [],
+      // events: []
     }
   },
-  mounted() {
-    this.fetchNewsData();
-    this.fetchHuodong();
-    this.fetchEvents();
-  },
+  // mounted() {
+  //   this.fetchNewsData();
+  //   this.fetchHuodong();
+  //   this.fetchEvents();
+  // },
   methods: {
     getDay(dateStr) {
       return new Date(dateStr).getDate()
@@ -214,45 +214,45 @@ export default {
     getMonth(dateStr) {
       return new Date(dateStr).toLocaleString('zh-CN', { month: 'long' })
     },
-    async fetchNewsData() {
-      try {
-        const response = await fetch('https://ecustegame.top/assets/index.js');
-        const jsContent = await response.text();
-        const newsDataMatch = jsContent.match(/const newsData = (\[.*?\])/s);
-        if (newsDataMatch) {
-          const parseData = new Function(`return ${newsDataMatch[1]}`);
-          this.newsData = parseData();
-        }
-      } catch (err) {
-        console.error("加载失败:", err);
-      }
-    },
-    async fetchHuodong() {
-      try {
-        const response = await fetch('https://ecustegame.top/assets/index.js');
-        const jsContent = await response.text();
-        const huodongMatch = jsContent.match(/const events = (\[.*?\])/s);
-        if (huodongMatch) {
-          const parseData = new Function(`return ${huodongMatch[1]}`);
-          this.huodong = parseData();
-        }
-      } catch (err) {
-        console.error("加载失败:", err);
-      }
-    },
-    async fetchEvents() {
-      try {
-        const response = await fetch('https://ecustegame.top/assets/games.js');
-        const jsContent = await response.text();
-        const EventsMatch = jsContent.match(/const games = (\[.*?\])/s);
-        if (EventsMatch) {
-          const parseData = new Function(`return ${EventsMatch[1]}`);
-          this.events = parseData();
-        }
-      } catch (err) {
-        console.error("加载失败:", err);
-      }
-    }
+    // async fetchNewsData() {
+    //   try {
+    //     const response = await fetch('https://ecustegame.top/assets/index.js');
+    //     const jsContent = await response.text();
+    //     const newsDataMatch = jsContent.match(/const newsData = (\[.*?\])/s);
+    //     if (newsDataMatch) {
+    //       const parseData = new Function(`return ${newsDataMatch[1]}`);
+    //       this.newsData = parseData();
+    //     }
+    //   } catch (err) {
+    //     console.error("加载失败:", err);
+    //   }
+    // },
+    // async fetchHuodong() {
+    //   try {
+    //     const response = await fetch('https://ecustegame.top/assets/index.js');
+    //     const jsContent = await response.text();
+    //     const huodongMatch = jsContent.match(/const events = (\[.*?\])/s);
+    //     if (huodongMatch) {
+    //       const parseData = new Function(`return ${huodongMatch[1]}`);
+    //       this.huodong = parseData();
+    //     }
+    //   } catch (err) {
+    //     console.error("加载失败:", err);
+    //   }
+    // },
+    // async fetchEvents() {
+    //   try {
+    //     const response = await fetch('https://ecustegame.top/assets/games.js');
+    //     const jsContent = await response.text();
+    //     const EventsMatch = jsContent.match(/const games = (\[.*?\])/s);
+    //     if (EventsMatch) {
+    //       const parseData = new Function(`return ${EventsMatch[1]}`);
+    //       this.events = parseData();
+    //     }
+    //   } catch (err) {
+    //     console.error("加载失败:", err);
+    //   }
+    // }
   }
 }
 </script>
