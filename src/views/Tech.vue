@@ -83,27 +83,16 @@ export default {
     // 检查是否是从404.html重定向过来的
     console.log('Tech组件已挂载，检查URL参数')
     
-    // 检查URL参数中是否有文档标题
-    const urlParams = new URLSearchParams(window.location.search)
-    const docTitle = urlParams.get('doc') // URLSearchParams.get()已经会自动解码
-    
-    if (docTitle) {
-      console.log('从URL获取的文档标题:', docTitle)
-      
-      // 尝试根据标题找到对应的路径
-      const docPath = this.getDocPath(docTitle)
+    // 检查URL参数中是否有文档路径
+      const urlParams = new URLSearchParams(window.location.search)
+      const docPath = urlParams.get('doc') // URLSearchParams.get()已经会自动解码
       
       if (docPath) {
-        // 如果找到了路径，加载该文档
-        console.log('找到对应路径:', docPath)
+        console.log('从URL获取的文档路径:', docPath)
+        
+        // 直接使用路径加载文档
         this.loadMarkdown(docPath, true)
       } else {
-        // 如果标题不匹配任何菜单项，可能是直接使用的路径
-        // 尝试直接使用作为路径
-        console.log('未找到对应路径，尝试直接使用:', docTitle)
-        this.loadMarkdown(docTitle, true)
-      }
-    } else {
       // 否则加载默认文档
       console.log('加载默认文档')
       this.loadMarkdown(this.menuItems[0].path, true)
@@ -112,16 +101,11 @@ export default {
     // 添加事件监听器来处理浏览器的前进/后退按钮操作
     window.addEventListener('popstate', () => {
       const newUrlParams = new URLSearchParams(window.location.search)
-      const newDocTitle = newUrlParams.get('doc') // URLSearchParams.get()已经会自动解码
+      const newDocPath = newUrlParams.get('doc') // URLSearchParams.get()已经会自动解码
       
-      if (newDocTitle) {
-        const newDocPath = this.getDocPath(newDocTitle)
-        if (newDocPath) {
-          this.loadMarkdown(newDocPath, true)
-        } else {
-          // 尝试直接使用作为路径
-          this.loadMarkdown(newDocTitle, true)
-        }
+      if (newDocPath) {
+        // 直接使用路径加载文档
+        this.loadMarkdown(newDocPath, true)
       } else {
         this.loadMarkdown(this.menuItems[0].path, true)
       }
@@ -152,34 +136,10 @@ export default {
       return pathParts[pathParts.length - 1].replace('.md', '')
     },
     
-    // 根据标题获取文档路径
-    getDocPath(titlePath) {
-      // 检查是否包含斜杠，表示是"父菜单/子菜单"格式
-      if (titlePath.includes('/')) {
-        const [parentTitle, childTitle] = titlePath.split('/')
-        
-        // 查找匹配的父菜单
-        for (const item of this.menuItems) {
-          if (item.title === parentTitle && item.children) {
-            // 在子菜单中查找匹配的项
-            for (const child of item.children) {
-              if (child.title === childTitle) {
-                return child.path
-              }
-            }
-          }
-        }
-      } else {
-        // 如果没有斜杠，则是顶层菜单项
-        for (const item of this.menuItems) {
-          if (item.title === titlePath) {
-            return item.path
-          }
-        }
-      }
-      
-      // 如果找不到匹配的路径，返回null
-      return null
+    // 简化的路径查找函数，直接返回路径（因为我们现在使用路径作为参数）
+    getDocPath(docPath) {
+      // 现在URL参数直接是路径，所以可以直接返回
+      return docPath
     },
     
     async loadMarkdown(path, isInitialLoad = false) {
@@ -191,17 +151,14 @@ export default {
         // 每次加载新文档时滚动到页面顶部
         window.scrollTo({ top: 0, behavior: 'smooth' })
         
-        // 获取文档标题（可能包含父菜单/子菜单格式）
-        const docTitle = this.getDocTitle(path)
-        
         // 检查是否是外部URL
         const isExternalUrl = path.startsWith('http://') || path.startsWith('https://')
         
         // 只有对内部路径更新URL查询参数
         if (!isExternalUrl) {
-          // 更新URL查询参数，使用标题而不是路径
+          // 更新URL查询参数，使用路径而不是标题
           const url = new URL(window.location)
-          url.searchParams.set('doc', docTitle)
+          url.searchParams.set('doc', path)
           
           // 只有在非初始加载时才更新历史记录
           // 这样可以避免刷新页面时重复添加历史记录

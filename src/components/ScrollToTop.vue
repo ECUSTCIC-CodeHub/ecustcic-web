@@ -32,13 +32,8 @@ export default {
       this.scrollPosition = window.pageYOffset
     },
     scrollToTop() {
-      // 使用jQuery实现平滑滚动效果
-      if (window.$) {
-        $('html, body').animate({ scrollTop: 0 }, 500)
-      } else {
-        // 降级方案：不使用动画
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
+      // 使用原生平滑滚动实现
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 }
