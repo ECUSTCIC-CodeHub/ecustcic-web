@@ -1,7 +1,7 @@
 export const menuItems = [
   {
     title: '华东理工大学课程攻略共享计划', 
-    path: 'https://cnb.ecustvr.top/ecustcic/ecust-CourseShare/-/git/raw/master/Readme.md',
+    path: '/docs/ecust-CourseShare.md',
     icon: 'fa-book'
   },
   { 
@@ -21,6 +21,11 @@ export const menuItems = [
       {
         title: '搬迁徐汇校区网络问题',
         path: '/docs/faq/xuhuinetwork.md',
+        icon: 'fa-wifi'
+      },
+      {
+        title: '校园网连接问题解决方案',
+        path: '/docs/faq/campus_network_connection.md',
         icon: 'fa-wifi'
       }
     ]
