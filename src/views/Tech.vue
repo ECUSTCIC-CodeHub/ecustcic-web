@@ -188,6 +188,9 @@ export default {
         this.content = response.data
         this.currentPath = path
         
+        // 每次加载新文档时滚动到页面顶部
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        
         // 获取文档标题（可能包含父菜单/子菜单格式）
         const docTitle = this.getDocTitle(path)
         

@@ -58,6 +58,10 @@ const router = new Router({
   base: "/",
   linkActiveClass: "active",
   linkExactActiveClass: "exact-active",
+  scrollBehavior() {
+    // 始终滚动到顶部
+    return { x: 0, y: 0 }
+  },
   routes: [
     // 主页
     {

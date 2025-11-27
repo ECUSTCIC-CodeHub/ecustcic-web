@@ -190,11 +190,7 @@
         </div>
       </div>
     </footer>
-    <back-to-top bottom="100px" right="50px">
-      <button type="button" class="btn btn-light">
-        <i class="fa fa-chevron-up"></i>
-      </button>
-    </back-to-top>
+    <ScrollToTop />
   </div>
 </template>
 
@@ -538,6 +534,7 @@ body,
 import $ from "jquery";
 import Identicon from "identicon.js";
 import { Hash } from "crypto";
+import ScrollToTop from './components/ScrollToTop.vue';
 export default {
   data() {
     return {
@@ -558,6 +555,9 @@ export default {
       this.$store.commit("logout");
       this.$router.go(0);
     }
+  },
+  components: {
+    ScrollToTop
   },
   computed: {
     name: function() {
