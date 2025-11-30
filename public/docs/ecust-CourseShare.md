@@ -84,7 +84,7 @@
 
 Fork 这个项目，在您的仓库里的对应位置上传文件，提交后创建 Pull Request 等待合并
 
-![PR](\docs\ecust-CourseShare\pr.png)
+![PR](/docs/ecust-CourseShare/pr.png)
 
 VSCode插件 *[GitHub Repositories](https://marketplace.visualstudio.com/items?itemName=GitHub.remotehub)* 可用于快速修改仓库
 
