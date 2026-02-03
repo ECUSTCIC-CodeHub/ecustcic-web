@@ -2,16 +2,9 @@ master:
   push:
     - name: sync
       runner:
-        cpus: 2
+        cpus: 1
       imports: https://cnb.cool/ecustcic/key/-/blob/main/env.yml
       stages:
-        - name: sync to github
-          image: tencentcom/git-sync
-          settings:
-            target_url: https://github.com/ECUSTCIC-CodeHub/ecustcic-web.git
-            auth_type: https
-            username: ${GITHUB_USERNAME}
-            password: ${GITHUB_ACCESS_TOKEN}
         - name: sync to gitee
           image: tencentcom/git-sync
           settings:
@@ -19,6 +12,15 @@ master:
             auth_type: https
             username: ${GITEE_USERNAME}
             password: ${GITEE_ACCESS_TOKEN}
+            force: true
+        - name: sync to github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/ECUSTCIC-CodeHub/ecustcic-web.git
+            auth_type: https
+            username: ${GITHUB_USERNAME}
+            password: ${GITHUB_ACCESS_TOKEN}
+            force: true
     # - name: edgeone
     #   imports: https://cnb.cool/ecustcic/key/-/blob/main/env.yml
     #   stages:
