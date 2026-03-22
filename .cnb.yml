@@ -21,14 +21,20 @@ master:
             username: ${GITHUB_USERNAME}
             password: ${GITHUB_ACCESS_TOKEN}
             force: true
-    # - name: edgeone
-    #   imports: https://cnb.cool/ecustcic/key/-/blob/main/env.yml
-    #   stages:
-    #     # 构建当前项目
-    #     - name: Build Current Project
-    #       image: node:20
-    #       script: node -v && npm install && npm run build
-    #     # 将构建输出部署到 EdgeOne Pages
-    #     - name: Deploy to EdgeOne Pages
-    #       image: node:20
-    #       script: npx edgeone pages deploy ./dist -n ecustcic -t $EDGEONE_API_TOKEN
+    - name: edgeone
+      runner:
+        cpus: 2
+      imports: https://cnb.cool/ecustcic/key/-/blob/main/env.yml
+      stages:
+        # 构建当前项目
+        - name: Build Current Project
+          image: docker.cnb.cool/arsrna/dev-env/node22
+          script: |
+            node -v
+            npm config set registry http://mirrors.tencent.com/npm/
+            npm install
+            npm run build
+        # 将构建输出部署到 EdgeOne Pages
+        - name: Deploy to EdgeOne Pages
+          image: tencentcom/deploy-eopages:latest
+          script: edgeone pages deploy ./dist -n ecustcic -t $EDGEONE_API_TOKEN
