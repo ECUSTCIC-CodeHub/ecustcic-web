@@ -1,11 +1,13 @@
 {
-  "name": "www-ecust-cic-com",
+  "name": "www-ecustcic-com",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "vue-cli-service build && npm run docs:build",
+    "lint": "vue-cli-service lint",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs && node scripts/docs-postbuild.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -46,6 +48,8 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "lodash.template": "^4.5.0",
+    "vue-template-compiler": "^2.6.10",
+    "vuepress": "^1.9.10"
   }
 }

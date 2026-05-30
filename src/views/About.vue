@@ -140,7 +140,7 @@
                       <div class="content-middle">
                         <h3 class="content-card-title">技术部</h3>
                         <p class="content-card-text">技术讲座、项目开发、技术比赛</p>
-                        <router-link class="btn btn-sm content-card-btn" to="/tech">More</router-link>
+                        <a class="btn btn-sm content-card-btn" href="/tech/">More</a>
                       </div>
                     </div>
                   </div>
@@ -148,9 +148,9 @@
                     <div class="content-table content-arrow-left content-arrow-green overlay">
                       <div class="overlay-wrapper">
                         <div class="overlay-content">
-                          <router-link to="/tech">
+                          <a href="/tech/">
                             <i class="fa fa-link fa-fw"></i>
-                          </router-link>
+                          </a>
                           <a class="image-popup" :href="tech">
                             <i class="fa fa-search"></i>
                           </a>

@@ -1,8 +1,15 @@
 .DS_Store
 node_modules
 /dist
+
+# VuePress 构建产物（由 docs/ 生成，无需入库）
+/public/tech/
+
+# Live2D 模型文件
 /public/live2d/model/*
 !.gitkeep
+
+# 文档
 *.doc
 *.docx
 *.pdf
@@ -16,10 +23,12 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+serve_log*
 
 # Editor directories and files
 .idea
 .vscode
+.atomcode
 *.suo
 *.ntvs*
 *.njsproj

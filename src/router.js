@@ -7,8 +7,7 @@ import Home from "@/views/Home.vue";
 // 活动
 import Activity from "@/views/Activity.vue";
 
-// 技术
-import Tech from '@/views/Tech.vue'
+// 技术 - 已迁移至 VuePress，无需路由
 
 // 电竞
 import E_sports from '@/views/E-sports/E-sports.vue'
@@ -80,15 +79,6 @@ const router = new Router({
       meta: {
         title: "CIC-活动"
       }
-    },
-    // 技术
-    {
-      path: '/tech',
-      name: 'tech',
-      meta: {
-        title: 'CIC-技术'
-      },
-      component: Tech
     },
     // 组宣
     {

@@ -18,7 +18,7 @@
       <hr />
       <div class="row">
         <div class="col-md-6 mb-3">
-          <router-link class="tdn" to="/tech">
+          <a class="tdn" href="/tech/">
             <div class="hover media shadow-sm wow fadeInLeft">
               <img src="@/assets/img/Home/tech.png" class="mr-3" alt="技术" width="100" height="100" />
               <div class="media-body">
@@ -26,7 +26,7 @@
                 <h5 class="mt-0 font-weight-bold">技术部</h5>这里有大佬有萌新，但他们都热爱计算机。
               </div>
             </div>
-          </router-link>
+          </a>
         </div>
         <div class="col-md-6 mb-3">
           <router-link class="tdn" to="/service">
