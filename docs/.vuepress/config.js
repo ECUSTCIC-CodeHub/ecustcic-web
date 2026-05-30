@@ -22,7 +22,8 @@ module.exports = {
           collapsable: false,
           children: [
             '/learning/ecust-CourseShare/',
-            '/learning/library/'
+            '/learning/library/',
+            '/learning/ai'
           ]
         },
         {
