@@ -18,7 +18,7 @@ title: 学习资源
 
 [查看图书数据库 →](/learning/library/)
 
-## CIC 免费 API 网关
+## 免费大模型 API 网关
 
 面向校内同学的免费大模型 API，统一认证即可使用，支持 DeepSeek 等模型。
 
