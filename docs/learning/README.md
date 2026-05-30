@@ -23,3 +23,9 @@ title: 学习资源
 面向校内同学的免费大模型 API，统一认证即可使用，支持 DeepSeek 等模型。
 
 [查看 API 网关 →](/learning/ai/)
+
+## NIC 域名分发系统
+
+面向校内同学的免费域名分发服务，提供 `cic.su`、`cic.cool` 等根域名的子域名申请。
+
+[查看域名分发系统 →](/learning/nic/)

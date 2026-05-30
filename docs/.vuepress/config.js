@@ -23,7 +23,8 @@ module.exports = {
           children: [
             '/learning/ecust-CourseShare/',
             '/learning/library/',
-            '/learning/ai/'
+            '/learning/ai/',
+            '/learning/nic/'
           ]
         },
         {
