@@ -36,7 +36,7 @@ function createHtmlAliases(dir) {
   }
 }
 
-// Step 2: 修复"返回主站"链接
+// Step 2: 修复指向主站的链接
 function fixHomeLinks(dir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
@@ -45,13 +45,24 @@ function fixHomeLinks(dir) {
       fixHomeLinks(fullPath);
     } else if (entry.name.endsWith('.html')) {
       let content = fs.readFileSync(fullPath, 'utf-8');
+      let modified = false;
+
       // 替换"返回主站"对应的 href="/tech/" 为 href="/"
-      const newContent = content.replace(
-        /href="\/tech\/"(>[^<]*返回主站)/g,
+      const r1 = content.replace(
+        /href="\/tech\/"([^>]*>\s*返回主站)/g,
         'href="/"$1'
       );
-      if (newContent !== content) {
-        fs.writeFileSync(fullPath, newContent, 'utf-8');
+      if (r1 !== content) modified = true;
+
+      // 替换 logo (home-link) 的 href="/tech/" 为 href="/"
+      const r2 = r1.replace(
+        /href="\/tech\/"([^>]*class="home-link)/g,
+        'href="/"$1'
+      );
+      if (r2 !== r1) modified = true;
+
+      if (modified) {
+        fs.writeFileSync(fullPath, r2, 'utf-8');
         console.log(`Fixed home link: ${path.relative(distDir, fullPath)}`);
       }
     }
