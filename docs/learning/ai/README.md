@@ -96,7 +96,7 @@ Claude Code 是 Anthropic 推出的 AI 编程助手命令行工具。
 - 也可以在 Claude Code 中通过 `/model` 命令切换模型
 :::
 
-### Reasonix Code
+### Reasonix
 
 Reasonix 是一款以 DeepSeek 为原生后端的终端编程 Agent。设计围绕 DeepSeek API 展开 —— Cache-First 循环、Flash 优先的成本控制、工具调用自动修复。
 
@@ -115,6 +115,7 @@ Reasonix 是一款以 DeepSeek 为原生后端的终端编程 Agent。设计围�
 
 ::: tip 说明
 - `baseUrl` 填写 `https://ai.ecustcic.com/api/v1`
+- 可以先使用真实DeepSeek API过配置教程，设置完成后修改配置文件
 - 如果需要使用性能更强的模型，将 `model` 改为 `deepseek-v4-pro`
 :::
 
