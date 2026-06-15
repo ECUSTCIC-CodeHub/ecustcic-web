@@ -96,6 +96,28 @@ Claude Code 是 Anthropic 推出的 AI 编程助手命令行工具。
 - 也可以在 Claude Code 中通过 `/model` 命令切换模型
 :::
 
+### Reasonix Code
+
+Reasonix 是一款以 DeepSeek 为原生后端的终端编程 Agent。设计围绕 DeepSeek API 展开 —— Cache-First 循环、Flash 优先的成本控制、工具调用自动修复。
+
+编辑配置文件 `~/.reasonix/config.json`（如不存在则创建）：
+
+```json
+{
+  "lang": "zh-CN",
+  "baseUrl": "https://ai.ecustcic.com/api/v1",
+  "apiKey": "你的API Key",
+  "theme": "dark",
+  "mcp": [],
+  "model": "deepseek-v4-flash"
+}
+```
+
+::: tip 说明
+- `baseUrl` 填写 `https://ai.ecustcic.com/api/v1`
+- 如果需要使用性能更强的模型，将 `model` 改为 `deepseek-v4-pro`
+:::
+
 ### OpenAI Codex CLI
 
 OpenAI Codex CLI 是 OpenAI 推出的命令行 AI 编程工具。
