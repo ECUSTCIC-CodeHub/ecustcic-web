@@ -69,7 +69,7 @@
                     data-content="<img src='https://open.weixin.qq.com/qr/code?username=gh_5814cf630585' width='100%'>">
                     <i class="fab fa-weixin fa-fw"></i> 微信公众号
                   </a>
-                  <a href="https://qm.qq.com/q/meIj5H3Ov0" target="_blank" class="btn btn-primary btn-join"
+                  <a href="https://qm.qq.com/q/1szFk3nMHC" target="_blank" class="btn btn-primary btn-join"
                     data-toggle="popover" data-animation="true" data-container="#qq" data-placement="top"
                     data-trigger="manual" data-html="true" data-content="<img src='/img/E-sports/qq.jpg' width='100%'>">
                     <i class="fab fa-qq fa-fw"></i> 立即加入
@@ -132,18 +132,94 @@
       </section>
       <router-link to="/e-sports/detail" class="view-all-events">查看全部交流群 <i
           class="fas fa-chevron-right"></i></router-link>
+
+      <!-- 交流活动 -->
+      <section class="media-section">
+        <h2 class="section-title">交流活动</h2>
+        <p class="honor-intro text-muted">从校园社团文化到全国电竞舞台，从媒体关注到产教融合</p>
+        <div class="row">
+          <div v-for="(media, index) in mediaCoverage" :key="index" class="col-md-6 mb-4">
+            <div class="media-card">
+              <div class="media-head">
+                <span class="media-year">{{ media.year }}</span>
+                <span class="media-tag">{{ media.tag }}</span>
+              </div>
+              <h4 class="media-title">{{ media.title }}</h4>
+              <p class="media-source"><i class="far fa-newspaper"></i>
+                <a :href="media.link" target="_blank" rel="noopener">{{ media.source }} <i class="fas fa-external-link-alt fa-xs"></i></a>
+              </p>
+              <p class="media-summary">{{ media.summary }}</p>
+            </div>
+          </div>
+        </div>
+        <!-- 校友相关新闻 -->
+        <div class="alumni-news">
+          <div class="media-head">
+            <span class="media-year">行业影响力</span>
+            <span class="media-tag">校友动态</span>
+          </div>
+          <h4 class="media-title">电竞产业校友齐聚：华理校友活跃在游戏电竞产业一线</h4>
+          <p class="media-source"><i class="far fa-newspaper"></i>
+            <a :href="alumniSource.link" target="_blank" rel="noopener">{{ alumniSource.sourceName }} <i class="fas fa-external-link-alt fa-xs"></i></a>
+          </p>
+          <p class="media-summary">
+            {{ alumniNote }}华理在游戏电竞产业深厚的校友资源，成为连接校园与行业的重要纽带。
+            <strong>{{ alumni[0].name }}</strong>（{{ alumni[0].title }}，{{ alumni[0].background }}）与
+            <strong>{{ alumni[1].name }}</strong>（{{ alumni[1].title }}，{{ alumni[1].background }}），均受邀返校参与座谈。
+          </p>
+        </div>
+      </section>
+
+      <!-- 荣誉殿堂 -->
+      <section class="honor-section">
+        <h2 class="section-title honor-toggle" @click="toggleHonors">
+          荣誉殿堂
+          <i class="fas fa-chevron-down" :class="{ collapsed: !showHonors }"></i>
+        </h2>
+        <transition name="toggle-fade">
+          <div v-show="showHonors">
+            <p class="honor-intro text-muted">华理电竞代表队在各大权威赛事中的代表性战绩（不完全统计）</p>
+            <div class="honor-timeline">
+              <div v-for="(item, index) in achievements" :key="index" class="honor-item" :class="{reverse: index % 2 === 1}">
+                <div class="honor-card">
+                  <div class="honor-head">
+                    <span class="honor-date">{{ item.year }}</span>
+                    <span class="trophy"><i class="fas fa-trophy"></i> {{ item.award }}</span>
+                  </div>
+                  <h4 class="honor-event">{{ item.event }}</h4>
+                  <p class="honor-game"><i class="fas fa-gamepad"></i> {{ item.game }}</p>
+                  <p class="honor-detail">{{ item.detail }}</p>
+                  <a :href="item.link" target="_blank" rel="noopener" class="honor-source">来源：{{ item.source }} <i class="fas fa-external-link-alt fa-xs"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </section>
     </div>
   </div>
 </template>
 
 <script>
 import { esportsGames } from '@/data/esportsGames';
+import { mediaCoverage, achievements, alumni, alumniNote, alumniSource } from '@/data/esportsHonors';
 
 export default {
   name: "e-sports",
   data() {
     return {
-      games: esportsGames
+      games: esportsGames,
+      mediaCoverage,
+      achievements,
+      alumni,
+      alumniNote,
+      alumniSource,
+      showHonors: true
+    }
+  },
+  methods: {
+    toggleHonors() {
+      this.showHonors = !this.showHonors;
     }
   }
 }
@@ -505,8 +581,281 @@ export default {
   transform: translateX(5px);
 }
 
+/* ---------- 荣誉殿堂 ---------- */
+.honor-section,
+.media-section {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  margin: 30px 0;
+}
+
+.honor-intro {
+  margin-top: -10px;
+}
+
+.honor-timeline {
+  position: relative;
+  margin-top: 2rem;
+}
+
+.honor-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--line);
+}
+
+.honor-item {
+  position: relative;
+  width: 50%;
+  padding: 0 2.4rem 1.8rem 0;
+}
+
+.honor-item.reverse {
+  margin-left: 50%;
+  padding: 0 0 1.8rem 2.4rem;
+}
+
+/* 时间线节点 */
+.honor-item::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px #fff;
+  z-index: 1;
+}
+
+.honor-item.reverse::before {
+  right: auto;
+  left: -6px;
+}
+
+.honor-card {
+  background: var(--surface-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.3rem 1.4rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
+}
+
+.honor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.honor-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.honor-date {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.trophy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fdf3d8 0%, #fbe9b6 100%);
+  border: 1px solid #f0d48a;
+  color: #8a6d1d;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.honor-event {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+}
+
+.honor-game {
+  color: var(--accent-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.honor-game i,
+.honor-detail i {
+  margin-right: 0.35rem;
+}
+
+.honor-detail {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  margin-bottom: 0.7rem;
+}
+
+.honor-source {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.honor-source:hover {
+  color: var(--accent-dark);
+}
+
+/* 可折叠的荣誉殿堂标题 */
+.honor-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.honor-toggle:hover {
+  color: var(--accent-dark);
+}
+
+.honor-toggle .fa-chevron-down {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.honor-toggle:hover .fa-chevron-down {
+  color: var(--accent-dark);
+}
+
+/* 折叠后箭头旋转180度 */
+.honor-toggle .fa-chevron-down.collapsed {
+  transform: rotate(-90deg);
+}
+
+.toggle-fade-enter-active,
+.toggle-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.toggle-fade-enter,
+.toggle-fade-leave-to {
+  opacity: 0;
+}
+
+/* ---------- 媒体报道 ---------- */
+.media-card {
+  background: var(--surface-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+  transition: all 0.25s ease;
+}
+
+.media-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.media-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.media-year {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.media-tag {
+  padding: 0.2rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  color: var(--accent-dark);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.media-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.media-source {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0.7rem;
+}
+
+.media-source i {
+  margin-right: 0.35rem;
+}
+
+.media-summary {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ---------- 校友新闻（与媒体卡片一致的新闻态） ---------- */
+.alumni-news {
+  margin-top: 0.5rem;
+  padding: 1.4rem 1.5rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
+}
+
+.alumni-news:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.alumni-news .media-title strong {
+  color: var(--accent-dark);
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
+  /* 荣誉时间线移动端单列 */
+  .honor-timeline::before {
+    display: none;
+  }
+
+  .honor-item,
+  .honor-item.reverse {
+    width: 100%;
+    margin-left: 0;
+    padding: 0 0 1.2rem 0;
+  }
+
+  .honor-item::before {
+    display: none;
+  }
+
   /* 公告卡片移动端优化 */
   .news-list {
     grid-template-columns: 1fr;
