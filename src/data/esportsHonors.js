@@ -1,7 +1,7 @@
-// 电竞部发展历程、荣誉战绩与行业影响力数据
-// 来源：上观新闻、澎湃新闻、文汇报、荔枝网、凤凰网、5EPlay、中新网等公开媒体报道
+// 电竞部发展历程、荣誉战绩与新闻动态数据
+// 来源：上观新闻、澎湃新闻、文汇报、荔枝网、中国新闻网等公开媒体报道
 
-// 荣誉殿堂（重大赛事战绩）
+// 荣誉殿堂（重大赛事战绩，按时间排序）
 export const achievements = [
   {
     year: '2018',
@@ -22,6 +22,24 @@ export const achievements = [
     link: 'https://www.toutiao.com/article/7311585206417654323/'
   },
   {
+    year: '2024',
+    event: 'iQOO 杯上海市赛',
+    game: '王者荣耀',
+    award: '冠军',
+    detail: 'HLT0 系战队夺得 2024 iQOO 杯上海市赛王者荣耀项目冠军。',
+    source: '今日头条',
+    link: 'https://m.toutiao.com/article/7589935283127304742/'
+  },
+  {
+    year: '2024',
+    event: 'IEF 国际数字体育娱乐节',
+    game: '王者荣耀',
+    award: '全国四强',
+    detail: '华理王者荣耀战队在 IEF 国际数字体育娱乐节中晋级全国四强。',
+    source: '今日头条',
+    link: 'https://m.toutiao.com/article/7589935283127304742/'
+  },
+  {
     year: '2024.6',
     event: '杨浦区运动会高校联盟系列赛（“电竞风云”）',
     game: 'DOTA2',
@@ -36,6 +54,15 @@ export const achievements = [
     game: 'DOTA2',
     award: '总决赛冠军（卫冕）',
     detail: '“沪上OG”战队从全市 31 所高校、160 余支报名战队中突围，决赛历经近三小时鏖战胜上海理工大学“极速风暴”，成为该赛事历史上首个卫冕冠军，队中四人是 2023 年夺冠成员。',
+    source: '文汇报',
+    link: 'https://www.whb.cn/commonDetail/962605'
+  },
+  {
+    year: '2024.12',
+    event: '上海高校电竞挑战赛（第四届）',
+    game: '王者荣耀',
+    award: '亚军',
+    detail: '“HLT0.5”战队一路闯入总决赛，最终 0:2 不敌上海师范大学天华学院“入机”战队，夺得该赛事王者荣耀项目亚军。',
     source: '文汇报',
     link: 'https://www.whb.cn/commonDetail/962605'
   },
@@ -56,37 +83,10 @@ export const achievements = [
     detail: 'HLT0 战队在闵行星环中心的总决赛中，以不到 20 分钟的时间直落两局战胜复旦大学“卿云上”战队。',
     source: '中国新闻网',
     link: 'https://www.sh.chinanews.com.cn/tiyu/2025-12-14/143321.shtml'
-  },
-  {
-    year: '2024.12',
-    event: '上海高校电竞挑战赛（第四届）',
-    game: '王者荣耀',
-    award: '亚军',
-    detail: '“HLT0.5”战队一路闯入总决赛，最终 0:2 不敌上海师范大学天华学院“入机”战队，夺得该赛事王者荣耀项目亚军。',
-    source: '文汇报',
-    link: 'https://www.whb.cn/commonDetail/962605'
-  },
-  {
-    year: '2024',
-    event: 'iQOO 杯上海市赛',
-    game: '王者荣耀',
-    award: '冠军',
-    detail: 'HLT0 系战队夺得 2024 iQOO 杯上海市赛王者荣耀项目冠军。',
-    source: '今日头条',
-    link: 'https://m.toutiao.com/article/7589935283127304742/'
-  },
-  {
-    year: '2024',
-    event: 'IEF 国际数字体育娱乐节',
-    game: '王者荣耀',
-    award: '全国四强',
-    detail: '华理王者荣耀战队在 IEF 国际数字体育娱乐节中晋级全国四强。',
-    source: '今日头条',
-    link: 'https://m.toutiao.com/article/7589935283127304742/'
   }
 ];
 
-// 媒体报道（发展历程与社团文化）
+// 交流活动（媒体报道与新闻）
 export const mediaCoverage = [
   {
     year: '2018',
@@ -107,7 +107,16 @@ export const mediaCoverage = [
     link: 'https://m.thepaper.cn/newsDetail_forward_2593764'
   },
   {
-    year: '2026',
+    year: '2026.10',
+    source: '华东理工大学商学院',
+    title: '产教融合与校友协同育人座谈会召开',
+    summary:
+      '华理多名校友活跃在游戏电竞产业一线：AG电竞集团董事长乐可登（2001 级金融专业校友）、假面科技董事长徐伟凡（2007 级信息管理专业校友）受邀返校参与产教融合与校友协同育人座谈会，与在校师生交流行业前沿动态。',
+    tag: '校友动态',
+    link: 'https://bs.ecust.edu.cn/cms/ecust/xyzx/zxdt/517909715681284.html'
+  },
+  {
+    year: '2026.7',
     source: '澎湃新闻',
     title: '在这里，电竞不只为了赢，更是关于成长和未来的破壁实验',
     summary:
@@ -116,26 +125,4 @@ export const mediaCoverage = [
     link: 'https://www.thepaper.cn/newsDetail_forward_33766771'
   }
 ];
-
-// 校友与产业联动
-export const alumni = [
-  {
-    name: '乐可登',
-    title: 'AG电竞集团董事长',
-    background: '2001 级金融专业校友'
-  },
-  {
-    name: '徐伟凡',
-    title: '假面科技董事长',
-    background: '2007 级信息管理专业校友'
-  }
-];
-
-export const alumniNote =
-  '根据华东理工大学商学院 2026 年 10 月 29 日发布的资讯，华理在游戏电竞产业拥有深厚的校友资源，两人均受邀返校参与产教融合与校友协同育人座谈会。';
-
-export const alumniSource = {
-  sourceName: '华东理工大学商学院',
-  link: 'https://bs.ecust.edu.cn/cms/ecust/xyzx/zxdt/517909715681284.html'
-};
 

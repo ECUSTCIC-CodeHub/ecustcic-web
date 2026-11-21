@@ -49,8 +49,8 @@
                 <span class="achievement-text">活跃成员</span>
               </div>
               <div class="achievement-item">
-                <span class="achievement-number">5+</span>
-                <span class="achievement-text">场活动</span>
+                <span class="achievement-number">10+</span>
+                <span class="achievement-text">项冠军荣誉</span>
               </div>
             </div>
           </div>
@@ -110,11 +110,6 @@
                         <i class="fas fa-tags"></i> {{game.category}}
                       </span>
                     </p>
-                    <!-- <div class="game-info">
-                      <span class="info-item"><i class="fas fa-users"></i> {{game.playerCount}} 名玩家</span>
-                      <span class="info-item"><i class="fas fa-trophy"></i> {{game.tournaments}} 场活动</span>
-                      <span class="info-item"><i class="fas fa-calendar-alt"></i> 每周 {{game.activityDays}}</span>
-                    </div> -->
                     <div class="btn-container">
                       <a :href="game.qqGroup" target="_blank" class="btn btn-outline-primary btn-join-game">
                         加入{{game.name}}群
@@ -136,9 +131,9 @@
       <!-- 交流活动 -->
       <section class="media-section">
         <h2 class="section-title">交流活动</h2>
-        <p class="honor-intro text-muted">从校园社团文化到全国电竞舞台，从媒体关注到产教融合</p>
+        <p class="honor-intro text-muted">电竞真正的故事，往往发生在屏幕之外</p>
         <div class="row">
-          <div v-for="(media, index) in mediaCoverage" :key="index" class="col-md-6 mb-4">
+          <div v-for="(media, index) in sortedMedia" :key="index" class="col-md-6 mb-4">
             <div class="media-card">
               <div class="media-head">
                 <span class="media-year">{{ media.year }}</span>
@@ -152,22 +147,6 @@
             </div>
           </div>
         </div>
-        <!-- 校友相关新闻 -->
-        <div class="alumni-news">
-          <div class="media-head">
-            <span class="media-year">行业影响力</span>
-            <span class="media-tag">校友动态</span>
-          </div>
-          <h4 class="media-title">电竞产业校友齐聚：华理校友活跃在游戏电竞产业一线</h4>
-          <p class="media-source"><i class="far fa-newspaper"></i>
-            <a :href="alumniSource.link" target="_blank" rel="noopener">{{ alumniSource.sourceName }} <i class="fas fa-external-link-alt fa-xs"></i></a>
-          </p>
-          <p class="media-summary">
-            {{ alumniNote }}华理在游戏电竞产业深厚的校友资源，成为连接校园与行业的重要纽带。
-            <strong>{{ alumni[0].name }}</strong>（{{ alumni[0].title }}，{{ alumni[0].background }}）与
-            <strong>{{ alumni[1].name }}</strong>（{{ alumni[1].title }}，{{ alumni[1].background }}），均受邀返校参与座谈。
-          </p>
-        </div>
       </section>
 
       <!-- 荣誉殿堂 -->
@@ -180,7 +159,7 @@
           <div v-show="showHonors">
             <p class="honor-intro text-muted">华理电竞代表队在各大权威赛事中的代表性战绩（不完全统计）</p>
             <div class="honor-timeline">
-              <div v-for="(item, index) in achievements" :key="index" class="honor-item" :class="{reverse: index % 2 === 1}">
+              <div v-for="(item, index) in sortedAchievements" :key="index" class="honor-item" :class="{reverse: index % 2 === 1}">
                 <div class="honor-card">
                   <div class="honor-head">
                     <span class="honor-date">{{ item.year }}</span>
@@ -202,7 +181,16 @@
 
 <script>
 import { esportsGames } from '@/data/esportsGames';
-import { mediaCoverage, achievements, alumni, alumniNote, alumniSource } from '@/data/esportsHonors';
+import { mediaCoverage, achievements } from '@/data/esportsHonors';
+
+// 将 '2018' / '2024.6' / '2024.12' 等日期字符串解析为可比较的数值
+// 解析为 [年, 月] 后再组合，避免浮点比较歧义（如 2024.6 vs 2024.12）
+function toSortableDate(str) {
+  const parts = String(str).split('.');
+  const year = parseInt(parts[0], 10) || 0;
+  const month = parts.length > 1 ? parseInt(parts[1], 10) || 0 : 0;
+  return year * 100 + month;
+}
 
 export default {
   name: "e-sports",
@@ -211,10 +199,20 @@ export default {
       games: esportsGames,
       mediaCoverage,
       achievements,
-      alumni,
-      alumniNote,
-      alumniSource,
       showHonors: true
+    }
+  },
+  computed: {
+    // 无论数据文件内条目顺序如何，展示时始终按年份、日期升序排列
+    sortedAchievements() {
+      return [...this.achievements].sort(
+        (a, b) => toSortableDate(a.year) - toSortableDate(b.year)
+      );
+    },
+    sortedMedia() {
+      return [...this.mediaCoverage].sort(
+        (a, b) => toSortableDate(a.year) - toSortableDate(b.year)
+      );
     }
   },
   methods: {
@@ -229,6 +227,9 @@ export default {
 .esports-container {
   background-color: #f8f9fa;
   color: #333;
+  /* 阻止最后一个 section 的 margin-bottom 塌陷出容器，
+     避免与页脚之间露出 body 白色背景（30px 灰色间隔与页脚同色，视觉无缝） */
+  display: flow-root;
 }
 
 /* 英雄背景区域（使用全站统一 cic-hero 样式） */
@@ -816,26 +817,6 @@ export default {
   font-size: 0.9rem;
   line-height: 1.8;
   margin: 0;
-}
-
-/* ---------- 校友新闻（与媒体卡片一致的新闻态） ---------- */
-.alumni-news {
-  margin-top: 0.5rem;
-  padding: 1.4rem 1.5rem;
-  background: var(--surface-alt);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.25s ease;
-}
-
-.alumni-news:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow);
-}
-
-.alumni-news .media-title strong {
-  color: var(--accent-dark);
 }
 
 /* 响应式调整 */
