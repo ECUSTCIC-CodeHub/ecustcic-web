@@ -56,7 +56,9 @@ module.exports = {
     },
 
     lastUpdated: '最后更新',
-    smoothScroll: true
+    // 关闭 vuepress-plugin-smooth-scroll：它会覆盖 enhanceApp 里的 scrollBehavior，
+    // 且返回值是 truthy 对象，导致 vue-router 额外滚回旧位置（点击侧边栏锚点后页面乱跳）
+    smoothScroll: false
   },
 
   markdown: {
