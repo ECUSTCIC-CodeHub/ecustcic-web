@@ -10,10 +10,44 @@ title: 免费大模型 API 网关
 
 ## 当前可用模型
 
-| 模型 | 说明 |
+| 模型 | 备注 |
 |---|---|
-| DeepSeek-V4-Flash | 响应快，适合日常问答和轻量任务 |
-| DeepSeek-V4-Pro | 性能更强，适合复杂任务 |
+| `bge-large-zh:latest` | 嵌入模型 |
+| `bge-reranker-v2-m3` | Rerank 模型 |
+| `cic-6-astra` | 识图 |
+| `cic-model` | 识图 |
+| `deepseek-v4-flash` | 0731 版本，上下文 256K |
+| `deepseek-v4.1-flash-oc` | 识图 |
+| `ernie-5.5-flash-preview` | |
+| `glm-4.7` | |
+| `glm-5-turbo` | |
+| `glm-5.2` | |
+| `glm-5.3` | |
+| `glm-5.3-flash` | 识图 |
+| `google/gemini-3.8-flash` | |
+| `gpt-oss-120b` | OpenAI 开源模型，上下文 128K |
+| `gte-qwen2:7b` | 嵌入模型，维度 3584，上下文 32K |
+| `MiniMax-M2` | |
+| `MiniMax-M2.1` | |
+| `MiniMax-M2.5` | |
+| `MiniMax-M2.5-highspeed` | |
+| `MiniMax-M2.7` | 全量版，上下文 256K |
+| `MiniMax-M2.7-highspeed` | |
+| `MiniMax-M3` | 识图 |
+| `MiniMax-M3.1-Flash` | 识图 |
+| `qwen3-embedding:8b` | 嵌入模型，维度 4096，上下文 32K |
+| `qwen3-reranker:8b` | Rerank 模型，维度 4096，上下文 32K |
+| `qwen3.5` | 397B 全量，上下文 128K，支持多模态输入 |
+| `qwen3.5-0.8b` | |
+| `qwen3.6-35b-a3b` | 识图 |
+| `qwen3.8-27b` | 识图 |
+| `S1-Base-Lite` | ScienceOne 8B，80 亿参数 |
+| `S1-Base-Pro` | ScienceOne 32B，320 亿参数 |
+| `S1-Base-Ultra` | ScienceOne 671B，6710 亿参数 |
+| `S1-Omni` | 科学多模态统一推理模型，支持蛋白质结合位点与结构预测、小分子/材料性质预测与分类、谱图到分子结构重建、科学图像生成与编辑 |
+| `S1-CitationCalculate` | 引用计算服务，用于计算大模型输出结果的引用来源 |
+| `wenye-model` | |
+| `xing4.0-29b-a4b` | |
 
 > 后续会视情况增加更多模型。
 
@@ -73,6 +107,30 @@ npx cic-ai-config-helper
 ```
 
 运行后按提示操作即可。如果自动工具不支持你使用的工具，请参考下面的手动配置方法。
+
+### DeepSeek Harness
+
+DeepSeek Harness（DSH）是 DeepSeek 推出的终端 Agent 框架。社团为其编写了接入本网关的插件 [dsh-cic](https://cnb.cool/ecustcic/dsh-cic)。
+
+**安装插件：**
+
+```bash
+dsh plugin --profile desktop add git+https://cnb.cool/ecustcic/dsh-cic
+```
+
+安装后重启 DSH，在设置页的 `dsh-cic` 分区点「登录」，浏览器完成校内统一认证授权即可，无需手动填 API Key。
+
+**更新插件：**
+
+```bash
+dsh plugin --profile desktop update dsh-cic
+```
+
+**插件功能：**
+
+- **一键接入**：OIDC 授权后自动写入密钥和模型配置，模型选择器即时刷新；回调不通时也可用兑换码或手动粘贴 `sk-gw-` 开头的密钥
+- **额度指示**：侧边栏显示「CIC 剩余额度」，点开可看详情
+- **模型自动发现**：自动同步网关的 `deepseek` 系列模型，含 `-oc` 后缀模型所需的会话头处理
 
 ### Claude Code
 
