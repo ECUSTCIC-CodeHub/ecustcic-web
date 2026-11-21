@@ -1,8 +1,27 @@
 <template>
   <div class="certificate-container">
     <!-- 顶部区域：标题和说明 -->
-    <div class="top-banner">
-      <div class="banner-overlay">
+    <div class="cic-hero">
+      <vue-particles
+        color="#7fafec"
+        :particleOpacity="0.7"
+        :particlesNumber="80"
+        shapeType="circle"
+        :particleSize="6"
+        linesColor="#7fafec"
+        :linesWidth="3"
+        :lineLinked="true"
+        :lineOpacity="0.4"
+        :linesDistance="150"
+        :moveSpeed="3"
+        :hoverEffect="false"
+        hoverMode="grab"
+        :clickEffect="false"
+        clickMode="push"
+        class="cic-hero-particles"
+      ></vue-particles>
+      <div class="cic-hero-overlay">
+        <span class="cic-hero-tag">CIC · PUBLICITY</span>
         <h1>荣誉证书生成</h1>
         <p>填写信息，生成专属荣誉证书</p>
       </div>
@@ -315,34 +334,7 @@ export default {
   padding-bottom: 50px;
 }
 
-/* 顶部区域 */
-.top-banner {
-  position: relative;
-  height: 300px;
-  background: linear-gradient(135deg, #3498db, #9b59b6);
-  margin-bottom: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.banner-overlay {
-  text-align: center;
-  color: white;
-  padding: 0 15px;
-}
-
-.banner-overlay h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.banner-overlay p {
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-}
+/* 顶部区域（使用全站统一 cic-hero 样式） */
 
 /* 证书申请卡片 */
 .certificate-card {
@@ -428,7 +420,7 @@ export default {
 }
 
 .btn-submit {
-  background: linear-gradient(to right, #3498db, #9b59b6);
+  background: linear-gradient(135deg, var(--accent, #3498db) 0%, #21618c 100%);
   border: none;
   padding: 12px 30px;
   font-weight: 600;
@@ -537,14 +529,6 @@ export default {
 
 /* 响应式调整 */
 @media (max-width: 768px) {
-  .banner-overlay h1 {
-    font-size: 2rem;
-  }
-  
-  .banner-overlay p {
-    font-size: 1rem;
-  }
-  
   .card-header, .card-body, .card-footer {
     padding: 15px;
   }

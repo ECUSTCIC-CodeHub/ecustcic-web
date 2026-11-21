@@ -127,12 +127,25 @@
     <!-- 页尾 -->
     <footer class="footer bg-light">
       <div class="container">
-        <div class="text-muted text-center text-small" id="footercontext">
-          <hr />
-          <ul class="list-inline my-0">
+        <div class="footer-inner text-center">
+          <div class="footer-nav">
+            <router-link class="footer-link" to="/" exact>首页</router-link>
+            <a class="footer-link" href="/tech/">指南</a>
+            <router-link class="footer-link" to="/service">服务</router-link>
+            <router-link class="footer-link" to="/publicity">组宣</router-link>
+            <router-link class="footer-link" to="/e-sports">电竞</router-link>
+            <a class="footer-link" href="https://wiki.ecustvr.top/" target="_blank">Wiki</a>
+            <router-link class="footer-link" to="/about">关于</router-link>
+          </div>
+          <ul class="list-inline footer-social" id="footercontext">
             <li class="list-inline-item">
-              <a href="//github.com/ecustcic" target="_blank">
-                <i class="fab fa-github fa-fw"></i>
+              <a href="https://cnb.cool/ecustcic" target="_blank" aria-label="CNB">
+                <img src="./assets/img/cnb.svg" alt="CNB" class="footer-icon-img" />
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/ECUSTCIC-CodeHub" target="_blank" aria-label="GitHub">
+                <img src="./assets/img/social/github.svg" alt="GitHub" class="footer-icon-img" />
               </a>
             </li>
             <li class="list-inline-item" id="wechat">
@@ -145,8 +158,9 @@
                 data-trigger="manual"
                 data-html="true"
                 data-content="<img src='/img/cic_qrcode.jpg' width='100%'>"
+                aria-label="微信公众号"
               >
-                <i class="fab fa-weixin fa-fw"></i>
+                <img src="./assets/img/social/weixin.svg" alt="微信公众号" class="footer-icon-img" />
               </a>
             </li>
             <li class="list-inline-item" id="qq">
@@ -159,34 +173,23 @@
                 data-trigger="manual"
                 data-html="true"
                 data-content="<img src='/img/cic_qq_new.jpg' width='100%'>"
+                aria-label="QQ群"
               >
-                <i class="fab fa-qq fa-fw"></i>
+                <img src="./assets/img/social/qq.svg" alt="QQ群" class="footer-icon-img" />
               </a>
             </li>
           </ul>
-          <p class="mb-1">CopyRight &copy; 1998-{{ new Date().getFullYear() }} ECUST-CIC. All Rights Reserved</p>
-          <ul class="list-inline my-0">
-            <!-- <li class="list-inline-item">
-              <a href="javascript:void(0);" target="_blank">Privacy</a>
-            </li>
+          <p class="footer-copy mb-1">CopyRight &copy; 1998-{{ new Date().getFullYear() }} ECUST-CIC. All Rights Reserved</p>
+          <ul class="list-inline mb-0">
             <li class="list-inline-item">
-              <a href="javascript:void(0);" target="_blank">Terms</a>
-            </li>
-            <li class="list-inline-item">
-              <a href="javascript:void(0);" target="_blank">Support</a>
-            </li> -->
-            <li class="list-inline-item">
-              <a href="https://beian.miit.gov.cn/" target="_blank">
+              <a class="footer-beian" href="https://beian.miit.gov.cn/" target="_blank">
                 浙ICP备2025169668号-1
               </a>
             </li>
-            <!-- <li class="list-inline-item">
-              <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=" id="policeLink">
-                <img src="https://beian.mps.gov.cn/img/ghs.png">沪公网安备号
-              </a>
-            </li> -->
           </ul>
-          <span id="ipv4"></span><span id="ipv6"></span>
+          <div class="footer-ip-row">
+            <span id="ipv4"></span><span id="ipv6"></span>
+          </div>
         </div>
       </div>
     </footer>
@@ -214,6 +217,91 @@ body,
 }
 .footer {
   width: 100%;
+}
+
+/* ---------- 页脚 ---------- */
+.footer-inner {
+  padding: 2rem 0 1.5rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.footer-link {
+  color: var(--ink-soft, #4b5563);
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-dark, #2980b9);
+}
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(52, 152, 219, 0.1);
+  color: var(--ink-soft, #4b5563);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  line-height: 0;
+}
+
+.footer-social a:hover {
+  background: rgba(52, 152, 219, 0.2);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* 页脚品牌图标（img 实现，保证基线一致） */
+.footer-social .footer-icon-img {
+  width: 19px;
+  height: 19px;
+  display: block;
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: var(--ink-muted, #6b7280);
+}
+
+/* 备案号行与 IP 显示行（IP 由外部脚本 nav.js 填充），同一行、样式与页脚辅助文字一致 */
+.footer-beian {
+  font-size: 0.8rem;
+  color: var(--ink-muted, #6b7280);
+  text-decoration: none;
+}
+
+.footer-beian:hover {
+  color: var(--accent-dark, #2980b9);
+}
+
+.footer-ip-row {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: var(--ink-muted, #6b7280);
+}
+
+.footer-ip-row span {
+  display: inline;
 }
 
 .navbar .container,

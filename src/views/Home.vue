@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <Carousel :slides="this.slides"></Carousel>
-    <div class="container">
-      <hr />
+    <div class="container home-intro">
       <div class="tlt h3">
         <ul class="texts">
           <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">华东理工大学计算机信息交流协会</li>
@@ -13,101 +12,122 @@
       <div class="text-muted lead">宗旨：服务华理，振兴IT！</div>
       <div class="text-muted">
         更多请看：
-        <router-link to="/about">社团介绍>></router-link>
+        <router-link class="link-arrow" to="/about">社团介绍 <i class="fas fa-arrow-right fa-xs"></i></router-link>
       </div>
-      <hr />
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <a class="tdn" href="/tech/">
-            <div class="hover media shadow-sm wow fadeInLeft">
-              <img src="@/assets/img/Home/tech.png" class="mr-3" alt="技术" width="100" height="100" />
-              <div class="media-body">
-                <br />
-                <h5 class="mt-0 font-weight-bold">技术部</h5>这里有大佬有萌新，但他们都热爱计算机。
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-6 mb-3">
-          <router-link class="tdn" to="/service">
-            <div class="hover media shadow-sm wow fadeInDown">
-              <img src="@/assets/img/Home/serve.png" class="mr-3" alt="服务" width="100" height="100" />
-              <div class="media-body">
-                <br />
-                <h5 class="mt-0 font-weight-bold">服务部</h5>这里有一群无私奉献、为他人服务的人。
-              </div>
-            </div>
-          </router-link>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <router-link class="tdn" to="/publicity">
-            <div class="hover media shadow-sm wow fadeInUp">
-              <img src="@/assets/img/Home/media.png" class="mr-3" alt="组宣" width="100" height="100" />
-              <div class="media-body">
-                <br />
-                <h5 class="mt-0 font-weight-bold">组宣部</h5>这里是社团运营以及宣传的大脑。
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="col-md-6 mb-3">
-          <router-link class="tdn" to="/e-sports">
-            <div class="hover media shadow-sm wow fadeInRight">
-              <img src="@/assets/img/Home/game.png" class="mr-3" alt="电竞" width="100" height="100" />
-              <div class="media-body">
-                <br />
-                <h5 class="mt-0 font-weight-bold">电竞部</h5>这里是游戏爱好者的圣地。
-              </div>
-            </div>
-          </router-link>
-        </div>
-      </div>
-      <hr />
-      <div class="tlt h3">
-        <ul class="texts">
-          <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">活动更新</li>
-          <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">ACTIVITIES</li>
-        </ul>
-      </div>
-      <div class="text-muted lead">更新时间：{{ buildTime }}</div>
-      <div class="text-muted">
-        <a href="#">查看更多>></a>
-      </div>
+    </div>
 
-      <hr />
-      <div class="row">
-        <template v-for="(item, index) in this.activities">
-          <div class="col-md-4 mb-3" :key="index">
-            <div class="newsItem hover">
-              <a class="tdn" :href="`/activity/${item.id}`">
-                <img class="newsImg" :src="item.cover" />
-              </a>
-              <div class="newsText">
-                <a class="tdn" :href="`/activity/${item.id}`">{{item.title}}</a>
-                <br />
+    <!-- 部门导航 -->
+    <div class="dept-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <a class="tdn" href="/tech/">
+              <div class="hover media wow fadeInLeft">
+                <img src="@/assets/img/Home/tech.png" class="mr-3" alt="技术" width="100" height="100" />
+                <div class="media-body">
+                  <br />
+                  <h5 class="mt-0 font-weight-bold">技术部</h5>这里有大佬有萌新，但他们都热爱计算机。
+                </div>
               </div>
-              <div class="left">{{item.date}}</div>
-              <div class="right">{{item.author}}</div>
-            </div>
+            </a>
           </div>
-        </template>
+          <div class="col-md-6 mb-3">
+            <router-link class="tdn" to="/service">
+              <div class="hover media wow fadeInDown">
+                <img src="@/assets/img/Home/serve.png" class="mr-3" alt="服务" width="100" height="100" />
+                <div class="media-body">
+                  <br />
+                  <h5 class="mt-0 font-weight-bold">服务部</h5>这里有一群无私奉献、为他人服务的人。
+                </div>
+              </div>
+            </router-link>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <router-link class="tdn" to="/publicity">
+              <div class="hover media wow fadeInUp">
+                <img src="@/assets/img/Home/media.png" class="mr-3" alt="组宣" width="100" height="100" />
+                <div class="media-body">
+                  <br />
+                  <h5 class="mt-0 font-weight-bold">组宣部</h5>这里是社团运营以及宣传的大脑。
+                </div>
+              </div>
+            </router-link>
+          </div>
+          <div class="col-md-6 mb-3">
+            <router-link class="tdn" to="/e-sports">
+              <div class="hover media wow fadeInRight">
+                <img src="@/assets/img/Home/game.png" class="mr-3" alt="电竞" width="100" height="100" />
+                <div class="media-body">
+                  <br />
+                  <h5 class="mt-0 font-weight-bold">电竞部</h5>这里是游戏爱好者的圣地。
+                </div>
+              </div>
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 活动更新 -->
+    <div class="activity-section">
+      <div class="container">
+        <div class="text-center mb-4">
+          <div class="tlt h3">
+            <ul class="texts">
+              <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">活动更新</li>
+              <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">ACTIVITIES</li>
+            </ul>
+          </div>
+          <div class="text-muted">更新时间：{{ buildTime }}</div>
+          <!-- 活动列表页上线后在此处加“查看全部”链接 -->
+        </div>
+        <div class="row justify-content-center">
+          <template v-for="(item, index) in this.activities">
+            <div class="col-md-4 mb-3" :key="index">
+              <div class="newsItem">
+                <a class="tdn" :href="`/activity/${item.id}`">
+                  <img class="newsImg" :src="item.cover" />
+                </a>
+                <div class="newsText">
+                  <a class="tdn" :href="`/activity/${item.id}`">{{item.title}}</a>
+                  <br />
+                </div>
+                <div class="left">{{item.date}}</div>
+                <div class="right">{{item.author}}</div>
+              </div>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.home-intro {
+  padding-top: 2.5rem;
+  padding-bottom: 2rem;
+}
+
+.tdn {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* ---------- 部门卡片 ---------- */
+.dept-section {
+  padding: 2.5rem 0 3rem;
+  background: var(--surface-alt);
+}
+
 .media {
   padding: 15px;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
 }
-.tdn {
-  color: black;
-  text-decoration: none;
-}
+
 .hover:hover {
   -webkit-transform: translateY(-6px);
   -ms-transform: translateY(-6px);
@@ -117,33 +137,59 @@
   -webkit-transition: all 0.5s ease-out;
   transition: all 0.5s ease-out;
 }
+
+/* ---------- 活动区 ---------- */
+.activity-section {
+  padding: 2.5rem 0 4rem;
+}
+
 .newsItem {
-  width: 300px;
+  width: 100%;
   min-height: 250px;
-  border-radius: 0.5rem;
-  box-shadow: 0px 13px 28.42px 0.58px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  overflow: hidden;
   position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
+.newsItem:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
 .newsImg {
-  width: 300px;
+  width: 100%;
   height: 180px;
-  border-radius: 0.5rem;
+  object-fit: cover;
 }
+
 .newsText {
   font-size: 1em;
-  padding: 0.3rem 0.7rem 0.3rem;
+  padding: 0.6rem 0.9rem 1.8rem;
 }
-.left {
-  left: 0.5rem;
-  bottom: 0.3rem;
-  position: absolute;
-  color: #6c757d;
+
+.newsText a {
+  color: var(--ink);
+  font-weight: 500;
 }
+
+.left,
 .right {
-  right: 0.5rem;
-  bottom: 0.3rem;
   position: absolute;
-  color: #6c757d;
+  bottom: 0.4rem;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+
+.left {
+  left: 0.9rem;
+}
+
+.right {
+  right: 0.9rem;
 }
 </style>
 

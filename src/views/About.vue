@@ -31,7 +31,7 @@
                     @click="$refs.fullpage.api.moveSectionDown()"
                   >
                     <i class="far fa-hand-point-right fa-fw"></i>
-                    Learn About Us
+                    了解我们
                   </button>
                 </div>
               </div>
@@ -54,7 +54,7 @@
                 <button
                   class="btn content-btn btn-md wow fadeIn"
                   @click="$refs.fullpage.api.moveSectionDown()"
-                >Next</button>
+                >继续</button>
                 <img
                   class="content-photo wow fadeInUp"
                   src="../assets/img/About/history.png"
@@ -128,7 +128,7 @@
       <div class="content-table absolute">
         <div class="content-middle">
           <div class="mt-5 wow fadeInDown">
-            <h3 class="font-weight-bold">Services We Do</h3>
+            <h3 class="font-weight-bold">我们的部门</h3>
             <div class="line-center"></div>
           </div>
           <div class="row m-0 p-0 wow fadeInUp">

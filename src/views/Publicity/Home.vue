@@ -1,9 +1,27 @@
 <template>
   <div class="publicity-container">
-    <!-- 顶部区域：背景图和logo -->
-    <div class="top-banner">
-      <img src="@/assets/img/About/publicity.png" alt="组宣部背景" class="banner-image">
-      <div class="banner-overlay">
+    <!-- 顶部区域：hero banner -->
+    <div class="cic-hero">
+      <vue-particles
+        color="#7fafec"
+        :particleOpacity="0.7"
+        :particlesNumber="80"
+        shapeType="circle"
+        :particleSize="6"
+        linesColor="#7fafec"
+        :linesWidth="3"
+        :lineLinked="true"
+        :lineOpacity="0.4"
+        :linesDistance="150"
+        :moveSpeed="3"
+        :hoverEffect="false"
+        hoverMode="grab"
+        :clickEffect="false"
+        clickMode="push"
+        class="cic-hero-particles"
+      ></vue-particles>
+      <div class="cic-hero-overlay">
+        <span class="cic-hero-tag">CIC · PUBLICITY</span>
         <h1>组宣部</h1>
         <p>社团运营以及宣传的大脑</p>
       </div>
@@ -105,48 +123,12 @@ export default {
   color: #333;
 }
 
-/* 顶部区域 */
-.top-banner {
-  position: relative;
-  height: 400px;
-  overflow: hidden;
-  margin-bottom: 30px;
-}
-
-.banner-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.7);
-}
-
-.banner-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-  width: 100%;
-  padding: 0 15px;
-}
-
-.banner-overlay h1 {
-  font-size: 3.5rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.banner-overlay p {
-  font-size: 1.5rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-}
+/* 顶部区域（使用全站统一 cic-hero 样式） */
 
 /* 各部分标题样式 */
 .section-title {
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--ink);
   margin-bottom: 25px;
   position: relative;
   padding-bottom: 10px;
@@ -159,7 +141,14 @@ export default {
   left: 0;
   width: 50px;
   height: 3px;
-  background: linear-gradient(to right, #3498db, #9b59b6);
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* 居中排版的 section 标题（如"加入我们"），装饰线跟随居中 */
+.join-section .section-title::after {
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* 快讯区域 - 文字链接形式 */
@@ -200,7 +189,7 @@ export default {
 }
 
 .news-link:hover {
-  color: #3498db;
+  color: var(--accent-dark);
   transform: translateX(5px);
 }
 
@@ -350,7 +339,7 @@ export default {
 }
 
 .btn-join {
-  background: linear-gradient(to right, #3498db, #9b59b6);
+  background: linear-gradient(135deg, var(--accent) 0%, #21618c 100%);
   border: none;
   padding: 12px 30px;
   font-weight: 600;
@@ -360,19 +349,11 @@ export default {
 
 .btn-join:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.35);
 }
 
 /* 响应式调整 */
 @media (max-width: 768px) {
-  .banner-overlay h1 {
-    font-size: 2.5rem;
-  }
-  
-  .banner-overlay p {
-    font-size: 1.2rem;
-  }
-  
   .news-list, .activities-container {
     grid-template-columns: 1fr;
     gap: 15px;

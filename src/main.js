@@ -19,6 +19,9 @@ window.$ = jQuery;
 import "popper.js";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+// 全站设计变量与公共样式
+import "./assets/css/theme.css";
 // bootstap-select
 import "bootstrap-select/dist/js/bootstrap-select.min.js";
 import "bootstrap-select/dist/css/bootstrap-select.min.css";

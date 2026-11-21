@@ -1,9 +1,27 @@
 <template>
   <div class="qq-groups-container">
     <!-- 顶部横幅 -->
-    <div class="hero-banner">
-      <img src="@/assets/img/Home/bg-th3.png" alt="交流群背景" class="hero-image">
-      <div class="hero-overlay">
+    <div class="cic-hero">
+      <vue-particles
+        color="#7fafec"
+        :particleOpacity="0.7"
+        :particlesNumber="80"
+        shapeType="circle"
+        :particleSize="6"
+        linesColor="#7fafec"
+        :linesWidth="3"
+        :lineLinked="true"
+        :lineOpacity="0.4"
+        :linesDistance="150"
+        :moveSpeed="3"
+        :hoverEffect="false"
+        hoverMode="grab"
+        :clickEffect="false"
+        clickMode="push"
+        class="cic-hero-particles"
+      ></vue-particles>
+      <div class="cic-hero-overlay">
+        <span class="cic-hero-tag">CIC · E-SPORTS</span>
         <h1>交流群汇总</h1>
         <p>加入兴趣社群 · 结识同好伙伴 · 获取最新资讯</p>
       </div>
@@ -374,40 +392,7 @@ export default {
 }
 
 .hero-banner {
-  position: relative;
-  height: 300px;
-  overflow: hidden;
-  margin-bottom: 30px;
-}
-
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.7);
-}
-
-.hero-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-  width: 100%;
-  padding: 0 15px;
-}
-
-.hero-overlay h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.hero-overlay p {
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  display: none;
 }
 
 .search-filter {
@@ -603,14 +588,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .hero-overlay h1 {
-    font-size: 2rem;
-  }
-  
-  .hero-overlay p {
-    font-size: 1rem;
-  }
-  
   .group-list {
     grid-template-columns: 1fr;
   }

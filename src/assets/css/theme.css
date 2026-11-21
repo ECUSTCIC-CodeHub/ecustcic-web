@@ -1,0 +1,214 @@
+/* ============================================================
+   ECUST-CIC 全站设计变量（Design Tokens）
+   所有页面共享：主色、圆角、阴影、字体栈
+   ============================================================ */
+
+:root {
+  /* 品牌色 */
+  --brand: #1ecfca;
+  --brand-dark: #14a8a4;
+  --brand-soft: rgba(30, 207, 202, 0.1);
+
+  /* 强调色（section 标题线、hover 等场景） */
+  --accent: #3498db;
+  --accent-dark: #2980b9;
+  --accent-soft: rgba(52, 152, 219, 0.08);
+
+  /* 中性色 */
+  --ink: #1f2937;
+  --ink-soft: #4b5563;
+  --ink-muted: #6b7280;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --line: #e5e7eb;
+
+  /* 圆角与阴影 */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+
+  /* 字体栈 */
+  --font-sans: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* 页面头部 banner */
+  --page-hero-height: 340px;
+}
+
+/* ---------- 基础排版 ---------- */
+body {
+  font-family: var(--font-sans);
+  color: var(--ink);
+}
+
+#app {
+  font-family: var(--font-sans);
+  color: var(--ink);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+}
+
+/* ---------- 统一 section 标题 ---------- */
+.cic-section-title {
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding-bottom: 0.6rem;
+  padding-left: 0;
+}
+
+.cic-section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 44px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* ---------- 统一卡片 ---------- */
+.cic-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--line);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cic-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- 统一按钮 ---------- */
+.btn-cic {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.6rem 1.6rem;
+  transition: all 0.25s ease;
+}
+
+.btn-cic:hover {
+  background: var(--accent-dark);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(52, 152, 219, 0.35);
+}
+
+.btn-cic-outline {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent-dark);
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.25s ease;
+}
+
+.btn-cic-outline:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ---------- 页面 hero banner（服务/组宣/电竞共用） ----------
+   与关于页首屏同款：浅灰底 + 淡蓝球棍粒子，深色文字 */
+.cic-hero {
+  position: relative;
+  height: var(--page-hero-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  background: rgb(219, 219, 219);
+}
+
+.cic-hero img.cic-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.16;
+  filter: saturate(0.5);
+}
+
+.cic-hero-overlay {
+  position: relative;
+  text-align: center;
+  color: #333;
+  padding: 0 15px;
+  z-index: 2;
+}
+
+.cic-hero-overlay h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.06em;
+  color: #2c3e50;
+}
+
+.cic-hero-overlay p {
+  font-size: 1.2rem;
+  opacity: 0.75;
+  margin-bottom: 0;
+  color: #4b5563;
+}
+
+.cic-hero-tag {
+  display: inline-block;
+  padding: 0.2rem 0.9rem;
+  border: 1px solid rgba(52, 152, 219, 0.45);
+  border-radius: 999px;
+  color: #2470a0;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* hero 粒子层（球棍/星座连线） */
+.cic-hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .cic-hero-overlay h1 {
+    font-size: 2.2rem;
+  }
+  .cic-hero-overlay p {
+    font-size: 1.05rem;
+  }
+}
+
+/* ---------- 友好链接箭头 ---------- */
+.link-arrow {
+  color: var(--accent-dark);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: gap 0.25s ease;
+}
+
+.link-arrow:hover {
+  color: var(--accent);
+  opacity: 0.9;
+  gap: 0.7rem;
+  text-decoration: none;
+}

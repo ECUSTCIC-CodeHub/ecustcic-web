@@ -129,8 +129,6 @@ npm run lint
 
 ### 修改电竞热门游戏数据
 
-> 电竞部公共/赛事/活动直接调用[电竞部独立网站](https://ecustegame.top/)，不在本站修改，附上电竞部网站[Github仓库](https://github.com/hearthewind9/ecustegame-website)
-
 编辑 `/src/data/esportsGames.js` 文件。
 
 ### 修改技术文档
@@ -160,6 +158,15 @@ npm run lint
 ### 修改组宣新闻和活动
 
 编辑 `/src/data/publicityData.js` 文件。
+
+### 关于首页"活动更新"模块
+
+> ⚠️ 该模块依赖后端接口 `/api/activity/all`，目前后端服务已下线，拉取活动的调用已注释（见 `src/views/Home.vue`），页面仅显示构建时间戳，活动列表为空。`/activity/:id` 详情页同理依赖 `/api/activity/detail`，同样不可用。
+
+如需恢复活动展示，有两种方案：
+
+1. **恢复后端接口**：取消注释 `Home.vue` 中的 `getActivities`，并重新部署提供 `/api/activity/all` 的后端服务
+2. **改为静态数据**（推荐，无需后端）：仿照 `publicityData.js` 的做法，将活动数据写入本地数据文件并导入渲染
 
 ### 贡献方式
 

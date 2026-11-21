@@ -1,9 +1,27 @@
 <template>
   <div class="esports-container">
     <!-- 电竞部英雄背景图 -->
-    <div class="hero-banner">
-      <img src="@/assets/img/Home/bg-th3.png" alt="电竞部背景" class="hero-image">
-      <div class="hero-overlay">
+    <div class="cic-hero">
+      <vue-particles
+        color="#7fafec"
+        :particleOpacity="0.7"
+        :particlesNumber="80"
+        shapeType="circle"
+        :particleSize="6"
+        linesColor="#7fafec"
+        :linesWidth="3"
+        :lineLinked="true"
+        :lineOpacity="0.4"
+        :linesDistance="150"
+        :moveSpeed="3"
+        :hoverEffect="false"
+        hoverMode="grab"
+        :clickEffect="false"
+        clickMode="push"
+        class="cic-hero-particles"
+      ></vue-particles>
+      <div class="cic-hero-overlay">
+        <span class="cic-hero-tag">CIC · E-SPORTS</span>
         <h1>电竞部</h1>
         <p>丰富校园生活 · 培养竞技精神 · 创造精彩瞬间</p>
       </div>
@@ -19,8 +37,6 @@
               电竞部致力于为校园内的游戏爱好者提供交流平台，组织各类电竞赛事活动，
               培养团队协作精神和竞技意识，同时倡导健康游戏理念。
               <br>
-              <!-- 官方网站: <a href="https://ecustegame.top/" target="_blank">https://ecustegame.top/</a>
-              <br> -->
               查看全部交流群:  <a href="/e-sports/detail" target="_blank">点击查看</a>
             </p>
             <div class="achievements">
@@ -44,9 +60,6 @@
                 <h5 class="card-title">加入我们</h5>
                 <p class="card-text">无论你是休闲玩家还是竞技高手，电竞部都欢迎你的加入！</p>
                 <div class="d-flex flex-column" style="gap: 12px">
-                  <!-- <a href="https://ecustegame.top/" target="_blank" class="btn btn-primary btn-join">
-                    <i class="fa fa-home fa-fw"></i> 官方网站
-                  </a> -->
                   <a href="/e-sports/detail" target="_blank" class="btn btn-primary btn-join">
                     <i class="fab fa-qq fa-fw"></i> 查看全部交流群
                   </a>
@@ -119,140 +132,19 @@
       </section>
       <router-link to="/e-sports/detail" class="view-all-events">查看全部交流群 <i
           class="fas fa-chevron-right"></i></router-link>
-
-      <!-- 最新公告 -->
-      <!-- <section class="news-section">
-        <h2 class="section-title">最新公告</h2>
-        <div class="news-list">
-          <div class="news-card"
-            v-for="news in newsData.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3)"
-            :key="news.id">
-            <div class="news-date">
-              <span class="date-day">{{ getDay(news.date) }}</span>
-              <span class="date-month">{{ getMonth(news.date) }}</span>
-            </div>
-            <div class="news-content">
-              <h4>{{news.title}}</h4>
-              <p class="news-content">{{ news.content }}</p>
-            </div>
-            <a :href="`https://ecustegame.top/#/news/${news.id}`" target="_blank" class="btn btn-sm btn-outline-primary">查看详情</a>
-          </div>
-        </div>
-        <a href="https://ecustegame.top/#/news" class="view-all-events">查看全部公告 <i class="fas fa-chevron-right"></i></a>
-      </section> -->
-
-      <!-- 最新活动 -->
-      <!-- <section class="news-section">
-        <h2 class="section-title">最新活动</h2>
-        <div class="news-list">
-          <div class="news-card" 
-            v-for="activity in huodong.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3)"
-            :key="activity.id">
-            <div class="news-date">
-              <span class="date-day">{{ getDay(activity.date) }}</span>
-              <span class="date-month">{{ getMonth(activity.date) }}</span>
-            </div>
-            <div class="news-content">
-              <h4>{{activity.title}}</h4>
-              <p class="news-content">{{ activity.description }}</p>
-            </div>
-            <a :href="`https://ecustegame.top/#${activity.path}`" target="_blank" class="btn btn-sm btn-outline-primary">查看详情</a>
-          </div>
-        </div>
-        <a href="https://ecustegame.top/#/events" class="view-all-events">查看全部活动 <i class="fas fa-chevron-right"></i></a>
-      </section> -->
-
-      <!-- 最新赛事 -->
-      <!-- <section class="events-section">
-        <h2 class="section-title">最新赛事</h2>
-        <div class="event-list">
-          <div class="event-card" v-for="event in events.slice(0, 3)" :key="event.title">
-            <div class="event-date">
-              <span class="date-day">{{event.year}}</span>
-              <span class="date-month">年</span>
-            </div>
-            <div class="event-details">
-              <h4>{{event.title}}</h4>
-              <p class="event-game"><i class="fas fa-gamepad"></i> {{event.game}}</p>
-              <p class="event-content">{{event.desc}}</p>
-            </div>
-            <div class="event-actions">
-              <a :href="event.link" class="btn btn-sm btn-outline-secondary">详情</a>
-            </div>
-          </div>
-        </div>
-        <a href="https://ecustegame.top/games.html" class="view-all-events">查看全部赛事 <i class="fas fa-chevron-right"></i></a>
-      </section> -->
     </div>
   </div>
 </template>
 
 <script>
 import { esportsGames } from '@/data/esportsGames';
-// 已使用外部数据
-// import { esportsEvents } from '@/data/esportsEvents';
 
 export default {
   name: "e-sports",
   data() {
     return {
-      games: esportsGames,
-      // newsData: [],
-      // huodong: [],
-      // events: []
+      games: esportsGames
     }
-  },
-  // mounted() {
-  //   this.fetchNewsData();
-  //   this.fetchHuodong();
-  //   this.fetchEvents();
-  // },
-  methods: {
-    getDay(dateStr) {
-      return new Date(dateStr).getDate()
-    },
-    getMonth(dateStr) {
-      return new Date(dateStr).toLocaleString('zh-CN', { month: 'long' })
-    },
-    // async fetchNewsData() {
-    //   try {
-    //     const response = await fetch('https://ecustegame.top/assets/index.js');
-    //     const jsContent = await response.text();
-    //     const newsDataMatch = jsContent.match(/const newsData = (\[.*?\])/s);
-    //     if (newsDataMatch) {
-    //       const parseData = new Function(`return ${newsDataMatch[1]}`);
-    //       this.newsData = parseData();
-    //     }
-    //   } catch (err) {
-    //     console.error("加载失败:", err);
-    //   }
-    // },
-    // async fetchHuodong() {
-    //   try {
-    //     const response = await fetch('https://ecustegame.top/assets/index.js');
-    //     const jsContent = await response.text();
-    //     const huodongMatch = jsContent.match(/const events = (\[.*?\])/s);
-    //     if (huodongMatch) {
-    //       const parseData = new Function(`return ${huodongMatch[1]}`);
-    //       this.huodong = parseData();
-    //     }
-    //   } catch (err) {
-    //     console.error("加载失败:", err);
-    //   }
-    // },
-    // async fetchEvents() {
-    //   try {
-    //     const response = await fetch('https://ecustegame.top/assets/games.js');
-    //     const jsContent = await response.text();
-    //     const EventsMatch = jsContent.match(/const games = (\[.*?\])/s);
-    //     if (EventsMatch) {
-    //       const parseData = new Function(`return ${EventsMatch[1]}`);
-    //       this.events = parseData();
-    //     }
-    //   } catch (err) {
-    //     console.error("加载失败:", err);
-    //   }
-    // }
   }
 }
 </script>
@@ -263,48 +155,12 @@ export default {
   color: #333;
 }
 
-/* 英雄背景区域 */
-.hero-banner {
-  position: relative;
-  height: 400px;
-  overflow: hidden;
-  margin-bottom: 30px;
-}
-
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.7);
-}
-
-.hero-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-  width: 100%;
-  padding: 0 15px;
-}
-
-.hero-overlay h1 {
-  font-size: 3.5rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.hero-overlay p {
-  font-size: 1.5rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-}
+/* 英雄背景区域（使用全站统一 cic-hero 样式） */
 
 /* 各部分标题样式 */
 .section-title {
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--ink);
   margin-bottom: 25px;
   position: relative;
   padding-bottom: 10px;
@@ -317,7 +173,8 @@ export default {
   left: 0;
   width: 50px;
   height: 3px;
-  background: linear-gradient(to right, #3498db, #9b59b6);
+  border-radius: 2px;
+  background: var(--accent);
 }
 
 /* 关于我们部分 */
@@ -346,7 +203,7 @@ export default {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: #3498db;
+  color: var(--accent-dark);
 }
 
 .achievement-text {
@@ -375,7 +232,7 @@ export default {
 }
 
 .btn-join {
-  background: linear-gradient(to right, #3498db, #9b59b6);
+  background: linear-gradient(135deg, var(--accent) 0%, #21618c 100%);
   border: none;
   padding: 10px 25px;
   font-weight: 600;
@@ -384,7 +241,7 @@ export default {
 
 .btn-join:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.35);
 }
 
 /* 游戏介绍部分 */
@@ -406,7 +263,7 @@ export default {
 }
 
 .nav-link {
-  color: #7f8c8d;
+  color: var(--ink-muted);
   font-weight: 600;
   border: none !important;
   padding: 12px 20px;
@@ -414,17 +271,19 @@ export default {
 }
 
 .nav-link:hover {
-  color: #3498db;
+  color: var(--accent-dark);
 }
 
 .nav-link.active {
-  color: #3498db;
+  color: var(--accent-dark);
   background-color: transparent;
-  border-bottom: 3px solid #3498db !important;
+  border-bottom: 3px solid var(--accent) !important;
 }
 
 .game-logo {
-  height: 20px;
+  height: 24px;
+  max-width: 72px;
+  object-fit: contain;
   margin-right: 10px;
 }
 
@@ -450,7 +309,7 @@ export default {
 
 .info-item i {
   margin-right: 5px;
-  color: #3498db;
+  color: var(--accent-dark);
 }
 
 .btn-join-game {
@@ -460,10 +319,11 @@ export default {
 }
 
 .btn-join-game:hover {
-  background-color: #3498db;
-  color: white;
+  background-color: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
 }
 
 /* 公告部分 */
@@ -502,7 +362,7 @@ export default {
 .news-date .date-day {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #3498db;
+  color: var(--accent-dark);
   line-height: 1;
 }
 
@@ -543,8 +403,8 @@ export default {
 }
 
 .news-card .btn:hover {
-  background-color: #3498db;
-  color: white;
+  background-color: var(--accent);
+  color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -584,7 +444,7 @@ export default {
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: #3498db;
+  color: var(--accent-dark);
 }
 
 .date-month {
@@ -609,7 +469,7 @@ export default {
 
 .event-details i {
   margin-right: 8px;
-  color: #3498db;
+  color: var(--accent-dark);
 }
 
 .event-actions {
@@ -624,7 +484,7 @@ export default {
 }
 
 .view-all-events {
-  color: #3498db;
+  color: var(--accent-dark);
   font-weight: 600;
   text-decoration: none;
   display: inline-block;
@@ -632,7 +492,7 @@ export default {
 }
 
 .view-all-events:hover {
-  color: #2980b9;
+  color: var(--accent);
   transform: translateX(5px);
 }
 
@@ -647,10 +507,6 @@ export default {
 
 /* 响应式调整 */
 @media (max-width: 768px) {
-  .hero-overlay h1 {
-    font-size: 2.5rem;
-  }
-
   /* 公告卡片移动端优化 */
   .news-list {
     grid-template-columns: 1fr;
@@ -680,11 +536,7 @@ export default {
     line-clamp: 3;
     -webkit-line-clamp: 3;
   }
-  
-  .hero-overlay p {
-    font-size: 1.2rem;
-  }
-  
+
   .game-detail .row {
     flex-direction: column;
   }
