@@ -382,6 +382,8 @@
 .content-arrow-right,
 .content-arrow-left {
   position: relative;
+  /* Firefox 下 table-cell 高度链塌陷时图片区仍需保持视觉平衡 */
+  min-height: 260px;
 }
 .content-arrow-right:after,
 .content-arrow-left:after {
@@ -427,6 +429,8 @@
 }
 .content-background-img {
   height: 100%;
+  min-height: 260px;
+  min-height: max(220px, 100%);
   position: relative;
   z-index: 1;
   background-repeat: no-repeat;
@@ -435,6 +439,14 @@
   -o-background-size: cover;
   background-size: cover;
   background-position: center;
+}
+
+/* Firefox 对 display:table-cell 内百分比高度的解析与 Chromium 不同，
+   会把高度链塌陷为 0，导致 background-size: cover 的部门图片不显示。
+   这里的 min-height 为塌陷场景兜底，Chromium 下父级有正常高度时不生效。 */
+.content-arrow-left > .content-background-img,
+.content-arrow-right > .content-background-img {
+  min-height: 260px;
 }
 @media (max-width: 1199px) {
   .content-text {
