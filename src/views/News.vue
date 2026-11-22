@@ -80,8 +80,18 @@
                 :class="expanded === item.id ? 'fa-angle-up' : 'fa-angle-down'"
               ></i>
             </button>
+            <!-- 正文是 Markdown（后台用 mavon-editor 录入），这里用同款编辑器只读预览 -->
             <div v-if="item.content && expanded === item.id" class="news-content">
-              {{ item.content }}
+              <mavon-editor
+                :value="item.content"
+                :boxShadow="false"
+                previewBackground="transparent"
+                :subfield="false"
+                defaultOpen="preview"
+                :editable="false"
+                :toolbarsFlag="false"
+                :shortCut="false"
+              ></mavon-editor>
             </div>
           </template>
         </div>
@@ -225,14 +235,55 @@ export default {
 
 .news-content {
   margin: 0 0 1rem 96px;
-  padding: 0.8rem 1rem;
+  padding: 0.6rem 1rem;
   background: var(--surface-alt, #f8fafc);
   border-radius: var(--radius-sm, 8px);
   font-size: 0.88rem;
   color: var(--ink-soft, #4b5563);
-  white-space: pre-wrap;
   text-align: left;
   line-height: 1.7;
+  overflow: hidden;
+}
+
+/* 只读预览：去掉 mavon-editor 自带的边框、阴影与大片留白 */
+.news-content >>> .v-note-wrapper {
+  min-height: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  z-index: auto;
+}
+
+.news-content >>> .v-note-panel {
+  border: none;
+  box-shadow: none;
+}
+
+.news-content >>> .v-note-show,
+.news-content >>> .v-note-show .v-show-content,
+.news-content >>> .v-note-show .v-show-content-html {
+  padding: 0;
+  min-height: 0;
+  background: transparent;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--ink-soft, #4b5563);
+}
+
+/* Markdown 段落的默认外边距在窄容器里太松 */
+.news-content >>> .v-show-content p {
+  margin-bottom: 0.6rem;
+}
+
+.news-content >>> .v-show-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* 正文里的链接可点击，长链接允许换行 */
+.news-content >>> .v-show-content a {
+  color: var(--accent-dark, #2980b9);
+  text-decoration: underline;
+  word-break: break-all;
 }
 
 .empty {
