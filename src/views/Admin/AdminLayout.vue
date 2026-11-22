@@ -63,6 +63,7 @@
           <nav class="admin-tabs">
             <router-link to="/admin/activity" class="admin-tab">活动管理</router-link>
             <router-link to="/admin/news" class="admin-tab">快讯管理</router-link>
+            <router-link to="/admin/storage" class="admin-tab">图片存储</router-link>
           </nav>
           <a href="/api/auth/logout" class="logout-link">退出登录</a>
         </div>

@@ -31,6 +31,7 @@ import Certificate from "@/views/Publicity/Certificate.vue";
 import AdminLayout from "@/views/Admin/AdminLayout.vue";
 import ActivityList from "@/views/Admin/ActivityList.vue";
 import ActivityEditor from "@/views/Admin/ActivityEditor.vue";
+import StorageList from "@/views/Admin/StorageList.vue";
 
 // 其他
 import Others from "@/views/Others/Others.vue";
@@ -288,6 +289,14 @@ const router = new Router({
           props: route => ({ kind: "news", id: route.params.id }),
           meta: {
             title: "CIC-编辑快讯"
+          }
+        },
+        {
+          path: "storage",
+          name: "admin-storage",
+          component: StorageList,
+          meta: {
+            title: "CIC-图片存储"
           }
         }
       ]
