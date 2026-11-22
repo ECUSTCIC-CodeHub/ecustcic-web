@@ -26,7 +26,7 @@
     <div v-else class="placeholder" @click.stop="pick">
       <i class="fas fa-cloud-upload-alt"></i>
       <p class="mb-1">点击选择、拖拽图片到此处，或直接 <kbd>Ctrl</kbd>+<kbd>V</kbd> 粘贴</p>
-      <span class="hint">支持 JPG / PNG / WebP / GIF，5MB 以内</span>
+      <span class="hint">支持 JPG / PNG / WebP / GIF，上传前自动压缩到 500KB 以内（原图 20MB 以内）</span>
     </div>
 
     <div v-if="uploading" class="uploading">

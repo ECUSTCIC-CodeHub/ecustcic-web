@@ -145,9 +145,9 @@ export async function onRequestPost(context) {
     return json({ ret: 1, msg: `不支持的图片类型: ${mime || '未知'}` }, 400);
   }
 
-  // 大小限制 5MB
-  if (bytes.byteLength > 5 * 1024 * 1024) {
-    return json({ ret: 1, msg: '图片不能超过 5MB' }, 400);
+  // 大小限制 500KB：EdgeOne 带宽受限，图片越小加载越稳
+  if (bytes.byteLength > 500 * 1024) {
+    return json({ ret: 1, msg: '图片不能超过 500KB' }, 400);
   }
 
   // 写入 Blob。用 Blob 包装以便把 Content-Type 一起写入，
