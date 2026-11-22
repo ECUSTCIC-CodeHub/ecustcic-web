@@ -84,9 +84,13 @@ function setCookieHeader(value, maxAge) {
 }
 
 export async function onRequestGet(context) {
-  const { request, env } = context;
-  const url = new URL(request.url);
-  const action = url.pathname.split('/').pop();
+  const { request, env, params } = context;
+  // [[action]] 动态路由：action 从 params 获取
+  // CLI 会把多级路径打包成数组（如 /api/auth/login → params.action = ["login"]）
+  const raw = params?.action ?? '';
+  const action = Array.isArray(raw)
+    ? (raw[raw.length - 1] || '')
+    : (raw || '');
   const baseUrl = (env.BS_BASE_URL || '').replace(/\/+$/, '');
 
   // ── 登录：跳转到皮肤站授权页 ──
