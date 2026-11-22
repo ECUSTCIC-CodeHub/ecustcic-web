@@ -6,6 +6,9 @@ import Home from "@/views/Home.vue";
 
 // 活动
 import Activity from "@/views/Activity.vue";
+// 活动回顾 / 快讯列表
+import Activities from "@/views/Activities.vue";
+import News from "@/views/News.vue";
 
 // 技术 - 已迁移至 VuePress，无需路由
 
@@ -25,7 +28,9 @@ import PublicityHome from "@/views/Publicity/Home.vue";
 import Certificate from "@/views/Publicity/Certificate.vue";
 
 // 后台管理
-import ActivityAdmin from "@/views/Admin/ActivityAdmin.vue";
+import AdminLayout from "@/views/Admin/AdminLayout.vue";
+import ActivityList from "@/views/Admin/ActivityList.vue";
+import ActivityEditor from "@/views/Admin/ActivityEditor.vue";
 
 // 其他
 import Others from "@/views/Others/Others.vue";
@@ -81,6 +86,22 @@ const router = new Router({
       component: Activity,
       meta: {
         title: "CIC-活动"
+      }
+    },
+    {
+      path: "/activities",
+      name: "activities",
+      component: Activities,
+      meta: {
+        title: "CIC-活动回顾"
+      }
+    },
+    {
+      path: "/news",
+      name: "news",
+      component: News,
+      meta: {
+        title: "CIC-快讯"
       }
     },
     // 组宣
@@ -206,14 +227,70 @@ const router = new Router({
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
-    // 后台管理
+    // 后台管理：/admin/activity（列表） → /admin/activity/new · /admin/activity/:id/edit（编辑器）
     {
-      path: "/admin/activity",
-      name: "activity-admin",
-      component: ActivityAdmin,
-      meta: {
-        title: "CIC-活动管理"
-      }
+      path: "/admin",
+      component: AdminLayout,
+      children: [
+        {
+          path: "",
+          redirect: "/admin/activity"
+        },
+        {
+          path: "activity",
+          name: "admin-activity-list",
+          component: ActivityList,
+          props: { kind: "activity" },
+          meta: {
+            title: "CIC-活动管理"
+          }
+        },
+        {
+          path: "activity/new",
+          name: "admin-activity-new",
+          component: ActivityEditor,
+          props: { kind: "activity" },
+          meta: {
+            title: "CIC-新建活动"
+          }
+        },
+        {
+          path: "activity/:id/edit",
+          name: "admin-activity-edit",
+          component: ActivityEditor,
+          props: route => ({ kind: "activity", id: route.params.id }),
+          meta: {
+            title: "CIC-编辑活动"
+          }
+        },
+        {
+          path: "news",
+          name: "admin-news-list",
+          component: ActivityList,
+          props: { kind: "news" },
+          meta: {
+            title: "CIC-快讯管理"
+          }
+        },
+        {
+          path: "news/new",
+          name: "admin-news-new",
+          component: ActivityEditor,
+          props: { kind: "news" },
+          meta: {
+            title: "CIC-新建快讯"
+          }
+        },
+        {
+          path: "news/:id/edit",
+          name: "admin-news-edit",
+          component: ActivityEditor,
+          props: route => ({ kind: "news", id: route.params.id }),
+          meta: {
+            title: "CIC-编辑快讯"
+          }
+        }
+      ]
     },
     // 用户相关
     {

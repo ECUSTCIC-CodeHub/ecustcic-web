@@ -259,10 +259,15 @@ body,
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100%;
+  /* 用 flex 布局把页脚推到底部：内容不足一屏时页脚贴底但不遮挡内容，
+     替代各页面手动把 .footer 设为 position: fixed 的做法 */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 .footer {
   width: 100%;
+  margin-top: auto;
 }
 
 /* ---------- 页脚 ---------- */

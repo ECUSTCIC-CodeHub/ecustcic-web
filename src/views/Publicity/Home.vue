@@ -33,13 +33,24 @@
         <div class="col-md-8">
             <!-- 快讯区域 -->
             <section class="news-section">
-                <h2 class="section-title">快讯</h2>
+                <div class="section-head">
+                    <h2 class="section-title">快讯</h2>
+                    <router-link class="more-link" to="/news">查看全部 <i class="fas fa-angle-right"></i></router-link>
+                </div>
                 <div class="news-container">
-                <div class="news-links">
-                    <div class="news-item" v-for="(news, index) in newsData" :key="index">
-                    <a :href="news.link" target="_blank" class="news-link">
+                <div v-if="newsList.length === 0 && aiDone" class="feed-empty">暂无快讯</div>
+                <div v-else-if="newsList.length > 0" class="news-links">
+                    <div class="news-item" v-for="news in newsList" :key="news.id">
+                    <a
+                        :href="news.link"
+                        class="news-link"
+                        :target="isExternal(news.link) ? '_blank' : null"
+                        :rel="isExternal(news.link) ? 'noopener' : null"
+                    >
                         <span class="news-date">{{ news.date }}</span>
-                        <span class="news-title">{{ news.title }}</span>
+                        <span class="news-title">
+                            <span v-if="news.source === 'ai'" class="news-prefix">【大模型网关】</span>{{ news.title }}
+                        </span>
                     </a>
                     </div>
                 </div>
@@ -48,17 +59,28 @@
 
             <!-- 活动回顾 -->
             <section class="activities-section">
-                <h2 class="section-title">活动回顾</h2>
-                <div class="activities-container">
-                    <div class="activity-card" v-for="(activity, index) in activities" :key="index">
-                        <a :href="activity.link" target="_blank" class="activity-link">
-                            <img :src="activity.image" :alt="activity.title" class="activity-image">
-                            <div class="activity-overlay">
-                                <h4>{{activity.title}}</h4>
-                                <p>{{activity.date}}</p>
-                            </div>
-                        </a>
-                    </div>
+                <div class="section-head">
+                    <h2 class="section-title">活动回顾</h2>
+                    <router-link class="more-link" to="/activities">查看全部 <i class="fas fa-angle-right"></i></router-link>
+                </div>
+                <div v-if="activityList.length === 0" class="feed-empty">暂无活动记录</div>
+                <div v-else class="activities-container">
+                    <component
+                        :is="isExternal(item.link) ? 'a' : 'router-link'"
+                        v-for="item in activityList"
+                        :key="item.id"
+                        v-bind="linkProps(item)"
+                        class="activity-card"
+                    >
+                        <img v-if="item.cover" :src="item.cover" :alt="item.title" class="activity-image">
+                        <div v-else class="activity-image activity-image-empty">
+                            <span>{{ (item.title || '活').slice(0, 1) }}</span>
+                        </div>
+                        <div class="activity-overlay">
+                            <h4>{{ item.title }}</h4>
+                            <p>{{ item.date }}</p>
+                        </div>
+                    </component>
                 </div>
             </section>
         </div>
@@ -97,24 +119,80 @@
 
 <script>
 import { newsData, activities } from '@/data/publicityData';
+import { getActivities } from '@/api/edgeActivities';
+import { getAiNotices, mergeByDate } from '@/api/externalFeed';
 
 export default {
   name: "publicity-home",
   data() {
     return {
-      newsData,
-      activities
+      // 动态数据优先；接口不可用时回退到 publicityData.js 的静态条目
+      localNews: [],
+      aiNews: [],
+      aiDone: false,
+      activityList: []
+    };
+  },
+  computed: {
+    // 本站快讯 + AI 站公告合并后总体倒序，组宣页取前 5 条
+    newsList() {
+      return mergeByDate(this.localNews.concat(this.aiNews), 5);
     }
   },
+  created() {
+    this.load();
+  },
   methods: {
-    getDay(dateStr) {
-      return new Date(dateStr).getDate()
+    async load() {
+      try {
+        const acts = await getActivities({ kind: 'activity', limit: 9 });
+        this.activityList = acts.length ? acts : this.fallbackActivities();
+      } catch (e) {
+        this.activityList = this.fallbackActivities();
+      }
+
+      try {
+        const news = await getActivities({ kind: 'news', limit: 5 });
+        this.localNews = news.length ? news : this.fallbackNews();
+      } catch (e) {
+        this.localNews = this.fallbackNews();
+      }
+
+      // AI 站公告：独立请求、失败静默降级；取全量后由前端统一排序截断
+      getAiNotices().then(notices => {
+        this.aiNews = notices;
+        this.aiDone = true;
+      });
     },
-    getMonth(dateStr) {
-      return new Date(dateStr).toLocaleString('zh-CN', { month: 'long' })
+    fallbackNews() {
+      return newsData.map((item, index) => ({
+        id: 'fallback-news-' + index,
+        title: item.title,
+        date: item.date,
+        link: item.link
+      }));
+    },
+    fallbackActivities() {
+      return activities.map((item, index) => ({
+        id: 'fallback-act-' + index,
+        title: item.title,
+        date: item.date,
+        cover: item.image,
+        link: item.link
+      }));
+    },
+    isExternal(link) {
+      return /^https?:\/\//i.test(link || '');
+    },
+    linkProps(item) {
+      if (!item.link) return { to: `/activity/${item.id}` };
+      if (this.isExternal(item.link)) {
+        return { href: item.link, target: '_blank', rel: 'noopener' };
+      }
+      return { to: item.link };
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -204,6 +282,12 @@ export default {
   font-weight: 500;
 }
 
+/* AI 站公告的来源前缀 */
+.news-prefix {
+  color: var(--accent-dark, #2980b9);
+  font-weight: 700;
+}
+
 /* 右侧边栏 */
 .sidebar-section {
   background-color: #f8f9fa;
@@ -253,6 +337,36 @@ export default {
   margin-top: 1.5rem;
 }
 
+/* section 头部：标题 + 查看全部 */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.more-link {
+  font-size: 0.85rem;
+  color: var(--accent-dark, #2980b9);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.more-link:hover {
+  color: var(--accent, #3498db);
+  text-decoration: none;
+}
+
+.feed-empty {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 1.4rem;
+  text-align: center;
+  color: var(--ink-muted, #6b7280);
+  font-size: 0.9rem;
+}
+
 /* 活动回顾 */
 .activities-section {
   padding: 30px 0;
@@ -295,6 +409,21 @@ export default {
 
 .activity-card:hover .activity-image {
   transform: scale(1.1);
+}
+
+/* 无封面的活动卡片：渐变底 + 标题首字 */
+.activity-image-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #eaf4fe 0%, #dbeafe 55%, #cfe6fc 100%);
+}
+
+.activity-image-empty span {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #5b9bd5;
+  opacity: 0.75;
 }
 
 .activity-overlay {

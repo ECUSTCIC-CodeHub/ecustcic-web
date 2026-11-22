@@ -70,39 +70,78 @@
       </div>
     </div>
 
-    <!-- 活动更新 -->
+    <!-- 活动更新 + 快讯（均不放封面，用紧凑列表呈现更多信息） -->
     <div class="activity-section">
       <div class="container">
-        <div class="text-center mb-4">
-          <div class="tlt h3">
-            <ul class="texts">
-              <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">活动更新</li>
-              <li data-in-effect="fadeInLeft" data-out-effect="fadeOut">ACTIVITIES</li>
-            </ul>
-          </div>
-          <div class="text-muted">更新时间：{{ buildTime }}</div>
-          <!-- 活动列表页上线后在此处加“查看全部”链接 -->
-        </div>
-        <div class="row justify-content-center">
-          <template v-for="(item, index) in this.activities">
-            <div class="col-md-4 mb-3" :key="index">
-              <div class="newsItem">
-                <a class="tdn" :href="`/activity/${item.id}`">
-                  <img v-if="item.cover" class="newsImg" :src="item.cover" />
-                  <div v-else class="newsImg newsImg-placeholder">
-                    <canvas ref="placeholderCanvases" class="placeholder-canvas"></canvas>
-                    <img class="plume" src="@/assets/img/plume.svg" alt="" />
-                  </div>
-                </a>
-                <div class="newsText">
-                  <a class="tdn" :href="`/activity/${item.id}`">{{item.title}}</a>
-                  <br />
-                </div>
-                <div class="left">{{item.date}}</div>
-                <div class="right">{{item.author}}</div>
-              </div>
+        <div class="row">
+          <!-- 快讯在左、占 7 列：快讯标题普遍更长，给更宽的行 -->
+          <div class="col-lg-7 mb-4 mb-lg-0">
+            <div class="feed-head">
+              <h3 class="feed-title">快讯</h3>
+              <router-link class="link-arrow" to="/news">
+                查看全部 <i class="fas fa-arrow-right fa-xs"></i>
+              </router-link>
             </div>
-          </template>
+            <p class="feed-sub text-muted">社团近期通知与动态</p>
+
+            <div v-if="news.length === 0 && aiDone" class="feed-empty">
+              暂无快讯。
+            </div>
+            <div v-else-if="news.length > 0" class="feed-list">
+              <component
+                :is="isExternal(item.link) ? 'a' : 'router-link'"
+                v-for="item in news"
+                :key="item.id"
+                v-bind="linkProps(item, 'news')"
+                class="feed-row"
+              >
+                <span class="feed-date">{{ item.date }}</span>
+                <span class="feed-main">
+                  <span class="feed-name">
+                    <span v-if="item.source === 'ai'" class="news-prefix">【大模型网关】</span>{{ item.title }}
+                  </span>
+                </span>
+                <i
+                  class="feed-icon"
+                  :class="isExternal(item.link) ? 'fas fa-external-link-alt' : 'fas fa-angle-right'"
+                ></i>
+              </component>
+            </div>
+          </div>
+
+          <!-- 活动在右、占 5 列 -->
+          <div class="col-lg-5">
+            <div class="feed-head">
+              <h3 class="feed-title">活动更新</h3>
+              <router-link class="link-arrow" to="/activities">
+                查看全部 <i class="fas fa-arrow-right fa-xs"></i>
+              </router-link>
+            </div>
+            <p class="feed-sub text-muted">更新时间：{{ buildTime }}</p>
+
+            <div v-if="activities.length === 0" class="feed-empty">
+              暂无活动，敬请期待。
+            </div>
+            <div v-else class="feed-list">
+              <component
+                :is="isExternal(item.link) ? 'a' : 'router-link'"
+                v-for="item in activities"
+                :key="item.id"
+                v-bind="linkProps(item, 'activity')"
+                class="feed-row"
+              >
+                <span class="feed-date">{{ item.date }}</span>
+                <span class="feed-main">
+                  <span class="feed-name">{{ item.title }}</span>
+                  <span v-if="item.summary" class="feed-summary">{{ item.summary }}</span>
+                </span>
+                <i
+                  class="feed-icon"
+                  :class="isExternal(item.link) ? 'fas fa-external-link-alt' : 'fas fa-angle-right'"
+                ></i>
+              </component>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -142,83 +181,129 @@
   transition: all 0.5s ease-out;
 }
 
-/* ---------- 活动区 ---------- */
+/* ---------- 活动 / 快讯：无封面紧凑列表 ---------- */
 .activity-section {
   padding: 2.5rem 0 4rem;
 }
 
-.newsItem {
-  width: 100%;
-  min-height: 250px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  overflow: hidden;
+.feed-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.feed-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
   position: relative;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  padding-bottom: 0.5rem;
 }
 
-.newsItem:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow);
+.feed-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
 }
 
-.newsImg {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  display: block;
+.feed-sub {
+  font-size: 0.82rem;
+  margin-bottom: 0.9rem;
 }
 
-/* 无封面时的占位样式：淡蓝晴空风，轻松愉悦 */
-.newsImg-placeholder {
-  position: relative;
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.feed-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: linear-gradient(160deg, #eaf4fe 0%, #dcedfd 55%, #cfe6fc 100%);
-}
-
-.placeholder-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.newsImg-placeholder .plume {
-  position: relative;
-  width: 74px;
-  height: 74px;
-  opacity: 0.95;
-  filter: drop-shadow(0 3px 8px rgba(96, 165, 250, 0.5));
-}
-
-.newsText {
-  font-size: 1em;
-  padding: 0.6rem 0.9rem 1.8rem;
-}
-
-.newsText a {
+  gap: 0.9rem;
+  padding: 0.7rem 0.95rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
   color: var(--ink);
-  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.left,
-.right {
-  position: absolute;
-  bottom: 0.4rem;
+.feed-row:hover {
+  color: var(--accent-dark);
+  text-decoration: none;
+  border-color: rgba(52, 152, 219, 0.5);
+  transform: translateX(3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.feed-date {
+  flex: none;
+  width: 84px;
+  font-size: 0.8rem;
   color: var(--ink-muted);
-  font-size: 0.85rem;
 }
 
-.left {
-  left: 0.9rem;
+.feed-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
-.right {
-  right: 0.9rem;
+.feed-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-summary {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-icon {
+  flex: none;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+/* AI 站公告的来源前缀 */
+.news-prefix {
+  color: var(--accent-dark, #2980b9);
+  font-weight: 700;
+}
+
+.feed-empty {
+  padding: 1.2rem;
+  text-align: center;
+  color: var(--ink-muted);
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 576px) {
+  .feed-date {
+    width: 68px;
+    font-size: 0.75rem;
+  }
 }
 </style>
 
@@ -228,6 +313,7 @@ import { WOW } from "wowjs";
 import { setTimeout } from "timers";
 import Carousel from "@/components/Carousel.vue";
 import { getActivities } from "@/api/edgeActivities";
+import { getAiNotices, mergeByDate } from "@/api/externalFeed";
 
 export default {
   name: "home",
@@ -254,79 +340,63 @@ export default {
           subTitle: "ECUST E-Sports, Go Beyond the Game"
         }
       ],
-      activities: []
+      activities: [],
+      localNews: [],
+      aiNews: [],
+      // AI 站公告是否已返回（避免"暂无快讯"在公告到达前闪一下）
+      aiDone: false
     };
   },
+  computed: {
+    // 本站快讯 + AI 站公告合并后按日期总体倒序，首页取前 6 条（与右侧活动对齐）
+    news() {
+      return mergeByDate(this.localNews.concat(this.aiNews), 6);
+    }
+  },
   methods: {
-    getActivities: function() {
-      getActivities(6)
+    // 活动与快讯都从同一个 Edge Function 取，kind 区分类型
+    loadFeeds: function() {
+      getActivities({ kind: 'activity', limit: 6 })
         .then(activities => {
           this.activities = activities;
           // 有数据后用最新活动日期替代构建时间
           if (activities.length > 0) {
             this.buildTime = activities[0].date;
           }
-          this.$nextTick(() => this.drawPlaceholders());
         })
         .catch(error => {
-          console.log("活动数据加载失败:", error);
+          console.log('活动数据加载失败:', error);
         });
-    },
-    // 为无封面的活动卡片绘制静态球棍粒子连线（致敬关于页粒子背景）
-    drawPlaceholders: function() {
-      this.$nextTick(() => {
-        const canvases = this.$refs.placeholderCanvases;
-        if (!canvases || !Array.isArray(canvases)) return;
-        canvases.forEach(canvas => {
-          if (canvas.dataset.drawn) return;   // 避免重复绘制
-          const w = canvas.offsetWidth || 300;
-          const h = canvas.offsetHeight || 180;
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return;
 
-          // 布点
-          const count = Math.floor((w * h) / 4200);
-          const pts = [];
-          for (let i = 0; i < count; i++) {
-            pts.push({
-              x: Math.random() * w,
-              y: Math.random() * h,
-              r: 1 + Math.random() * 1.6
-            });
-          }
-          // 连线（距离阈值内）
-          const maxDist = Math.min(w, h) * 0.35;
-          ctx.strokeStyle = 'rgba(96, 165, 250, 0.32)';
-          ctx.lineWidth = 1;
-          for (let i = 0; i < pts.length; i++) {
-            for (let j = i + 1; j < pts.length; j++) {
-              const dx = pts[i].x - pts[j].x;
-              const dy = pts[i].y - pts[j].y;
-              const d = Math.sqrt(dx * dx + dy * dy);
-              if (d < maxDist) {
-                ctx.beginPath();
-                ctx.moveTo(pts[i].x, pts[i].y);
-                ctx.lineTo(pts[j].x, pts[j].y);
-                ctx.stroke();
-              }
-            }
-          }
-          // 节点
-          ctx.fillStyle = 'rgba(59, 130, 246, 0.55)';
-          for (const p of pts) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          canvas.dataset.drawn = '1';
+      getActivities({ kind: 'news', limit: 6 })
+        .then(news => {
+          this.localNews = news;
+        })
+        .catch(error => {
+          console.log('快讯数据加载失败:', error);
         });
+
+      // AI 站公告：独立请求、超时静默降级，本站内容先渲染，公告到达后自动并入。
+      // 取全量再由前端统一排序截断，避免依赖接口返回顺序
+      getAiNotices().then(notices => {
+        this.aiNews = notices;
+        this.aiDone = true;
       });
+    },
+    isExternal(link) {
+      return /^https?:\/\//i.test(link || '');
+    },
+    // 外链条目直接跳外链，站内路径走 router-link，其余进详情页
+    linkProps(item, kind) {
+      if (this.isExternal(item.link)) {
+        return { href: item.link, target: '_blank', rel: 'noopener' };
+      }
+      if (item.link) return { to: item.link };
+      return { to: kind === 'news' ? '/news' : `/activity/${item.id}` };
     }
   },
   mounted() {
-    this.getActivities();
+    this.loadFeeds();
 
     // 循环文字特效
     $(".tlt").textillate({

@@ -20,11 +20,21 @@
 //
 // ## 本项目使用的接口
 //
-//   GET  /api/activity/all?limit=9      首页活动列表（按日期倒序）
-//   GET  /api/activity/all              全部活动
-//   GET  /api/activity/detail?id=xxx    活动详情（含 content 正文）
-//   POST /api/activity/all              新增/更新（需 Authorization: Bearer <ADMIN_TOKEN>）
-//   DELETE /api/activity/detail?id=xxx  删除（同样需鉴权）
+//   GET  /api/activity/all                    内容列表（默认只返回未隐藏条目，按日期倒序）
+//        ?kind=activity|news                  按类型过滤（缺省 activity 兼容老数据）
+//        ?limit=9                             限制条数
+//        ?includeHidden=1                     含隐藏条目（需 Authorization: Bearer <ADMIN_TOKEN>）
+//   GET  /api/activity/detail?id=xxx          单条详情（隐藏条目同样需要 token）
+//   POST /api/activity/all                    新增/更新（需 Authorization: Bearer <ADMIN_TOKEN>）
+//   DELETE /api/activity/detail?id=xxx        删除（同样需鉴权）
+//
+// 数据字段：
+//   id / kind / title / date / author
+//   cover    封面 URL，可空（首页列表不使用封面，详情页与活动回顾卡片使用）
+//   summary  列表摘要，可空（后台列表会从 content 截取）
+//   content  Markdown 正文
+//   link     非空即外链型条目，前台卡片直接跳转该地址（如「MC服务器上线」）
+//   hidden   是否在前台隐藏（草稿/下架）
 //
 // 所有接口返回 { ret: 0, data: ... } 或 { ret: 1, msg: '...' }，
 // 与原后端 /api/activity/* 的响应结构保持兼容。
@@ -35,11 +45,15 @@
 //     -H "Content-Type: application/json" \
 //     -H "Authorization: Bearer <ADMIN_TOKEN>" \
 //     -d '{
+//       "kind": "activity",
 //       "title": "2026年迎新义诊活动",
 //       "date": "2026-09-15",
 //       "author": "服务部",
-//       "cover": "/img/activities/welcome2026.jpg",
-//       "content": "# 活动详情\n..."
+//       "cover": "",
+//       "summary": "面向新生的免费义诊",
+//       "content": "# 活动详情\n...",
+//       "link": "",
+//       "hidden": false
 //     }'
 //
 // ## 注意事项

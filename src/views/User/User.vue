@@ -78,33 +78,9 @@
 </style>
 
 <script>
-import $ from "jquery";
+// 页脚定位已由 App.vue 的 flex 布局统一处理（footer margin-top: auto），
+// 这里不再手动改写 .footer 的 position，避免 resize 时互相覆盖。
 export default {
-  name: "User",
-  methods: {
-    windowResize: function() {
-      this.$nextTick(function() {
-        $(".footer").attr("style", "");
-        $(".footer").removeAttr("style");
-        if (
-          $("#user").outerHeight() +
-            $(".navbar").outerHeight() +
-            $(".footer").outerHeight() <
-          $(window).innerHeight()
-        ) {
-          $(".footer").css("position", "fixed");
-          $(".footer").css("bottom", "0");
-        }
-      });
-    }
-  },
-  mounted: function() {
-    this.windowResize();
-    window.onresize = this.windowResize;
-  },
-  destroyed: function() {
-    $(".footer").attr("style", "");
-    $(".footer").removeAttr("style");
-  }
+  name: "User"
 };
 </script>

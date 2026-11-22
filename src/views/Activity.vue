@@ -1,44 +1,201 @@
 <template>
-  <div class="container py-3" id="activity">
-    <div class="row">
-      <div class="col-md-9 text-left">
-        <h1>{{ activity.title }}</h1>
-        <hr />
-        <!-- <div class="lf">{{ activity.content }}</div> -->
-        <mavon-editor
-          v-model="activity.content"
-          :boxShadow="config.boxShadow"
-          :previewBackground="config.previewBackground"
-          :subfield="config.subfield"
-          :defaultOpen="config.defaultOpen"
-          :editable="false"
-          :toolbarsFlag="config.toolbarsFlag"
-          :shortCut="config.shortCut"
-        ></mavon-editor>
-      </div>
-      <div class="col-md-3">
-        <div class="df card">
-          <img class="im card-img-top" :src="activity.cover" />
-          <div class="card-body">
-            <h5 class="card-title">{{ activity.author }}</h5>
-            <p class="card-text text-muted">发布时间：{{ activity.date}}</p>
-            <button class="btn btn-success">
-              <i class="fa fa-envelope mr-2"></i>Contact Now
-            </button>
+  <div class="activity-page">
+    <div class="container py-4" id="activity">
+      <div class="activity-layout">
+        <!-- 左：正文 -->
+        <article class="activity-main">
+          <nav class="crumbs">
+            <router-link to="/">首页</router-link>
+            <span class="sep">/</span>
+            <router-link to="/activities">活动</router-link>
+          </nav>
+
+          <h1 class="activity-title">{{ activity.title || '活动' }}</h1>
+
+          <div class="meta-line">
+            <span v-if="activity.date">
+              <i class="far fa-calendar-alt mr-1"></i>{{ activity.date }}
+            </span>
+            <span v-if="activity.author">
+              <i class="far fa-user mr-1"></i>{{ activity.author }}
+            </span>
+            <a v-if="activity.link" :href="activity.link" target="_blank" rel="noopener">
+              <i class="fas fa-external-link-alt mr-1"></i>外部活动页面
+            </a>
           </div>
-          <!-- <div class="card-header">更多活动：</div>
-          <div class="list-group list-group-flush">
-            <button type="button" class="list-group-item hover">本学期第一次义诊顺利举行！</button>
-            <button type="button" class="list-group-item hover">害，没头发了呀</button>
-            <button type="button" class="list-group-item hover">我想谈恋爱</button>
-            <button type="button" class="list-group-item hover">女生节牛逼！</button>
-          </div>-->
-        </div>
+
+          <hr />
+
+          <div v-if="loading" class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="text-muted mt-3 mb-0">正在加载活动…</p>
+          </div>
+
+          <div v-else-if="error" class="alert alert-warning">
+            <i class="fas fa-exclamation-circle mr-2"></i>{{ error }}
+            <router-link to="/activities" class="btn btn-sm btn-outline-secondary ml-3">返回活动列表</router-link>
+          </div>
+
+          <template v-else>
+            <mavon-editor
+              v-if="activity.content"
+              v-model="activity.content"
+              :boxShadow="config.boxShadow"
+              :previewBackground="config.previewBackground"
+              :subfield="config.subfield"
+              :defaultOpen="config.defaultOpen"
+              :editable="false"
+              :toolbarsFlag="config.toolbarsFlag"
+              :shortCut="config.shortCut"
+            ></mavon-editor>
+            <p v-else class="text-muted">这条活动还没有正文内容。</p>
+          </template>
+        </article>
+
+        <!-- 右：封面与信息（sticky，不再 fixed，避免与页脚重叠） -->
+        <aside class="activity-side">
+          <div class="cic-card side-card">
+            <img v-if="activity.cover" class="side-cover" :src="activity.cover" :alt="activity.title" />
+            <div class="side-body">
+              <h5 class="side-author">{{ activity.author || 'CIC' }}</h5>
+              <p class="side-date mb-3">发布时间：{{ activity.date || '—' }}</p>
+
+              <a
+                v-if="activity.link"
+                :href="activity.link"
+                target="_blank"
+                rel="noopener"
+                class="btn btn-cic btn-block"
+              >
+                <i class="fas fa-external-link-alt mr-2"></i>前往活动页面
+              </a>
+              <router-link v-else to="/activities" class="btn btn-cic-outline btn-block">
+                查看全部活动
+              </router-link>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   </div>
 </template>
 
+<style scoped>
+.activity-page {
+  min-height: 60vh;
+}
+
+/* 桌面端导航栏是全站 absolute 覆盖在页面顶部的（其它页面靠 hero 撑出空间，
+   活动详情页没有 hero），这里显式留出导航栏高度，避免标题与菜单重叠 */
+@media (min-width: 992px) {
+  .activity-page {
+    padding-top: 96px;
+  }
+}
+
+.activity-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.activity-main {
+  min-width: 0;
+  text-align: left;
+}
+
+.crumbs {
+  font-size: 0.82rem;
+  color: var(--ink-muted, #6b7280);
+  margin-bottom: 0.6rem;
+}
+
+.crumbs a {
+  color: var(--ink-muted, #6b7280);
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  color: var(--accent-dark, #2980b9);
+}
+
+.crumbs .sep {
+  margin: 0 0.35rem;
+  color: #cbd5e1;
+}
+
+.activity-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink, #1f2937);
+  margin-bottom: 0.6rem;
+  text-align: left;
+}
+
+.meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  font-size: 0.88rem;
+  color: var(--ink-muted, #6b7280);
+}
+
+.meta-line a {
+  color: var(--accent-dark, #2980b9);
+  text-decoration: none;
+}
+
+/* sticky 右栏：随页面滚动，永远不会压住正文或页脚 */
+.activity-side {
+  position: sticky;
+  top: 1rem;
+}
+
+.side-card {
+  overflow: hidden;
+}
+
+.side-cover {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+.side-body {
+  padding: 1rem 1.1rem 1.2rem;
+  text-align: left;
+}
+
+.side-author {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--ink, #1f2937);
+}
+
+.side-date {
+  font-size: 0.85rem;
+  color: var(--ink-muted, #6b7280);
+}
+
+@media (max-width: 768px) {
+  .activity-layout {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .activity-side {
+    position: static;
+  }
+
+  .activity-title {
+    font-size: 1.5rem;
+  }
+}
+</style>
+
+<!-- mavon-editor 内部元素不受 scoped 约束，需要全局样式覆盖 -->
 <style>
 .v-note-wrapper {
   border: none;
@@ -47,137 +204,53 @@
 .v-note-wrapper .v-note-panel .v-note-show .v-show-content,
 .v-note-wrapper .v-note-panel .v-note-show .v-show-content-html {
   padding: 0;
-}
-/* .page {
-  padding: 30px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.5rem;
-}
-.lf {
   text-align: left;
 }
-.subtitle {
-  float: left;
-  color: #6c757d;
-  position: relative;
-  bottom: -0.5rem;
-}
-.title {
-  padding-left: 1rem;
-}
-.line {
-  float: left;
-  width: 50px;
-  border-right: 1px solid #c0c0c0;
-  padding-bottom: 1600px;
-  margin-bottom: -1600px;
-}
-.maindiv {
-  overflow: hidden;
-}
-.df {
-  width: 20%;
-  right: 10%;
-  top: 15%;
-  position: fixed;
-}
-.im {
-  width: 100%;
-  height: auto;
-  padding-left: 0;
-}
-a.list-title {
-  text-decoration: none;
-  color: #fff;
-}
-a.list-title:hover {
-  color: #fff;
-  text-decoration: none;
-}
-.hover:hover {
-  -webkit-transform: translateY(-3px);
-  -ms-transform: translateY(-3px);
-  transform: translateY(-3px);
-  -webkit-box-shadow: 0 0 6px #999;
-  box-shadow: 0 0 6px #999;
-  -webkit-transition: all 0.5s ease-out;
-  transition: all 0.5s ease-out;
-}
-.list-group-item {
-  z-index: 2;
-}
-.list-group-item.active {
-  z-index: 1;
-} */
 </style>
 
 <script>
-import $ from "jquery";
+import { getActivityDetail } from '@/api/edgeActivities';
+
 export default {
-  name: "activity",
+  name: 'activity',
   data() {
     return {
+      loading: true,
+      error: '',
       activity: {
-        id: "",
-        date: "",
-        cover: "",
-        title: "",
-        author: "",
-        content: ""
+        id: '',
+        date: '',
+        cover: '',
+        title: '',
+        author: '',
+        content: '',
+        link: ''
       },
       config: {
         boxShadow: false,
-        previewBackground: "#ffffff",
+        previewBackground: '#ffffff',
         subfield: false,
-        defaultOpen: "preview",
+        defaultOpen: 'preview',
         editable: false,
         toolbarsFlag: false,
         shortCut: false
       }
     };
   },
+  created() {
+    this.loadDetail();
+  },
   methods: {
-    load_detail: function() {
-      this.$ajax
-        .get("/api/activity/detail", {
-          params: { id: this.$route.params.id }
-        })
-        .then(res => {
-          if (res.data.ret === 0) {
-            this.activity = res.data.data;
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    windowResize: function() {
-      this.$nextTick(function() {
-        $(".footer").attr("style", "");
-        $(".footer").removeAttr("style");
-        if (
-          $("#activity").outerHeight() +
-            $(".navbar").outerHeight() +
-            $(".footer").outerHeight() <
-          $(window).innerHeight()
-        ) {
-          $(".footer").css("position", "fixed");
-          $(".footer").css("bottom", "0");
-        }
-      });
+    async loadDetail() {
+      this.loading = true;
+      this.error = '';
+      try {
+        this.activity = await getActivityDetail(this.$route.params.id);
+      } catch (e) {
+        this.error = e.status === 404 ? '活动不存在或已被删除。' : (e.message || '加载失败');
+      }
+      this.loading = false;
     }
-  },
-  mounted() {
-    $(".navbar").css("position", "relative");
-    this.windowResize();
-    window.onresize = this.windowResize;
-    this.load_detail();
-  },
-  destroyed() {
-    $(".navbar").attr("style", "");
-    $(".navbar").removeAttr("style");
-    $(".footer").attr("style", "");
-    $(".footer").removeAttr("style");
   }
 };
 </script>
