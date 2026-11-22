@@ -13,19 +13,22 @@
 // 4. 将命名空间绑定到本项目（ecustcic-web），
 //    变量名必须填：activities_kv（与 edge-functions 中代码引用一致）
 // 5. 在项目的「环境变量」中添加：
-//    ADMIN_TOKEN = <自定义一串随机字符串>
-//    （用于 POST/DELETE 写入操作的鉴权）
-//    OAUTH_STATE_SECRET = <随机字符串，用于 OAuth 会话签名>
-//    （可选但推荐；未配置时使用代码内置的兜底密钥）
+//    OAUTH_STATE_SECRET = <随机长字符串，必填>
+//    （会话与管理令牌的签名密钥；未配置时 /api/auth/* 直接返回 500）
+//    SITE_URL = https://www.ecustcic.com （必填，用于拼 redirect_uri 与 CORS 白名单）
+//    MACHINE_TOKEN = <自定义一串随机字符串，可选>
+//    （仅供运维脚本/CI 使用的机器凭证，不再下发给浏览器；
+//      旧的 ADMIN_TOKEN 变量已废弃，历史上外泄过，必须轮换）
+//    （后台的管理令牌由 GET /api/auth/token 用登录会话签发，2 小时过期）
 //
 // ## 本项目使用的接口
 //
 //   GET  /api/activity/all                    内容列表（默认只返回未隐藏条目，按日期倒序）
 //        ?kind=activity|news                  按类型过滤（缺省 activity 兼容老数据）
 //        ?limit=9                             限制条数
-//        ?includeHidden=1                     含隐藏条目（需 Authorization: Bearer <ADMIN_TOKEN>）
+//        ?includeHidden=1                     含隐藏条目（需 Authorization: Bearer <管理令牌>）
 //   GET  /api/activity/detail?id=xxx          单条详情（隐藏条目同样需要 token）
-//   POST /api/activity/all                    新增/更新（需 Authorization: Bearer <ADMIN_TOKEN>）
+//   POST /api/activity/all                    新增/更新（需 Authorization: Bearer <管理令牌>）
 //   DELETE /api/activity/detail?id=xxx        删除（同样需鉴权）
 //
 // 数据字段：
@@ -43,7 +46,7 @@
 //
 //   curl -X POST https://www.ecustcic.com/api/activity/all \
 //     -H "Content-Type: application/json" \
-//     -H "Authorization: Bearer <ADMIN_TOKEN>" \
+//     -H "Authorization: Bearer <MACHINE_TOKEN 或 /api/auth/token 签发的管理令牌>" \
 //     -d '{
 //       "kind": "activity",
 //       "title": "2026年迎新义诊活动",

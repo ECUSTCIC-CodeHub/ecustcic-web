@@ -44,8 +44,13 @@
 │   ├── faq/                 # 网络信息服务 FAQ
 │   ├── dev/                 # 开发教程（游戏开发路径指南）
 │   └── maintenance/         # 站点维护指南
+├── cloud-functions/     # Cloud Functions（Node.js 运行时：OAuth 登录、图片上传、存储管理）
+│   └── api/
+├── edge-functions/      # Edge Functions（V8 运行时：活动/快讯读写，KV 存储）
+│   └── api/
 ├── scripts/
-│   └── docs-postbuild.js    # VuePress 构建后处理脚本
+│   ├── docs-postbuild.js       # VuePress 构建后处理脚本
+│   └── copy-edge-functions.js  # 构建后把两类 Functions 复制进 dist/
 ├── vue.config.js        # 主站 Vue CLI 配置
 └── package.json
 ```
@@ -159,14 +164,34 @@ npm run lint
 
 编辑 `/src/data/publicityData.js` 文件。
 
-### 关于首页"活动更新"模块
+### 内容管理（活动 / 快讯 / 图片存储）
 
-> ⚠️ 该模块依赖后端接口 `/api/activity/all`，目前后端服务已下线，拉取活动的调用已注释（见 `src/views/Home.vue`），页面仅显示构建时间戳，活动列表为空。`/activity/:id` 详情页同理依赖 `/api/activity/detail`，同样不可用。
+活动、快讯与封面图片由 EdgeOne Pages 的函数提供，后台入口 `/admin`（需 ECUSTMC 皮肤站账号，且 `permission >= 1`）。
 
-如需恢复活动展示，有两种方案：
+- 前台：`/activities` 活动回顾、`/news` 快讯、`/activity/:id` 详情，首页顶部展示最新条目
+- 数据：Edge Function + KV（控制台绑定变量名 `activities_kv`，数据存在 `activities:list`）
+- 图片：Cloud Function + Blob 存储（store 名 `activity-covers`，只允许 `covers/` 前缀）
+- 正文是 Markdown，前台用 `mavon-editor` 渲染，其内置 FilterXSS 会按白名单过滤 HTML。**不要关闭 `html`/`xssOptions`，也不要在未净化的情况下换用 `v-html` 渲染正文**
+- 图片被任意活动/快讯引用时，服务端会拒绝删除（由后端重新核对，不依赖前端判断）
 
-1. **恢复后端接口**：取消注释 `Home.vue` 中的 `getActivities`，并重新部署提供 `/api/activity/all` 的后端服务
-2. **改为静态数据**（推荐，无需后端）：仿照 `publicityData.js` 的做法，将活动数据写入本地数据文件并导入渲染
+接口一览：
+
+| 方法 | 路径 | 鉴权 |
+|---|---|---|
+| GET | `/api/activity/all`（`?kind=` `?limit=`） | 公开 |
+| GET | `/api/activity/all?includeHidden=1` | 管理令牌（未授权返回 401，不会降级成公开列表） |
+| GET | `/api/activity/detail?id=` | 公开（草稿需管理令牌） |
+| POST | `/api/activity/all` | 管理令牌 |
+| DELETE | `/api/activity/detail?id=` | 管理令牌 |
+| GET | `/api/activity-image?key=covers/...` | 公开 |
+| POST | `/api/activity-image` | 管理令牌 |
+| GET / DELETE | `/api/storage` | 管理令牌 |
+| GET | `/api/auth/login`、`/callback`、`/me`、`/token`、`/logout` | 会话 Cookie |
+
+"管理令牌"有两种：
+
+1. 后台页面通过 `/api/auth/token` 用登录会话兑换的 **2 小时短期令牌**（默认路径，只存在浏览器内存里）
+2. 控制台配置的 `MACHINE_TOKEN` 机器凭证（仅供脚本 / CI 直接调用写接口，不下发浏览器）
 
 ### 贡献方式
 
@@ -174,22 +199,54 @@ npm run lint
 
 ## 部署
 
-构建完成后，`npm run build` 会生成以下产物：
+生产环境由 EdgeOne Pages 托管，推送 `master` 后由 `.cnb.yml` 自动执行 `npm install` → `npm run build` → `edgeone pages deploy -n ecustcic ./dist`。
+
+`npm run build` 生成：
 
 ```
-dist/                    # 主站构建产物
+dist/
 ├── index.html           # 主站入口
-├── tech/                # 技术文档（VuePress 产物，已同步到 public/tech/）
-├── js/                  # 主站 JS
-├── css/                 # 主站 CSS
-└── ...
+├── tech/                # 技术文档（VuePress 产物）
+├── js/ css/ ...         # 主站静态资源
+├── edge-functions/      # 由 scripts/copy-edge-functions.js 复制（V8 运行时）
+├── cloud-functions/     # 同上（Node.js 运行时，Blob SDK）
+└── package.json         # 被重写为只含 @edgeone/pages-blob 的极简版
 ```
 
-将 `dist/` 目录的内容部署到 Web 服务器即可。注意：
+注意：
 
-- 主站使用 HTML5 History Mode 路由，需配置服务器将所有非文件请求回退到 `index.html`
-- `/tech/` 路径下的文件为纯静态文件，不需要回退处理
-- Nginx 示例配置：
+- **必须随 `dist/` 一起部署 `edge-functions/` 与 `cloud-functions/`**，否则 `/api/*` 全部 404，登录与内容管理不可用
+- **部署前必须重新构建**：旧 `dist/` 里保存的是上一版函数代码（例如旧的鉴权逻辑），直接 `edgeone pages deploy ./dist` 会把旧代码发上线
+- 环境变量在控制台配置，见下文「环境变量（EdgeOne Pages 控制台）」；缺少 `OAUTH_STATE_SECRET` / `SITE_URL` 会让登录直接返回 500
+- 只做纯静态托管（Nginx / GitHub Pages）时页面可正常浏览，但没有 `/api/*`，后台管理与动态内容不可用
+
+### 环境变量（EdgeOne Pages 控制台）
+
+在 EdgeOne Pages 控制台「环境变量」中配置，缺少必填项时对应功能不可用：
+
+| 变量 | 必填 | 说明 |
+|---|---|---|
+| `OAUTH_STATE_SECRET` | 是 | 会话与管理令牌的签名密钥，随机长字符串。缺失时 `/api/auth/*` 直接返回 500（fail-closed）。**更换后所有已登录用户需重新登录** |
+| `SITE_URL` | 是 | 本站对外地址，如 `https://www.ecustcic.com`（必须 https、结尾不带斜杠）。用于拼 OAuth `redirect_uri`、CORS 白名单、删除图片前的回源校验；不配则无法登录 |
+| `BS_CLIENT_ID` | 是 | Blessing Skin OAuth 客户端 ID |
+| `BS_CLIENT_SECRET` | 是 | Blessing Skin OAuth 客户端 Secret |
+| `BS_BASE_URL` | 是 | 皮肤站地址，如 `https://mcskin.ecustvr.top` |
+| `BS_OAUTH_SCOPE` | 否 | 默认 `User.Read`；设为空字符串表示不传 scope 参数 |
+| `MACHINE_TOKEN` | 否 | 机器凭证，供 curl / CI 直接调用写接口 |
+
+> 旧变量 `ADMIN_TOKEN` 已废弃：它曾由 `/api/auth/token` 明文返回给浏览器，历史值应视为已泄露。升级后请从控制台删除该变量；确需脚本化写入时改用新生成的 `MACHINE_TOKEN`。
+
+控制台还需完成的一次性配置：
+
+- KV 存储：创建命名空间并绑定为全局变量 `activities_kv`
+- Blob 存储：函数内使用 `activity-covers`，无需额外创建
+
+### 纯静态托管（可选）
+
+若不使用 EdgeOne Pages，把 `dist/` 的静态部分放进 Web 服务器即可：
+
+- 主站使用 HTML5 History Mode，需把所有非文件请求回退到 `index.html`
+- `/tech/` 下是纯静态文件，不需要回退
 
 ```nginx
 server {
@@ -197,12 +254,10 @@ server {
     server_name your-domain.com;
     root /var/www/ecustcic-web;
 
-    # 主站 SPA 回退
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # 技术文档为纯静态，不需要回退
     location /tech/ {
         try_files $uri $uri/ =404;
     }
