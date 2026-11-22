@@ -32,6 +32,15 @@
         <input v-model="onlyUnused" type="checkbox" :disabled="!contentsFetched" />
         只看未引用
       </label>
+      <div v-if="selected.length" class="batch-actions">
+        <span class="batch-count">已选 {{ selected.length }} 个</span>
+        <button class="btn btn-sm btn-outline-danger" :disabled="batchDeleting" @click="removeSelected">
+          {{ batchDeleting ? '删除中…' : '批量删除' }}
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" :disabled="batchDeleting" @click="selected = []">
+          取消选择
+        </button>
+      </div>
     </div>
 
     <div v-if="usageError" class="alert alert-warning">
@@ -70,6 +79,16 @@
       <table class="table align-middle mb-0">
         <thead>
           <tr>
+            <th class="col-check">
+              <input
+                type="checkbox"
+                :checked="allSelected"
+                :indeterminate.prop="someSelected"
+                :disabled="selectableKeys.length === 0"
+                title="全选当前可删除的文件"
+                @change="toggleAll"
+              />
+            </th>
             <th class="col-thumb">预览</th>
             <th class="col-file">文件</th>
             <th class="col-size">大小</th>
@@ -78,7 +97,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in filtered" :key="item.key">
+          <tr v-for="item in filtered" :key="item.key" :class="{ 'row-selected': isSelected(item.key) }">
+            <td class="col-check">
+              <input
+                v-model="selected"
+                type="checkbox"
+                :value="item.key"
+                :disabled="!canDelete(item)"
+                :title="canDelete(item) ? '' : deleteHint(item)"
+              />
+            </td>
             <td>
               <a :href="urlOf(item.key)" target="_blank" rel="noopener" class="thumb-link">
                 <img :src="urlOf(item.key)" class="thumb" alt="" loading="lazy" />
@@ -105,7 +133,7 @@
             <td class="text-right nowrap">
               <button
                 class="btn btn-sm btn-outline-danger"
-                :disabled="!canDelete(item) || deletingKey === item.key"
+                :disabled="!canDelete(item) || deletingKey === item.key || batchDeleting"
                 :title="deleteHint(item)"
                 @click="remove(item)"
               >{{ deletingKey === item.key ? '删除中…' : '删除' }}</button>
@@ -166,6 +194,9 @@ export default {
       keyword: '',
       onlyUnused: false,
       deletingKey: '',
+      // 批量操作：选中的 key 列表
+      selected: [],
+      batchDeleting: false,
       truncated: false
     };
   },
@@ -193,6 +224,17 @@ export default {
     },
     missingSize() {
       return this.blobs.filter(item => item.size === null || item.size === undefined).length;
+    },
+    // 当前筛选结果里允许删除的 key（被引用的不可选）
+    selectableKeys() {
+      return this.filtered.filter(item => this.canDelete(item)).map(item => item.key);
+    },
+    allSelected() {
+      const keys = this.selectableKeys;
+      return keys.length > 0 && keys.every(key => this.selected.indexOf(key) >= 0);
+    },
+    someSelected() {
+      return this.selected.length > 0 && !this.allSelected;
     }
   },
   created() {
@@ -231,6 +273,9 @@ export default {
         }
       }
       this.loading = false;
+      // 刷新后剔除已不存在的选中项
+      const keys = this.blobs.map(item => item.key);
+      this.selected = this.selected.filter(key => keys.indexOf(key) >= 0);
     },
     buildUsage(items) {
       const usage = {};
@@ -248,6 +293,18 @@ export default {
       });
       this.usage = usage;
       this.contentsFetched = true;
+    },
+    isSelected(key) {
+      return this.selected.indexOf(key) >= 0;
+    },
+    toggleAll(event) {
+      const keys = this.selectableKeys;
+      if (event.target.checked) {
+        const merged = this.selected.concat(keys.filter(key => this.selected.indexOf(key) < 0));
+        this.selected = merged;
+      } else {
+        this.selected = this.selected.filter(key => keys.indexOf(key) < 0);
+      }
     },
     refsOf(key) {
       return this.usage[key] || [];
@@ -289,6 +346,43 @@ export default {
         alert('删除失败: ' + (e.message || '未知错误'));
       }
       this.deletingKey = '';
+    },
+    // 批量删除：串行执行，避免一次性打太多请求
+    async removeSelected() {
+      const targets = this.blobs.filter(item => this.isSelected(item.key) && this.canDelete(item));
+      if (!targets.length) return;
+      if (!confirm(`确认删除选中的 ${targets.length} 个文件吗？删除后不可恢复。`)) return;
+
+      this.batchDeleting = true;
+      const deleted = [];
+      const failed = [];
+
+      try {
+        const token = await getAdminToken();
+        for (let i = 0; i < targets.length; i++) {
+          const item = targets[i];
+          try {
+            await deleteBlob(token, item.key);
+            deleted.push(item.key);
+          } catch (e) {
+            failed.push(item.key);
+            if (e.status === 401) {
+              clearAdminToken();
+              break;
+            }
+          }
+        }
+      } catch (e) {
+        alert('删除失败: ' + (e.message || '未知错误'));
+      }
+
+      this.blobs = this.blobs.filter(item => deleted.indexOf(item.key) < 0);
+      this.selected = this.selected.filter(key => deleted.indexOf(key) < 0);
+      this.batchDeleting = false;
+
+      if (failed.length) {
+        alert(`已删除 ${deleted.length} 个，${failed.length} 个失败，请重试。`);
+      }
     }
   }
 };
@@ -391,6 +485,27 @@ export default {
   color: var(--ink-muted, #6b7280);
   border-top: none;
   white-space: nowrap;
+}
+
+.col-check {
+  width: 40px;
+  padding-right: 0;
+}
+
+.row-selected {
+  background: #f8fafc;
+}
+
+.batch-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.batch-count {
+  font-size: 0.82rem;
+  color: var(--ink-muted, #6b7280);
 }
 
 .col-thumb {
