@@ -272,7 +272,10 @@ export default {
           ...this.form,
           cover: this.coverPreview || '',
         };
-        await saveActivity(payload, this.getAdminToken());
+        // getAdminToken 是 async，必须 await，否则会拼成
+        // Authorization: Bearer [object Promise]，服务端只能回 401 unauthorized
+        const token = await this.getAdminToken();
+        await saveActivity(payload, token);
         await this.fetchActivities();
         this.resetForm();
       } catch (e) {

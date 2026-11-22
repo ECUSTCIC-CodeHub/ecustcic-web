@@ -38,6 +38,11 @@ export function getActivityDetail(id) {
  * @param {string} adminToken 控制台环境变量 ADMIN_TOKEN 的值
  */
 export function saveActivity(activity, adminToken) {
+  // 防御：把 Promise 误当 token 传入时（忘记 await）会拼成 [object Promise]，
+  // 服务端只会返回 401，排查困难，这里直接给出明确错误。
+  if (typeof adminToken !== 'string' || !adminToken) {
+    return Promise.reject(new Error('管理员凭证无效，请重新登录后再试'));
+  }
   return request('/all', {
     method: 'POST',
     headers: {
