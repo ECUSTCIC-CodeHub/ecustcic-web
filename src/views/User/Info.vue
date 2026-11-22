@@ -1,6 +1,6 @@
 <template>
   <div class="container px-5 pt-3 pb-5" id="info">
-    <AnimWords text="UserInfo" :animation="false" fontSize="3rem" />
+    <AnimWords text="UserInfo" :animation="false" fontSize="3rem" spacing="0.05em" />
 
     <div v-if="loading" class="text-center py-5">
       <div class="spinner-border text-primary" role="status"></div>

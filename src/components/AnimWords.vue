@@ -707,6 +707,10 @@ export default {
     },
     fontSize: {
       type: String
+    },
+    // 字母间距（CSS letter-spacing），长单词可传入更大值
+    spacing: {
+      type: String
     }
   },
   mounted() {
@@ -715,6 +719,9 @@ export default {
     }
     if (this.fontSize) {
       $(".text").css("font-size", this.fontSize);
+    }
+    if (this.spacing) {
+      $(".text").css("letter-spacing", this.spacing);
     }
   },
   methods: {
