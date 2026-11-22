@@ -299,15 +299,17 @@ export async function onRequestGet(context) {
     }, accessToken, env);
 
     // 跳回原页面
+    // 注意：这里只能用对象形式下发单个 Set-Cookie。
+    // 平台适配层可能用 headers.entries() 拼头部，写成数组/多条 Set-Cookie 会被合并成一条，
+    // 导致会话 Cookie 被浏览器丢弃（表现为登录后 /api/auth/me 仍然 401）。
+    // state Cookie 本身 Max-Age 只有 600 秒，不必在这里清除。
     return new Response(null, {
       status: 302,
-      headers: [
-        ['Location', '/user/info'],
-        ['Set-Cookie', setCookieHeader(COOKIE_NAME, session, SESSION_MAX_AGE, request, env)],
-        // state 用完即弃，避免残留 Cookie 被复用
-        ['Set-Cookie', setCookieHeader('cic_oauth_state', '', 0, request, env)],
-        ['Cache-Control', 'no-store'],
-      ],
+      headers: {
+        Location: '/user/info',
+        'Set-Cookie': setCookieHeader(COOKIE_NAME, session, SESSION_MAX_AGE, request, env),
+        'Cache-Control': 'no-store',
+      },
     });
   }
 
