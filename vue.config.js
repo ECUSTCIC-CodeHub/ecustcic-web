@@ -6,6 +6,13 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV !== 'production',
 
   devServer: {
+    proxy: {
+      // 本地开发时将 /api 转发到线上 EdgeOne Edge Functions
+      '/api': {
+        target: 'https://www.ecustcic.com',
+        changeOrigin: true
+      }
+    },
     historyApiFallback: {
       rewrites: [
         // /tech/ 下的路径不回退到主站 index.html，让静态文件正常服务

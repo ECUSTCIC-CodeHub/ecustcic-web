@@ -88,7 +88,10 @@
             <div class="col-md-4 mb-3" :key="index">
               <div class="newsItem">
                 <a class="tdn" :href="`/activity/${item.id}`">
-                  <img class="newsImg" :src="item.cover" />
+                  <img v-if="item.cover" class="newsImg" :src="item.cover" />
+                  <div v-else class="newsImg newsImg-placeholder">
+                    <i class="far fa-image"></i>
+                  </div>
                 </a>
                 <div class="newsText">
                   <a class="tdn" :href="`/activity/${item.id}`">{{item.title}}</a>
@@ -164,6 +167,18 @@
   width: 100%;
   height: 180px;
   object-fit: cover;
+  display: block;
+}
+
+/* 无封面时的占位样式 */
+.newsImg-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8f6fc 0%, #d6eaf8 100%);
+  color: var(--accent, #3498db);
+  font-size: 2.2rem;
+  opacity: 0.7;
 }
 
 .newsText {
@@ -198,6 +213,7 @@ import $ from "jquery";
 import { WOW } from "wowjs";
 import { setTimeout } from "timers";
 import Carousel from "@/components/Carousel.vue";
+import { getActivities } from "@/api/edgeActivities";
 
 export default {
   name: "home",
@@ -227,20 +243,24 @@ export default {
       activities: []
     };
   },
-  // 暂时注释activity，只保留纯静态
-  // methods: {
-  //   getActivities: function() {
-  //     this.$ajax
-  //       .get("/api/activity/all", { params: { page: 1, limit: 9 } })
-  //       .then(res => {
-  //         this.activities = res.data.data.activities;
-  //       })
-  //       .catch(error => {
-  //         console.log(error);
-  //       });
-  //   }
-  // },
+  methods: {
+    getActivities: function() {
+      getActivities(6)
+        .then(activities => {
+          this.activities = activities;
+          // 有数据后用最新活动日期替代构建时间
+          if (activities.length > 0) {
+            this.buildTime = activities[0].date;
+          }
+        })
+        .catch(error => {
+          console.log("活动数据加载失败:", error);
+        });
+    }
+  },
   mounted() {
+    this.getActivities();
+
     // 循环文字特效
     $(".tlt").textillate({
       loop: true,
@@ -257,7 +277,6 @@ export default {
     setTimeout(function() {
       $(".wow").css("opacity", "1");
     }, 100);
-    // this.getActivities();
   }
 };
 </script>
