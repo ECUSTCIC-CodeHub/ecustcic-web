@@ -34,3 +34,7 @@ serve_log*
 *.njsproj
 *.sln
 *.sw?
+
+# EdgeOne CLI local artifacts
+.env
+.edgeone
