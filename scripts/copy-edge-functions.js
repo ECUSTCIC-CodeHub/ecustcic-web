@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
+const pkg = require(path.join(root, 'package.json'));
 
 function copyDir(srcDir, destDir) {
   if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
@@ -36,4 +37,22 @@ if (fs.existsSync(cloudSrc)) {
   copied = true;
 }
 
-if (!copied) console.log('No functions directories found, skipping.');
+if (!copied) {
+  console.log('No functions directories found, skipping.');
+} else {
+  // 重写 dist/package.json 为极简版，只保留平台安装依赖所需的 dependencies。
+  // 若把项目根完整 package.json 带进 dist（含 scripts.build 等），
+  // 平台在部署 ./dist 时会尝试执行其中的构建脚本（webpack4 在平台环境失败），
+  // 导致整个部署 Process 阶段报 Failed。
+  const minimal = {
+    dependencies: {
+      '@edgeone/pages-blob':
+        (pkg.dependencies && pkg.dependencies['@edgeone/pages-blob']) || '^0.0.19',
+    },
+  };
+  fs.writeFileSync(
+    path.join(root, 'dist', 'package.json'),
+    JSON.stringify(minimal, null, 2)
+  );
+  console.log('Rewrote dist/package.json to minimal dependencies-only form.');
+}
