@@ -262,12 +262,18 @@ export default {
       }
       this.submitting = false;
     },
-    // 后台面板以会话 Cookie 鉴权；POST/DELETE 到 /api/activity/*
-    // 由 Edge Function 校验 Authorization header。此函数从会话派生。
+    // 后台面板以会话 Cookie 鉴权：调 /api/auth/token 时带上 Cookie 凭证，
+    // 由 Cloud Function 校验会话并回传管理 token（仅皮肤站管理员可获取）。
     async getAdminToken() {
-      const res = await fetch('/api/auth/token');
-      if (!res.ok) throw new Error('无权限发布');
+      const res = await fetch('/api/auth/token', {
+        headers: { Authorization: `Bearer COOKIE_EXCHANGE` },
+        credentials: 'include', // 确保跨域时也带上会话 Cookie
+      });
+      if (!res.ok) throw new Error('无权限发布（会话无效或非管理员）');
       const data = await res.json();
+      if (data.ret !== 0 || !data.data || !data.data.token) {
+        throw new Error(data.msg || '获取管理凭证失败');
+      }
       return data.data.token;
     },
     editActivity(act) {
