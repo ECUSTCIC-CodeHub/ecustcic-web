@@ -16,6 +16,11 @@
 const COOKIE_NAME = 'cic_session';
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 天
 
+// 兜底签名密钥：未配置 OAUTH_STATE_SECRET 环境变量时使用。
+// 注意：同一密钥会随代码仓库分发，安全性弱于独立配置的环境变量，
+// 正式使用建议在控制台配置自定义密钥后此常量即被忽略。
+const DEFAULT_SECRET = 'CIC-2026-fallback-HMAC-key-7f4e9a2b81c35d06';
+
 function base64url(input) {
   return btoa(String.fromCharCode(...new TextEncoder().encode(input)))
     .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -49,12 +54,13 @@ async function createSession(userData, env) {
     isAdmin: !!userData.isAdmin,
     exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE,
   }));
-  const sig = await sign(payload, env.OAUTH_STATE_SECRET);
+  const sig = await sign(payload, env.OAUTH_STATE_SECRET || DEFAULT_SECRET);
   return `${payload}.${sig}`;
 }
 
 async function verifySession(token, env) {
-  if (!token || !env.OAUTH_STATE_SECRET) return null;
+  const secret = env.OAUTH_STATE_SECRET || DEFAULT_SECRET;
+  if (!token) return null;
   const [payload, sig] = token.split('.');
   if (!payload || !sig) return null;
   const expected = await sign(payload, env.OAUTH_STATE_SECRET);
