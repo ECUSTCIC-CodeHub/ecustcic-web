@@ -11,13 +11,12 @@
         </h3>
       </div>
       <div class="head-actions">
-        <a
-          v-if="isEdit && !form.link && !isNews"
-          :href="`/activity/${form.id}`"
-          target="_blank"
-          rel="noopener"
+        <button
+          v-if="!isNews"
+          type="button"
           class="btn btn-outline-secondary"
-        >前台预览</a>
+          @click="openPreview"
+        >前台预览</button>
         <router-link :to="listPath" class="btn btn-outline-secondary">取消</router-link>
         <button class="btn btn-cic" :disabled="saving" @click="save">
           {{ saving ? '保存中…' : '保存' }}
@@ -340,6 +339,33 @@ export default {
     },
     onEditorSave() {
       this.save();
+    },
+    // 前台预览当前编辑内容（未保存的草稿）：写入 localStorage 后在新标签打开，
+    // 详情页检测到 ?preview=1 时直接读取这份草稿，不请求接口
+    openPreview() {
+      if (this.uploadingCount > 0) {
+        alert('图片还在上传，请稍候再预览');
+        return;
+      }
+      if (!this.form.title) {
+        alert('请先填写标题再预览');
+        return;
+      }
+      try {
+        localStorage.setItem('cic_preview_payload', JSON.stringify({
+          form: this.form,
+          savedAt: Date.now()
+        }));
+      } catch (e) {
+        alert('预览失败：浏览器存储不可用');
+        return;
+      }
+      const id = this.form.id || 'preview';
+      const href = this.$router.resolve({
+        path: `/activity/${id}`,
+        query: { preview: '1' }
+      }).href;
+      window.open(href, '_blank');
     },
     async onImgAdd(pos, file) {
       this.uploadingCount += 1;

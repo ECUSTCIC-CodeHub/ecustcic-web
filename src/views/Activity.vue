@@ -10,6 +10,11 @@
             <router-link to="/activities">活动</router-link>
           </nav>
 
+          <div v-if="isPreview" class="preview-banner">
+            <i class="fas fa-eye mr-2"></i>
+            预览模式：这是编辑器中尚未保存的草稿，仅当前浏览器可见。
+          </div>
+
           <h1 class="activity-title">{{ activity.title || '活动' }}</h1>
 
           <div class="meta-line">
@@ -125,6 +130,17 @@
   color: #cbd5e1;
 }
 
+.preview-banner {
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.35);
+  color: var(--accent-dark, #2980b9);
+  border-radius: var(--radius-sm, 8px);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
 .activity-title {
   font-size: 2rem;
   font-weight: 700;
@@ -237,8 +253,18 @@ export default {
       }
     };
   },
+  computed: {
+    // ?preview=1 时渲染编辑器里的未保存草稿（数据来自 localStorage）
+    isPreview() {
+      return this.$route.query.preview === '1';
+    }
+  },
   created() {
-    this.loadDetail();
+    if (this.isPreview) {
+      this.loadPreview();
+    } else {
+      this.loadDetail();
+    }
   },
   methods: {
     async loadDetail() {
@@ -250,6 +276,19 @@ export default {
         this.error = e.status === 404 ? '活动不存在或已被删除。' : (e.message || '加载失败');
       }
       this.loading = false;
+    },
+    loadPreview() {
+      this.loading = false;
+      this.error = '';
+      try {
+        const raw = localStorage.getItem('cic_preview_payload');
+        if (!raw) throw new Error('empty');
+        const payload = JSON.parse(raw);
+        if (!payload || !payload.form) throw new Error('empty');
+        this.activity = { ...this.activity, ...payload.form };
+      } catch (e) {
+        this.error = '没有找到可预览的草稿，请回到编辑器重新点击「前台预览」。';
+      }
     }
   }
 };

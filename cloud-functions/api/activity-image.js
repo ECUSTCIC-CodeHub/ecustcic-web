@@ -28,6 +28,42 @@ const MIME_EXT = {
   'image/gif': 'gif',
 };
 
+const EXT_MIME = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+  gif: 'image/gif',
+};
+
+// GET /api/activity-image?key=covers/xxx.jpg —— 读取已上传的图片
+// 上传接口返回的 URL 就是这种 query 形式，必须在这里处理，
+// 否则请求会落到本文件的 POST 入口而返回 404。
+export async function onRequestGet(context) {
+  const url = new URL(context.request.url);
+  const key = url.searchParams.get('key');
+  if (!key || key.includes('..')) {
+    return new Response('Missing key', { status: 400 });
+  }
+
+  const store = getStore('activity-covers');
+  const result = await store.getWithHeaders(key);
+  if (!result) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  const ext = key.split('.').pop().toLowerCase();
+  const mime = EXT_MIME[ext] || result.headers['content-type'] || 'application/octet-stream';
+
+  return new Response(result.body, {
+    headers: {
+      'Content-Type': mime,
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+}
+
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS });
 }

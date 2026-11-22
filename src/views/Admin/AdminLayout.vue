@@ -168,7 +168,9 @@ export default {
   text-decoration: none;
 }
 
-.admin-tab.router-link-active {
+/* 注意：router.js 里全局配置了 linkActiveClass: "active"，
+   所以 router-link 的激活类名是 .active，不是默认的 .router-link-active */
+.admin-tab.active {
   background: #fff;
   color: var(--accent-dark, #2980b9);
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
