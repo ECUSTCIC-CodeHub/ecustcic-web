@@ -68,6 +68,47 @@
           </ul>
 
           <div class="my-2 my-lg-0">
+            <ul class="navbar-nav mr-auto user-menu">
+              <template v-if="bsUser">
+                <li class="nav-item dropdown" id="dropmenu">
+                  <a
+                    role="button"
+                    id="navbarDropdown"
+                    class="nav-link dropdown-toggle user-dropdown"
+                    href="javascript:void(0);"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    data-dropdown-hover
+                  >
+                    <img :src="bsUser.avatar" class="user-avatar" alt="" />
+                    {{ bsUser.nickname }}
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/user/info">
+                      <i class="fa fa-info-circle fa-fw mr-2"></i>个人信息
+                    </a>
+                    <a class="dropdown-item" href="/admin/activity">
+                      <i class="fa fa-gear fa-fw mr-2"></i>活动管理
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/api/auth/logout">
+                      <i class="fa fa-sign-out fa-fw mr-2" aria-hidden="true"></i>退出登录
+                    </a>
+                  </div>
+                </li>
+              </template>
+              <template v-else>
+                <li class="nav-item">
+                  <router-link class="user-link" to="/user/login">
+                    <i class="fa fa-sign-in fa-fw" aria-hidden="true"></i>登录
+                  </router-link>
+                </li>
+              </template>
+            </ul>
+          </div>
+
+          <div class="my-2 my-lg-0 legacy-user" style="display: none">
             <ul class="navbar-nav mr-auto">
               <!-- <template v-if="token">
                 <li class="nav-item dropdown" id="dropmenu">
@@ -354,6 +395,32 @@ body,
   color: #1ecfca;
 } */
 
+/* ---------- OAuth 用户菜单 ---------- */
+.user-menu .user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.user-menu .user-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.user-menu .dropdown-menu {
+  border-radius: 10px;
+  border: 1px solid var(--line, #e5e7eb);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+.user-menu .dropdown-item:hover {
+  background: var(--accent-soft, rgba(52, 152, 219, 0.08));
+  color: var(--accent-dark, #2980b9);
+}
+
 @media (min-width: 992px) {
   .navbar.navbar-sticky.navbar-transparent-light.bg-white {
     position: absolute;
@@ -620,23 +687,26 @@ body,
 
 <script>
 import $ from "jquery";
-import Identicon from "identicon.js";
-import { Hash } from "crypto";
 import ScrollToTop from './components/ScrollToTop.vue';
 export default {
   data() {
     return {
-      head: null
+      head: null,
+      bsUser: null
     };
   },
   methods: {
-    showHead: function() {
-      if (this.token) {
-        let hash = Hash("md5");
-        hash.update(this.name);
-        var imgData = new Identicon(hash.digest("hex"), 30).toString();
-        this.head = "data:image/png+xml;base64," + imgData;
-      }
+    fetchBsUser: function() {
+      fetch('/api/auth/me')
+        .then(res => (res.ok ? res.json() : null))
+        .then(data => {
+          if (data && data.ret === 0) {
+            this.bsUser = data.data;
+          }
+        })
+        .catch(() => {
+          this.bsUser = null;
+        });
     },
     logout: function() {
       this.$cookies.remove("ECUST-CIC");
@@ -665,6 +735,8 @@ export default {
     }
   },
   mounted: function() {
+    this.fetchBsUser();
+
     $('[data-toggle="popover"]').popover();
     $('[data-toggle="popover"]')
       .on("shown.bs.popover", function() {
@@ -701,7 +773,6 @@ export default {
   },
   watch: {
     token: function() {
-      this.showHead();
       this.$nextTick(function() {
         $('[data-toggle="dropdown"]').bootstrapDropdownHover();
       });

@@ -12,8 +12,8 @@
       <!-- 未登录提示 -->
       <div v-if="!user" class="alert alert-info text-center">
         <i class="fas fa-info-circle"></i>
-        发布活动需要先使用皮肤站账号登录。
-        <a href="/api/auth/login" class="btn btn-cic btn-sm ml-2">使用皮肤站登录</a>
+        发布活动需要先使用 ECUSTMC 账号登录。
+        <a href="/api/auth/login" class="btn btn-cic btn-sm ml-2">使用 ECUSTMC 登录</a>
       </div>
 
       <div v-else class="user-pill mb-4">

@@ -49,6 +49,9 @@
   width: 100%;
   padding: 1rem;
   margin: 0 0 0 0;
+  /* 相对定位抬高内容层级，避免被绝对定位的粒子背景层遮挡点击 */
+  position: relative;
+  z-index: 1;
 }
 </style>
 

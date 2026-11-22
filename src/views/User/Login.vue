@@ -3,17 +3,16 @@
     <Loading />
     <AnimWords text="Login" :animation="false" />
     <p class="lead text-muted text-center mb-4">
-      使用华理皮肤站账号登录，与 Minecraft 社区账号通用
+      使用 ECUSTMC 账号登录
     </p>
     <div class="col-md-6 offset-md-3">
       <a class="btn btn-primary btn-lg btn-block skin-login-btn" href="/api/auth/login">
         <img class="plume-icon" src="@/assets/img/plume.svg" alt="" />
-        使用皮肤站账号登录
+        使用 ECUSTMC 用户中心登录
       </a>
     </div>
     <div class="text-center text-muted small mt-4">
-      登录即代表你同意本站的使用条款 ·
-      <a href="https://mcskin.ecustvr.top/" target="_blank" rel="noopener">皮肤站主页</a>
+      <a href="https://mcskin.ecustvr.top/" target="_blank" rel="noopener">ECUSTMC 用户中心主页</a>
     </div>
     <!-- <div class="row mb-3">
       <div class="col-md-2 offset-md-2">
