@@ -49,8 +49,8 @@
 }
 #user {
   width: 100%;
-  /* 顶部与导航拉开距离，避免标题紧贴菜单 */
-  padding: 3.5rem 1rem 1rem;
+  /* 顶部与导航拉开足量距离，同时压缩底部留白 */
+  padding: 7rem 1rem 1rem;
   margin: 0 0 0 0;
   /* 相对定位抬高内容层级，避免被绝对定位的粒子背景层遮挡点击 */
   position: relative;
