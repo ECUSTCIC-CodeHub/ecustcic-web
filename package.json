@@ -10,6 +10,7 @@
     "docs:build": "vuepress build docs && node scripts/docs-postbuild.js"
   },
   "dependencies": {
+    "@edgeone/pages-blob": "^0.0.19",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "animate.css": "^3.7.2",
     "axios": "^0.21.1",

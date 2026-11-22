@@ -90,7 +90,7 @@
                 <a class="tdn" :href="`/activity/${item.id}`">
                   <img v-if="item.cover" class="newsImg" :src="item.cover" />
                   <div v-else class="newsImg newsImg-placeholder">
-                    <i class="far fa-image"></i>
+                    <img class="plume" src="@/assets/img/plume.svg" alt="" />
                   </div>
                 </a>
                 <div class="newsText">
@@ -170,15 +170,25 @@
   display: block;
 }
 
-/* 无封面时的占位样式 */
+/* 无封面时的占位样式：参考 s.mc.ecustcic.com 的蓝灰渐变星空风 */
 .newsImg-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #e8f6fc 0%, #d6eaf8 100%);
-  color: var(--accent, #3498db);
-  font-size: 2.2rem;
-  opacity: 0.7;
+  background: radial-gradient(
+      ellipse at 30% 20%,
+      rgba(115, 176, 251, 0.18) 0%,
+      transparent 50%
+    ),
+    radial-gradient(ellipse at 75% 80%, rgba(121, 181, 251, 0.22) 0%, transparent 55%),
+    linear-gradient(160deg, #101b33 0%, #1c3a66 55%, #2a5591 100%);
+}
+
+.newsImg-placeholder .plume {
+  width: 74px;
+  height: 74px;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 10px rgba(0, 62, 136, 0.45));
 }
 
 .newsText {

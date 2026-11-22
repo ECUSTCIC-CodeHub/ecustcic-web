@@ -24,6 +24,9 @@ import Publicity from "@/views/Publicity/Publicity.vue";
 import PublicityHome from "@/views/Publicity/Home.vue";
 import Certificate from "@/views/Publicity/Certificate.vue";
 
+// 后台管理
+import ActivityAdmin from "@/views/Admin/ActivityAdmin.vue";
+
 // 其他
 import Others from "@/views/Others/Others.vue";
 // 签到
@@ -202,6 +205,15 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/About.vue")
+    },
+    // 后台管理
+    {
+      path: "/admin/activity",
+      name: "activity-admin",
+      component: ActivityAdmin,
+      meta: {
+        title: "CIC-活动管理"
+      }
     },
     // 用户相关
     {
