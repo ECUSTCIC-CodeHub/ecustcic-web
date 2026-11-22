@@ -145,6 +145,38 @@
         </div>
       </div>
     </div>
+
+    <!-- 校园通知：来源为校内站点聚合（每天 20:30 更新），浏览器直连 news.bestzyq.cn -->
+    <div class="notice-section">
+      <div class="container">
+        <div class="feed-head">
+          <h3 class="feed-title">校园通知</h3>
+          <span class="feed-update">每日 20:30 更新</span>
+        </div>
+        <p class="feed-sub text-muted">来源：教务处通知 · 学校新闻网 · 学生处通知 · 研究生院通知</p>
+
+        <div v-if="campusNotices.length === 0" class="feed-empty">
+          暂无校园通知。
+        </div>
+        <div v-else class="feed-list">
+          <a
+            v-for="item in campusNotices"
+            :key="item.link"
+            :href="item.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="feed-row"
+          >
+            <span class="feed-date">{{ item.date }}</span>
+            <span class="feed-main">
+              <span class="feed-name">{{ item.title }}</span>
+              <span v-if="item.source" class="feed-summary">{{ item.source }}</span>
+            </span>
+            <i class="feed-icon fas fa-external-link-alt"></i>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -261,12 +293,13 @@
   text-align: left;
 }
 
+/* 标题不省略：窄屏下自动换行（原来 nowrap + ellipsis 会把长标题整段吃掉） */
 .feed-name {
   font-weight: 600;
   font-size: 0.95rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .feed-summary {
@@ -299,6 +332,17 @@
   font-size: 0.9rem;
 }
 
+/* ---------- 校园通知（首页最下方） ---------- */
+.notice-section {
+  padding: 0 0 4rem;
+}
+
+.feed-update {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
 @media (max-width: 576px) {
   .feed-date {
     width: 68px;
@@ -314,6 +358,7 @@ import { setTimeout } from "timers";
 import Carousel from "@/components/Carousel.vue";
 import { getActivities } from "@/api/edgeActivities";
 import { getAiNotices, mergeByDate } from "@/api/externalFeed";
+import { getCampusNotices } from "@/api/campusNotice";
 
 export default {
   name: "home",
@@ -343,6 +388,7 @@ export default {
       activities: [],
       localNews: [],
       aiNews: [],
+      campusNotices: [],
       // AI 站公告是否已返回（避免"暂无快讯"在公告到达前闪一下）
       aiDone: false
     };
@@ -383,6 +429,12 @@ export default {
         this.aiDone = true;
       });
     },
+    // 校园通知：独立请求，失败时该区块降级为"暂无"，不影响其他内容
+    loadCampusNotices: function() {
+      getCampusNotices(6).then(notices => {
+        this.campusNotices = notices;
+      });
+    },
     isExternal(link) {
       return /^https?:\/\//i.test(link || '');
     },
@@ -397,6 +449,7 @@ export default {
   },
   mounted() {
     this.loadFeeds();
+    this.loadCampusNotices();
 
     // 循环文字特效
     $(".tlt").textillate({
