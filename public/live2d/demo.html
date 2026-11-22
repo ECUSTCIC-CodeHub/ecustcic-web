@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Live2D 看板娘预览 · ECUST-CIC</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: radial-gradient(circle at 28% 18%, #eaf4fe, #f8fafc 58%, #eef2f7 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    color: #1f2937;
+  }
+  .stage {
+    position: relative;
+    width: 440px;
+    max-width: 94vw;
+    padding: 26px 24px 18px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(52, 152, 219, 0.18);
+    border-radius: 20px;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.13);
+    text-align: center;
+  }
+  .bubble {
+    position: absolute;
+    left: 50%;
+    top: 16px;
+    transform: translate(-50%, 6px);
+    min-width: 180px;
+    max-width: 320px;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1px solid rgba(52, 152, 219, 0.35);
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+    font-size: 13px;
+    line-height: 1.5;
+    color: #2980b9;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .bubble.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    background: #fff;
+    border-right: 1px solid rgba(52, 152, 219, 0.35);
+    border-bottom: 1px solid rgba(52, 152, 219, 0.35);
+    transform: rotate(45deg);
+  }
+  canvas#live2d {
+    display: block;
+    width: 392px;
+    height: 420px;
+    max-width: 100%;
+    margin: 8px auto 0;
+    cursor: grab;
+  }
+  canvas#live2d:active {
+    cursor: grabbing;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    border-radius: 999px;
+    border: 1px solid rgba(52, 152, 219, 0.55);
+    background: #3498db;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn:hover {
+    background: #2980b9;
+    text-decoration: none;
+    color: #fff;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: #2980b9;
+  }
+  .btn-ghost:hover {
+    background: rgba(52, 152, 219, 0.1);
+    color: #2980b9;
+  }
+  .hint {
+    margin: 14px 0 0;
+    font-size: 0.76rem;
+    color: #9ca3af;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="bubble" id="bubble">你好呀，我是 CIC 的看板娘～</div>
+    <canvas id="live2d" width="392" height="420"></canvas>
+    <div class="actions">
+      <button class="btn" type="button" id="btn-talk">说句话</button>
+      <a class="btn btn-ghost" href="/others/sign">原签到页</a>
+    </div>
+    <p class="hint" id="hint">模型：Shizuku（Cubism 2）· 加载中…</p>
+  </div>
+
+  <script src="/live2d/js/live2d.js"></script>
+  <script>
+    (function () {
+      var LINES = [
+        '你好呀，我是 CIC 的看板娘～',
+        '要看看今天的活动么？',
+        '在找什么东西呢，需要帮忙吗？',
+        '不要动手动脚的！快把手拿开~~',
+        '再摸的话我可要报警了！',
+        '记得常来华理计算机信息交流协会玩哦'
+      ];
+
+      // 模型不进仓库，全部走 CDN（cdnjs 没有 Live2D 资源，只能在 npm 系 CDN 里选）。
+      // 三个源都返回 Access-Control-Allow-Origin: *，老 SDK 会设 crossOrigin，纹理可正常上传。
+      // 若以后想本地托管，把 { label: 'local', base: '/live2d/model/shizuku/' } 放回数组首位即可。
+      var MODEL_FILE = 'shizuku.model.json';
+      var SOURCES = [
+        { label: 'elemecdn', base: 'https://npm.elemecdn.com/live2d-widget-model-shizuku@1.0.5/assets/' },
+        { label: 'fastly', base: 'https://fastly.jsdelivr.net/npm/live2d-widget-model-shizuku@1.0.5/assets/' },
+        { label: 'unpkg', base: 'https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/' }
+      ];
+
+      var bubble = document.getElementById('bubble');
+      var hint = document.getElementById('hint');
+      var timer = null;
+
+      function say(text, sticky) {
+        bubble.textContent = text;
+        bubble.classList.add('show');
+        if (timer) clearTimeout(timer);
+        timer = null;
+        if (!sticky) {
+          timer = setTimeout(function () {
+            bubble.classList.remove('show');
+          }, 3200);
+        }
+      }
+
+      function nextLine() {
+        say(LINES[Math.floor(Math.random() * LINES.length)]);
+      }
+
+      // ?src=elemecdn|fastly|unpkg 可强制指定来源，便于排查 CDN 问题
+      function forcedSource() {
+        var wanted = new URLSearchParams(location.search).get('src');
+        if (!wanted) return null;
+        for (var i = 0; i < SOURCES.length; i++) {
+          if (SOURCES[i].label === wanted) return SOURCES[i];
+        }
+        return null;
+      }
+
+      function pickSource() {
+        var forced = forcedSource();
+        if (forced) return Promise.resolve(forced);
+
+        return SOURCES.reduce(function (chain, source) {
+          return chain.then(function (found) {
+            if (found) return found;
+            return fetch(source.base + MODEL_FILE, { mode: 'cors', cache: 'force-cache' })
+              .then(function (res) {
+                return res.ok ? source : null;
+              })
+              .catch(function () {
+                return null;
+              });
+          });
+        }, Promise.resolve(null));
+      }
+
+      if (typeof loadlive2d !== 'function') {
+        hint.textContent = '加载失败：/live2d/js/live2d.js 里没有 loadlive2d';
+        return;
+      }
+
+      // 首屏欢迎语常驻，点击后才开始计时消失
+      say('你好呀，我是 CIC 的看板娘～', true);
+      hint.textContent = '正在寻找模型来源…';
+
+      pickSource().then(function (source) {
+        if (!source) {
+          hint.textContent = '模型加载失败：本地与 CDN 均不可用';
+          return;
+        }
+        try {
+          loadlive2d('live2d', source.base + MODEL_FILE);
+        } catch (e) {
+          hint.textContent = '模型加载失败：' + (e && e.message ? e.message : e);
+          return;
+        }
+        hint.textContent = '模型：Shizuku（Cubism 2）· 来源：' + source.label + ' · 点击人物或按钮试试';
+      });
+
+      var canvas = document.getElementById('live2d');
+      canvas.addEventListener('click', nextLine);
+      document.getElementById('btn-talk').addEventListener('click', nextLine);
+    })();
+  </script>
+</body>
+</html>
