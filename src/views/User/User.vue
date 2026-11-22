@@ -58,15 +58,21 @@
   /* 关键：让鼠标事件落在内容空白区域时穿透到粒子层触发特效 */
   pointer-events: none;
 }
-/* 内容中的可交互元素恢复鼠标事件 */
-#user a,
-#user button,
-#user input,
-#user textarea,
-#user select,
-#user label,
-#user .form-control,
-#user .btn {
+/* 内容中的可交互元素恢复鼠标事件。
+   注意：这里必须用深度选择器(>>>)，因为 router-view 渲染的是子组件
+   (Login/Register/Info/Password)，其内部元素不带本组件的 scope 属性，
+   普通写法 #user a[data-v-xxx] 匹配不到，会导致按钮/链接也一起穿透而无法点击。 */
+#user >>> a,
+#user >>> button,
+#user >>> input,
+#user >>> textarea,
+#user >>> select,
+#user >>> label,
+#user >>> .btn,
+#user >>> .form-control,
+#user >>> .nav-link,
+#user >>> [role="button"],
+#user >>> .modal {
   pointer-events: auto;
 }
 </style>
