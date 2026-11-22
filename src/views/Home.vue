@@ -90,6 +90,7 @@
                 <a class="tdn" :href="`/activity/${item.id}`">
                   <img v-if="item.cover" class="newsImg" :src="item.cover" />
                   <div v-else class="newsImg newsImg-placeholder">
+                    <canvas ref="placeholderCanvases" class="placeholder-canvas"></canvas>
                     <img class="plume" src="@/assets/img/plume.svg" alt="" />
                   </div>
                 </a>
@@ -170,25 +171,28 @@
   display: block;
 }
 
-/* 无封面时的占位样式：参考 s.mc.ecustcic.com 的蓝灰渐变星空风 */
+/* 无封面时的占位样式：淡蓝晴空风，轻松愉悦 */
 .newsImg-placeholder {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(
-      ellipse at 30% 20%,
-      rgba(115, 176, 251, 0.18) 0%,
-      transparent 50%
-    ),
-    radial-gradient(ellipse at 75% 80%, rgba(121, 181, 251, 0.22) 0%, transparent 55%),
-    linear-gradient(160deg, #101b33 0%, #1c3a66 55%, #2a5591 100%);
+  background: linear-gradient(160deg, #eaf4fe 0%, #dcedfd 55%, #cfe6fc 100%);
+}
+
+.placeholder-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .newsImg-placeholder .plume {
+  position: relative;
   width: 74px;
   height: 74px;
-  opacity: 0.9;
-  filter: drop-shadow(0 4px 10px rgba(0, 62, 136, 0.45));
+  opacity: 0.95;
+  filter: drop-shadow(0 3px 8px rgba(96, 165, 250, 0.5));
 }
 
 .newsText {
@@ -262,10 +266,63 @@ export default {
           if (activities.length > 0) {
             this.buildTime = activities[0].date;
           }
+          this.$nextTick(() => this.drawPlaceholders());
         })
         .catch(error => {
           console.log("活动数据加载失败:", error);
         });
+    },
+    // 为无封面的活动卡片绘制静态球棍粒子连线（致敬关于页粒子背景）
+    drawPlaceholders: function() {
+      this.$nextTick(() => {
+        const canvases = this.$refs.placeholderCanvases;
+        if (!canvases || !Array.isArray(canvases)) return;
+        canvases.forEach(canvas => {
+          if (canvas.dataset.drawn) return;   // 避免重复绘制
+          const w = canvas.offsetWidth || 300;
+          const h = canvas.offsetHeight || 180;
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
+
+          // 布点
+          const count = Math.floor((w * h) / 4200);
+          const pts = [];
+          for (let i = 0; i < count; i++) {
+            pts.push({
+              x: Math.random() * w,
+              y: Math.random() * h,
+              r: 1 + Math.random() * 1.6
+            });
+          }
+          // 连线（距离阈值内）
+          const maxDist = Math.min(w, h) * 0.35;
+          ctx.strokeStyle = 'rgba(96, 165, 250, 0.32)';
+          ctx.lineWidth = 1;
+          for (let i = 0; i < pts.length; i++) {
+            for (let j = i + 1; j < pts.length; j++) {
+              const dx = pts[i].x - pts[j].x;
+              const dy = pts[i].y - pts[j].y;
+              const d = Math.sqrt(dx * dx + dy * dy);
+              if (d < maxDist) {
+                ctx.beginPath();
+                ctx.moveTo(pts[i].x, pts[i].y);
+                ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+              }
+            }
+          }
+          // 节点
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.55)';
+          for (const p of pts) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          canvas.dataset.drawn = '1';
+        });
+      });
     }
   },
   mounted() {

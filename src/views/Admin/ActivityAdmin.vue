@@ -15,15 +15,21 @@
         发布活动需要先使用 ECUSTMC 账号登录。
         <a href="/api/auth/login" class="btn btn-cic btn-sm ml-2">使用 ECUSTMC 登录</a>
       </div>
+      <!-- 已登录但非管理员 -->
+      <div v-else-if="!user.isAdmin" class="alert alert-warning text-center">
+        <i class="fas fa-lock"></i>
+        当前账号（{{ user.nickname }}）不是 ECUSTMC 管理员，无权发布活动。
+        如需权限请在皮肤站获取管理员身份。
+      </div>
 
-      <div v-else class="user-pill mb-4">
+      <div v-if="user && user.isAdmin" class="user-pill mb-4">
         <img :src="user.avatar" class="user-avatar" alt="" />
         <span>{{ user.nickname }}</span>
         <a href="/api/auth/logout" class="ml-auto text-muted small">退出登录</a>
       </div>
 
-      <!-- 表单 -->
-      <section v-if="user" class="admin-form-section mb-5">
+      <!-- 表单（仅管理员可见） -->
+      <section v-if="user && user.isAdmin" class="admin-form-section mb-5">
         <h3 class="mb-3">{{ editingId ? '编辑活动' : '发布新活动' }}</h3>
         <form @submit.prevent="submitActivity">
           <div class="form-row">
@@ -60,8 +66,8 @@
         </form>
       </section>
 
-      <!-- 活动列表 -->
-      <section class="admin-list-section mb-5">
+      <!-- 活动列表（仅管理员可见） -->
+      <section v-if="user && user.isAdmin" class="admin-list-section mb-5">
         <h3 class="mb-3">现有活动（{{ activities.length }}）</h3>
         <div v-if="loading" class="text-center py-4">
           <div class="spinner-border text-primary"></div>

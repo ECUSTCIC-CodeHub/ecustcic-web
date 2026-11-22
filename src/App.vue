@@ -69,7 +69,12 @@
 
           <div class="my-2 my-lg-0">
             <ul class="navbar-nav mr-auto user-menu">
-              <template v-if="bsUser">
+              <!-- 加载中：骨架占位，避免登录/头像闪烁 -->
+              <li v-if="checking" class="nav-item user-skeleton">
+                <span class="skeleton-dot"></span>
+                <span class="skeleton-line"></span>
+              </li>
+              <template v-else-if="bsUser">
                 <li class="nav-item dropdown" id="dropmenu">
                   <a
                     role="button"
@@ -396,6 +401,48 @@ body,
 } */
 
 /* ---------- OAuth 用户菜单 ---------- */
+@media (max-width: 991px) {
+  .user-menu {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .user-menu {
+    margin-left: 1.25rem;
+  }
+}
+
+.user-menu .user-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.3rem 0.5rem;
+}
+
+.user-menu .skeleton-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s infinite;
+}
+
+.user-menu .skeleton-line {
+  width: 60px;
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.2s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .user-menu .user-avatar {
   width: 28px;
   height: 28px;
@@ -692,7 +739,8 @@ export default {
   data() {
     return {
       head: null,
-      bsUser: null
+      bsUser: null,
+      checking: true
     };
   },
   methods: {
@@ -706,6 +754,9 @@ export default {
         })
         .catch(() => {
           this.bsUser = null;
+        })
+        .finally(() => {
+          this.checking = false;
         });
     },
     logout: function() {

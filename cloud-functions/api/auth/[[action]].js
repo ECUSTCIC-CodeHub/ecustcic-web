@@ -170,16 +170,17 @@ export async function onRequestGet(context) {
     }
     const userData = await userResp.json();
 
-    // Blessing Skin /api/user 返回 { data: { uid, nickname, email, ... } }
+    // Blessing Skin /api/user 返回 { data: { uid, nickname, email, permission, ... } }
+    // permission: -1 封禁 | 0 普通用户 | 1 管理员 | 2 超级管理员
     const u = userData.data || userData;
 
-    // 生成会话
+    // 生成会话：皮肤站 permission >= 1 直接视为本站管理员
     const session = await createSession({
       uid: u.uid,
       nickname: u.nickname,
       email: u.email,
       avatar: baseUrl + '/avatar/' + u.uid,
-      isAdmin: false, // 默认非管理员；管理员通过 ADMIN 名单或皮肤站站点管理员标记另行判定
+      isAdmin: Number(u.permission) >= 1,
     }, env);
 
     // 跳回原页面
@@ -205,9 +206,9 @@ export async function onRequestGet(context) {
     return Response.json({ ret: 0, data: user });
   }
 
-  // ── 签发活动管理 token（已登录会话 → 短时 Bearer token）──
+  // ── 签发活动管理 token（已登录管理员 → Bearer token）──
   // 用于前端调用 /api/activity/* 时携带的 Authorization header。
-  // 直接复用 ADMIN_TOKEN（服务端间传递，不暴露给前端之外的第三方）。
+  // 仅当会话 isAdmin=true（皮肤站 permission>=1）时才回传 ADMIN_TOKEN。
   if (action === 'token') {
     const cookie = (request.headers.get('Cookie') || '')
       .split(';').map(s => s.trim())
@@ -216,6 +217,9 @@ export async function onRequestGet(context) {
     const user = await verifySession(token, env);
     if (!user) {
       return Response.json({ ret: 1, msg: 'not_logged_in' }, { status: 401 });
+    }
+    if (!user.isAdmin) {
+      return Response.json({ ret: 1, msg: 'forbidden' }, { status: 403 });
     }
     if (!env.ADMIN_TOKEN) {
       return Response.json({ ret: 1, msg: 'server_not_configured' }, { status: 500 });

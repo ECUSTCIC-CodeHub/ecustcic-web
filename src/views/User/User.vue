@@ -33,7 +33,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  height: 100%;
+  /* 拉伸到至少视口高度，避免页面内容超过 .particles(绝对定位100%高)后
+     下方露出无背景的空白 */
+  min-height: calc(100vh - 120px);
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;

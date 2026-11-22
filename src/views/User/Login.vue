@@ -116,6 +116,11 @@
   width: 24px;
   height: 24px;
 }
+/* 让粒子背景撑满剩余视口高度 */
+#login {
+  min-height: calc(100vh - 190px);
+  display: flow-root;
+}
 </style>
 
 <script>

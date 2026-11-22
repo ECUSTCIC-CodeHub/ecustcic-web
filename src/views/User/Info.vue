@@ -1,380 +1,194 @@
 <template>
   <div class="container px-5 pt-3 pb-5" id="info">
-    <template v-if="guide">
-      <div class="alert alert-dismissible fade show guide" role="alert">
-        <strong>Welcom To ECUST-CIC!</strong>
-        <br />Please fill in your information so that we can contact you.
-        <button
-          type="button"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    </template>
-
     <AnimWords text="UserInfo" :animation="false" fontSize="3rem" />
-    <div class="row mb-2">
-      <div class="col-md-2 offset-md-2">
-        <label class="form-control" onselectstart="return false;" for="name">昵称</label>
-      </div>
-      <div class="col-md-1">
-        <span class="form-control transparent">
-          <i class="fa fa-spinner fa-pulse"></i>
+
+    <div v-if="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-3 text-muted">正在获取用户信息...</p>
+    </div>
+
+    <!-- 未登录：引导去登录 -->
+    <div v-else-if="!user" class="not-logged-in text-center py-5">
+      <i class="fas fa-user-circle fa-5x mb-4"></i>
+      <h4>登录后可查看个人信息</h4>
+      <p class="text-muted">使用 ECUSTMC 用户中心账号登录本站</p>
+      <a href="/api/auth/login" class="btn btn-cic mt-2">
+        <i class="fas fa-sign-in-alt mr-2"></i>登录
+      </a>
+    </div>
+
+    <!-- 已登录：展示用户信息 -->
+    <div v-else class="profile-card mx-auto">
+      <div class="profile-top">
+        <img :src="user.avatar" class="profile-avatar" :alt="user.nickname" />
+        <h3 class="profile-nickname mt-3">{{ user.nickname }}</h3>
+        <span class="profile-badge" :class="user.isAdmin ? 'badge-admin' : 'badge-member'">
+          <i class="fas" :class="user.isAdmin ? 'fa-user-shield' : 'fa-user'"></i>
+          {{ user.isAdmin ? '管理员' : '成员' }}
         </span>
       </div>
-      <div class="col-md-4">
-        <input
-          type="text"
-          id="name"
-          name="name"
-          class="form-control"
-          placeholder="昵称"
-          @click="disablePopover"
-          @blur="check('name')"
-          v-model="name"
-          v-validate="'required|max:20'"
-        />
-      </div>
-      <div class="col-md-3">
-        <div class="form-control alert-danger" role="alert" v-show="errors.has('name')">昵称至多15个字符</div>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-md-2 offset-md-2">
-        <label class="form-control" onselectstart="return false;" for="studentNumber">学号</label>
-      </div>
-      <div class="col-md-1">
-        <span class="form-control transparent">
-          <i class="fa fa-spinner fa-pulse"></i>
-        </span>
-      </div>
-      <div class="col-md-4">
-        <input
-          type="text"
-          id="studentNumber"
-          name="studentNumber"
-          class="form-control"
-          placeholder="学号"
-          @click="disablePopover"
-          @blur="check('studentNumber')"
-          v-model="studentNumber"
-          v-validate
-          pattern="^1[0-9]{7}$"
-          title="修改失败"
-          data-toggle="popover"
-          datas-placement="right"
-          data-content="该学号已存在"
-        />
-      </div>
-      <div class="col-md-3">
-        <div
-          class="form-control alert-danger"
-          role="alert"
-          v-show="errors.has('studentNumber')"
-        >请填写正确的学号</div>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-md-2 offset-md-2">
-        <label class="form-control" onselectstart="return false;" for="studentCollege">学院</label>
-      </div>
-      <div class="col-md-1">
-        <span class="form-control transparent">
-          <i class="fa fa-spinner fa-pulse"></i>
-        </span>
-      </div>
-      <div class="col-md-4">
-        <select
-          id="studentCollege"
-          name="studentCollege"
-          class="form-control selectpicker show-tick"
-          title="学院"
-          v-model="studentCollege"
-        >
-          <option>化工学院</option>
-          <option>化学与分子工程学院</option>
-          <option>生物工程学院</option>
-          <option>药学院</option>
-          <option>材料科学与工程学院</option>
-          <option>信息科学与工程学院</option>
-          <option>机械与动力工程学院</option>
-          <option>资源与环境工程学院</option>
-          <option>商学院</option>
-          <option>社会与公共管理学院</option>
-          <option>理学院</option>
-          <option>艺术设计与传媒学院</option>
-          <option>外国语学院</option>
-          <option>法学院</option>
-          <option>体育科学与工程学院</option>
-          <option>马克思主义学院</option>
-          <option>中德工学院</option>
-          <option>国际卓越工程师学院</option>
-          <option>其他/外校</option>
-        </select>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-md-2 offset-md-2">
-        <label class="form-control" onselectstart="return false;" for="mobilephone">手机号</label>
-      </div>
-      <div class="col-md-1">
-        <span class="form-control transparent">
-          <i class="fa fa-spinner fa-pulse"></i>
-        </span>
-      </div>
-      <div class="col-md-4">
-        <input
-          type="text"
-          id="mobilephone"
-          name="mobilephone"
-          class="form-control"
-          placeholder="手机号"
-          @click="disablePopover"
-          @blur="check('mobilephone')"
-          v-model="mobilephone"
-          v-validate
-          pattern="^1[0-9]{10}$"
-          title="修改失败"
-          data-toggle="popover"
-          datas-placement="right"
-          data-content="该用户已存在"
-        />
-      </div>
-      <div class="col-md-3">
-        <div
-          class="form-control alert-danger"
-          role="alert"
-          v-show="errors.has('mobilephone')"
-        >请填写正确的手机号</div>
-      </div>
-    </div>
-    <div class="row mb-4">
-      <div class="col-md-2 offset-md-2">
-        <label class="form-control" onselectstart="return false;" for="qqNumber">QQ号</label>
-      </div>
-      <div class="col-md-1">
-        <span class="form-control transparent">
-          <i class="fa fa-spinner fa-pulse"></i>
-        </span>
-      </div>
-      <div class="col-md-4">
-        <input
-          type="text"
-          id="qqNumber"
-          name="qqNumber"
-          class="form-control"
-          placeholder="QQ号"
-          @click="disablePopover"
-          @blur="check('qqNumber')"
-          v-model="qqNumber"
-          v-validate
-          pattern="^[1-9][0-9]{4,11}$"
-        />
-      </div>
-      <div class="col-md-3">
-        <div
-          class="form-control alert-danger"
-          role="alert"
-          v-show="errors.has('qqNumber')"
-        >请填写正确的QQ号</div>
-      </div>
-    </div>
-    <div class="col-md-6 offset-md-3">
-      <button class="btn btn-primary btn-lg btn-block" @click="formValidate">确认提交</button>
-    </div>
-    <!-- SuccessModal -->
-    <Modal title="Success" text="修改成功!"></Modal>
-    <!-- <div
-      class="modal fade"
-      id="successModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="successModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="successModalLabel"></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">修改成功!</div>
+      <div class="profile-fields">
+        <div class="profile-field">
+          <span class="field-label"><i class="fas fa-envelope fa-fw"></i> 邮箱</span>
+          <span class="field-value">{{ user.email || '未绑定' }}</span>
+        </div>
+        <div class="profile-field">
+          <span class="field-label"><i class="fas fa-id-badge fa-fw"></i> 皮肤站 UID</span>
+          <span class="field-value">{{ user.uid }}</span>
+        </div>
+        <div class="profile-field">
+          <span class="field-label"><i class="fas fa-cube fa-fw"></i> ECUSTMC 用户中心</span>
+          <span class="field-value">
+            <a :href="skinHome" target="_blank" rel="noopener">前往管理 <i class="fas fa-external-link-alt fa-xs"></i></a>
+          </span>
+        </div>
+        <div v-if="user.isAdmin" class="profile-field">
+          <span class="field-label"><i class="fas fa-gear fa-fw"></i> 管理面板</span>
+          <span class="field-value">
+            <router-link to="/admin/activity">前往活动管理</router-link>
+          </span>
         </div>
       </div>
-    </div>-->
-    <!-- FailModal -->
-    <Modal title="Error" text="服务似乎暂时不可用呢!"></Modal>
-    <!-- <div
-      class="modal fade"
-      id="failModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="failModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="failModalLabel">Error</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">服务似乎暂时不可用呢！</div>
-        </div>
+      <div class="profile-actions">
+        <a href="/api/auth/logout" class="btn btn-outline-secondary btn-sm">
+          <i class="fas fa-sign-out-alt mr-1"></i>退出登录
+        </a>
       </div>
-    </div>-->
+    </div>
   </div>
 </template>
 
 <style scoped>
 #info {
-  background: #dedede;
+  min-height: 70vh;
 }
-.transparent {
-  box-shadow: none;
-  border: none;
-  background-color: transparent !important;
+
+.not-logged-in {
+  color: var(--ink-muted, #6b7280);
 }
-.guide {
-  position: absolute;
-  right: 0.25rem;
-  top: 80px;
-  z-index: 9999;
-  max-width: 400px;
-  padding: 1rem 2rem;
-  opacity: 1;
-  color: inherit;
-  background-color: #fff;
-  box-shadow: 0px 0px 45px rgba(118, 147, 172, 0.35);
+
+.not-logged-in i {
+  color: var(--line, #e5e7eb);
+}
+
+.profile-card {
+  max-width: 480px;
+  background: #fff;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: var(--radius, 12px);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
+  padding: 2.2rem 2rem 1.5rem;
+}
+
+.profile-top {
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-soft, rgba(52, 152, 219, 0.15));
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+}
+
+.profile-nickname {
+  font-weight: 700;
+  color: var(--ink, #1f2937);
+}
+
+.profile-badge {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.badge-member {
+  background: var(--accent-soft, rgba(52, 152, 219, 0.1));
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  color: var(--accent-dark, #2980b9);
+}
+
+.badge-admin {
+  background: rgba(240, 173, 78, 0.12);
+  border: 1px solid rgba(240, 173, 78, 0.45);
+  color: #8a6d1d;
+}
+
+.profile-fields {
+  margin: 1.8rem 0 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.profile-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px dashed var(--line, #e5e7eb);
+}
+
+.profile-field:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.field-label {
+  color: var(--ink-muted, #6b7280);
+  font-size: 0.9rem;
+}
+
+.field-label i {
+  margin-right: 0.3rem;
+  color: var(--accent-dark, #2980b9);
+}
+
+.field-value {
+  color: var(--ink, #1f2937);
+  font-weight: 500;
+  text-align: right;
+}
+
+.profile-actions {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line, #e5e7eb);
 }
 </style>
 
 <script>
-import $ from "jquery";
-import Modal from "@/components/Modal.vue";
-import AnimWords from "@/components/AnimWords.vue";
+import AnimWords from '@/components/AnimWords.vue';
+
 export default {
-  name: "info",
-  components: {
-    Modal,
-    AnimWords
-  },
+  name: 'UserInfo',
+  components: { AnimWords },
   data() {
     return {
-      guide: "",
-
-      name: "",
-      mobilephone: "",
-      studentNumber: "",
-      studentCollege: "",
-      qqNumber: ""
+      user: null,
+      loading: true,
+      skinHome: 'https://mcskin.ecustvr.top'
     };
   },
-  methods: {
-    disablePopover: function() {
-      $('[data-toggle="popover"]').popover("hide");
-      $('[data-toggle="popover"]').popover("disable");
-    },
-    check: function(name) {
-      var target = $(`[name="${name}"]`);
-      target.removeClass("is-valid");
-      target.removeClass("is-invalid");
-      target.addClass(
-        !this[name] | this.errors.has(name) ? "is-invalid" : "is-valid"
-      );
-    },
-    checkAll: function() {
-      var targets = ["name", "mobilephone", "studentNumber", "qqNumber"];
-      for (var index in targets) {
-        this.check(targets[index]);
-      }
-    },
-    formValidate: function() {
-      this.checkAll();
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          // eslint-disable-next-line
-          var captcha = new TencentCaptcha(
-            this.globals.TencentAPPID,
-            this.cbfn
-          );
-          captcha.show();
-        }
-      });
-    },
-    cbfn: function(res) {
-      if (res.ret === 0) {
-        var that = this;
-        this.$ajax
-          .post("/api/user/change-info", {
-            name: that.name,
-            student_number: that.studentNumber,
-            college: that.studentCollege,
-            mobilephone: that.mobilephone,
-            qqnumber: that.qqNumber,
-            ticket: res.ticket,
-            randstr: res.randstr
-          })
-          .then(res => {
-            if (res.data.ret === 0) {
-              var that = this;
-              $("#SuccessModal")
-                .modal("show")
-                .on("hidden.bs.modal", function() {
-                  that.$router.go(0);
-                });
-              return;
-            } else if (res.data.ret === 11) {
-              $("#mobilephone").popover("enable");
-              $("#mobilephone").popover("show");
-              const top = document
-                .querySelector("#mobilephone")
-                .getBoundingClientRect().top;
-              const position = window.pageYOffset + top - 200;
-              window.scrollTo({ top: position, behavior: "smooth" });
-              return;
-            }
-            console.log(res);
-            $("#ErrorModal").modal("show");
-          })
-          // eslint-disable-next-line
-          .catch(error => {
-            $("#ErrorModal").modal("show");
-          });
-      }
-    }
-  },
   mounted() {
-    this.disablePopover();
-
-    // guide
-    this.guide = this.$route.query.guide;
-    if (this.guide) {
-      setTimeout(function() {
-        $(".guide").fadeOut(5000, function() {
-          $(".guide").slideUp(500);
-        });
-      }, 1000);
-    }
-
-    // 加载用户数据
-    this.$ajax.get("/api/user/info").then(res => {
-      if (res.data.ret === 0) {
-        this.name = res.data.data.name || "";
-        this.studentNumber = res.data.data.student_number || "";
-        this.studentCollege = res.data.data.college || "";
-        this.mobilephone = res.data.data.mobilephone || "";
-        this.qqNumber = res.data.data.qqnumber || "";
-        $(".fa.fa-spinner.fa-pulse").css("display", "none");
-        $(".selectpicker").selectpicker("val", this.studentCollege);
-      }
-    });
+    fetch('/api/auth/me')
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => {
+        if (data && data.ret === 0) {
+          this.user = data.data;
+        }
+      })
+      .catch(() => {
+        this.user = null;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 };
 </script>

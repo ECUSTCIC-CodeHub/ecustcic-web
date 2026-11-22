@@ -251,8 +251,8 @@ const router = new Router({
           name: "info",
           component: Info,
           meta: {
-            title: "个人信息",
-            requireAuth: true
+            title: "个人信息"
+            // OAuth 会话在组件内处理（未登录时页面内引导登录）
           }
         }
       ]
