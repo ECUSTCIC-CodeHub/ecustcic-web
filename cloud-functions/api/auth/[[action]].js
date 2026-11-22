@@ -93,6 +93,16 @@ export async function onRequestGet(context) {
     : (raw || '');
   const baseUrl = (env.BS_BASE_URL || '').replace(/\/+$/, '');
 
+  // 站点对外地址：优先用 SITE_URL 环境变量（如 https://www.ecustcic.com）。
+  // 不能用 url.origin，因为函数在平台内部转发时 host 是内部域名
+  // （如 pages-pro-*.qcloudteo.com），用它拼 redirect_uri 会与皮肤站登记的不一致。
+  function siteOrigin() {
+    if (env.SITE_URL) return env.SITE_URL.replace(/\/+$/, '');
+    const realHost = request.headers.get('eo-pages-host') || request.headers.get('host');
+    const proto = request.headers.get('x-forwarded-proto') || 'https';
+    return realHost ? `${proto}://${realHost}` : new URL(request.url).origin;
+  }
+
   // ── 登录：跳转到皮肤站授权页 ──
   if (action === 'login') {
     if (!env.BS_CLIENT_ID || !baseUrl) {
@@ -102,7 +112,7 @@ export async function onRequestGet(context) {
       t: Date.now(),
       n: Math.random().toString(36).slice(2),
     }));
-    const redirectUri = `${url.origin}/api/auth/callback`;
+    const redirectUri = `${siteOrigin()}/api/auth/callback`;
     const authorizeUrl =
       `${baseUrl}/oauth/authorize?client_id=${encodeURIComponent(env.BS_CLIENT_ID)}` +
       `&redirect_uri=${encodeURIComponent(redirectUri)}` +
@@ -138,7 +148,7 @@ export async function onRequestGet(context) {
         grant_type: 'authorization_code',
         client_id: env.BS_CLIENT_ID,
         client_secret: env.BS_CLIENT_SECRET,
-        redirect_uri: `${url.origin}/api/auth/callback`,
+        redirect_uri: `${siteOrigin()}/api/auth/callback`,
         code,
       }),
     });
