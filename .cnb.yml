@@ -31,7 +31,7 @@ master:
           image: docker.cnb.cool/arsrna/dev-env/node22
           script: |
             node -v
-            npm config set registry http://mirrors.tencent.com/npm/
+            npm config set registry https://mirrors.tencent.com/npm/
             npm install
             npm run build
         # 灏嗘瀯寤鸿緭鍑洪儴缃插埌 EdgeOne Pages
