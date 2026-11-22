@@ -113,10 +113,11 @@ export async function onRequestGet(context) {
       n: Math.random().toString(36).slice(2),
     }));
     const redirectUri = `${siteOrigin()}/api/auth/callback`;
+    // 显式请求 identify scope，确保 /api/user 返回完整字段（含 permission）
     const authorizeUrl =
       `${baseUrl}/oauth/authorize?client_id=${encodeURIComponent(env.BS_CLIENT_ID)}` +
       `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-      `&response_type=code&scope=&state=${state}`;
+      `&response_type=code&scope=identify&state=${state}`;
     return new Response(null, {
       status: 302,
       headers: {
@@ -173,14 +174,21 @@ export async function onRequestGet(context) {
     // Blessing Skin /api/user 返回 { data: { uid, nickname, email, permission, ... } }
     // permission: -1 封禁 | 0 普通用户 | 1 管理员 | 2 超级管理员
     const u = userData.data || userData;
+    console.log('[OAuth] user fields:', JSON.stringify({
+      uid: u.uid, email: u.email, nickname: u.nickname,
+      permission: u.permission,
+      allKeys: Object.keys(u).join(','),
+    }));
 
-    // 生成会话：皮肤站 permission >= 1 直接视为本站管理员
+    // 生成会话：皮肤站 permission >= 1（管理员或超级管理员）视为本站管理员
+    const perms = Number(u.permission);
+    const isAdmin = Number.isFinite(perms) && perms >= 1;
     const session = await createSession({
       uid: u.uid,
       nickname: u.nickname,
       email: u.email,
       avatar: baseUrl + '/avatar/' + u.uid,
-      isAdmin: Number(u.permission) >= 1,
+      isAdmin,
     }, env);
 
     // 跳回原页面

@@ -106,7 +106,7 @@
               <template v-else>
                 <li class="nav-item">
                   <router-link class="user-link" to="/user/login">
-                    <i class="fa fa-sign-in fa-fw mr-2" aria-hidden="true"></i>登录
+                    <i class="fa fa-sign-in fa-fw mr-1" aria-hidden="true"></i>登录
                   </router-link>
                 </li>
               </template>
