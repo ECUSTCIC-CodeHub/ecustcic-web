@@ -186,12 +186,24 @@ npm run lint
 | GET | `/api/activity-image?key=covers/...` | 公开 |
 | POST | `/api/activity-image` | 管理令牌 |
 | GET / DELETE | `/api/storage` | 管理令牌 |
+| POST | `/api/ai-detect` | 登录会话（未登录返回 401） |
 | GET | `/api/auth/login`、`/callback`、`/me`、`/token`、`/logout` | 会话 Cookie |
 
 "管理令牌"有两种：
 
 1. 后台页面通过 `/api/auth/token` 用登录会话兑换的 **2 小时短期令牌**（默认路径，只存在浏览器内存里）
 2. 控制台配置的 `MACHINE_TOKEN` 机器凭证（仅供脚本 / CI 直接调用写接口，不下发浏览器）
+
+### AI 检测助手
+
+服务工具箱中的「AI 检测助手」（`/service/ai-detect`）用于判断文本是否由 AI 生成，**必须登录后使用**。
+
+- 前端：`src/views/Service/AiDetect.vue`，入口在 `/service` 工具箱
+- 后端：`POST /api/ai-detect`，校验 `cic_session` 登录会话后转发到 EdgeOne Makers 内置模型 `@makers/zhuque-text`
+- 密钥：在 EdgeOne 控制台 **Makers - Models - API Key** 创建，配置为环境变量 `MAKERS_MODELS_KEY`；密钥只存在服务端，不下发浏览器
+- 限制：单次最多 5000 字；模型调用计入 Makers 每月免费额度
+- 结果仅供参考：接口返回整体置信度、人工 / 疑似 AI / AI 三档占比，以及（不合并段落时）逐段标签
+- 图片检测不在本接口内，页面会引导前往腾讯朱雀官网
 
 ### 贡献方式
 
@@ -233,6 +245,7 @@ dist/
 | `BS_BASE_URL` | 是 | 皮肤站地址，如 `https://mcskin.ecustvr.top` |
 | `BS_OAUTH_SCOPE` | 否 | 默认 `User.Read`；设为空字符串表示不传 scope 参数 |
 | `MACHINE_TOKEN` | 否 | 机器凭证，供 curl / CI 直接调用写接口 |
+| `MAKERS_MODELS_KEY` | 否（AI 检测助手必填） | EdgeOne Makers 内置模型 API Key，用于调用朱雀文本检测；未配置时 `/api/ai-detect` 返回 500 |
 
 > 旧变量 `ADMIN_TOKEN` 已废弃：它曾由 `/api/auth/token` 明文返回给浏览器，历史值应视为已泄露。升级后请从控制台删除该变量；确需脚本化写入时改用新生成的 `MACHINE_TOKEN`。
 

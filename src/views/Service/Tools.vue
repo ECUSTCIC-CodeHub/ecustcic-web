@@ -31,12 +31,11 @@
         <div class="col-lg-9">
           <h4 class="cic-section-title">常用入口</h4>
           <div class="tool-grid">
-            <a
+            <component
+              :is="tool.internal ? 'router-link' : 'a'"
               v-for="tool in tools"
               :key="tool.url"
-              :href="tool.url"
-              target="_blank"
-              rel="noopener noreferrer"
+              v-bind="linkAttrs(tool)"
               class="tool-card"
             >
               <div class="tool-icon">
@@ -46,16 +45,20 @@
                 <div class="tool-name">
                   {{ tool.name }}
                   <span v-if="tool.campus" class="tool-badge">仅校内网</span>
+                  <span v-if="tool.login" class="tool-badge tool-badge-login">需登录</span>
                 </div>
                 <p class="tool-desc">{{ tool.desc }}</p>
               </div>
-              <i class="fas fa-external-link-alt tool-arrow"></i>
-            </a>
+              <i
+                class="fas tool-arrow"
+                :class="tool.internal ? 'fa-arrow-right' : 'fa-external-link-alt'"
+              ></i>
+            </component>
           </div>
 
           <p class="tools-note">
             <i class="fas fa-circle-info mr-1"></i>
-            标注「仅校内网」的站点需要连接校园网（或校内 VPN）才能访问，其余站点校内外均可访问。
+            标注「仅校内网」的站点需要连接校园网（或校内 VPN）才能访问；标注「需登录」的站点需要先登录 ECUSTMC 账号。
           </p>
         </div>
 
@@ -95,6 +98,14 @@ export default {
   data() {
     return {
       tools: [
+        {
+          name: "AI 检测助手",
+          desc: "判断一段文字更像人工写作还是 AI 生成",
+          url: "/service/ai-detect",
+          icon: "fas fa-magnifying-glass-chart",
+          internal: true,
+          login: true
+        },
         {
           name: "校内测速",
           desc: "信息办提供的校园网测速站点，测一下宿舍网速",
@@ -140,6 +151,14 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    // 站内工具走 router-link（无刷新），站外工具新窗口打开
+    linkAttrs(tool) {
+      return tool.internal
+        ? { to: tool.url }
+        : { href: tool.url, target: "_blank", rel: "noopener noreferrer" };
+    }
   }
 };
 </script>
@@ -228,6 +247,11 @@ export default {
   color: #b45309;
   font-size: 0.68rem;
   font-weight: 600;
+}
+
+.tool-badge-login {
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 
 .tool-desc {

@@ -20,6 +20,7 @@ import E_sports_detail from '@/views/E-sports/Detail.vue'
 // 服务
 import Service from "@/views/Service/Service.vue";
 import ServiceTools from "@/views/Service/Tools.vue";
+import ServiceAiDetect from "@/views/Service/AiDetect.vue";
 import ServiceSupport from "@/views/Service/Support.vue";
 import Repair from "@/views/Service/Repair.vue";
 
@@ -177,6 +178,16 @@ const router = new Router({
           component: ServiceSupport,
           meta: {
             title: "CIC-服务部介绍"
+          }
+        },
+        {
+          // 登录态由页面内 /api/auth/me 校验（会话是 HttpOnly Cookie，
+          // 不能用 requireAuth 的 ECUST-CIC 判断）
+          path: "ai-detect",
+          name: "service-ai-detect",
+          component: ServiceAiDetect,
+          meta: {
+            title: "CIC-AI 检测助手"
           }
         },
         {
