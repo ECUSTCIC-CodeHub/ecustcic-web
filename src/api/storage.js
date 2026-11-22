@@ -1,6 +1,6 @@
 // src/api/storage.js
 // Blob 存储管理：列出 covers/ 下的图片、删除未被引用的文件。
-// 接口在 cloud-functions/api/storage.js，需要 ADMIN_TOKEN。
+// 接口在 cloud-functions/api/storage.js，需要短时管理令牌（getAdminToken 获取）。
 
 const BASE = '/api/storage';
 

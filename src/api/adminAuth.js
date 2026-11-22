@@ -1,40 +1,17 @@
 // src/api/adminAuth.js
-// 后台鉴权：会话 Cookie → /api/auth/token → ADMIN_TOKEN（用于 Edge Function / 图片上传）
-// 编辑器里每次插图、每次保存都要用，因此做内存 + sessionStorage 缓存。
-
-const STORAGE_KEY = 'cic_admin_token';
-const TTL = 10 * 60 * 1000; // 10 分钟
+// 后台鉴权：会话 Cookie → /api/auth/token → 短时管理令牌
+// 令牌由服务端签发（默认 2 小时有效），只存在内存中：
+//   - 不写 sessionStorage/localStorage，避免被 XSS 或浏览器插件长期读取
+//   - 页面刷新后重新兑换一次，成本可接受
 
 let memory = null; // { token, exp }
 
-function readStorage() {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    if (!data || !data.token || data.exp < Date.now()) return null;
-    return data;
-  } catch (e) {
-    return null;
-  }
-}
-
-function writeStorage(data) {
-  try {
-    if (data) {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } else {
-      sessionStorage.removeItem(STORAGE_KEY);
-    }
-  } catch (e) {
-    // 隐私模式下 sessionStorage 可能不可用，忽略即可（退化为纯内存缓存）
-  }
-}
+const FALLBACK_TTL = 5 * 60 * 1000; // 服务端未返回有效期时的保守值
+const MAX_TTL = 30 * 60 * 1000; // 内存缓存上限，避免长时间持有旧令牌
 
 /** 清除缓存的 token（401 后调用，下次重新兑换） */
 export function clearAdminToken() {
   memory = null;
-  writeStorage(null);
 }
 
 /**
@@ -43,20 +20,13 @@ export function clearAdminToken() {
  * @returns {Promise<string>}
  */
 export async function getAdminToken(force = false) {
-  if (!force) {
-    const cached = memory || readStorage();
-    if (cached && cached.exp > Date.now()) {
-      memory = cached;
-      return cached.token;
-    }
+  if (!force && memory && memory.exp > Date.now()) {
+    return memory.token;
   }
 
   let res;
   try {
-    res = await fetch('/api/auth/token', {
-      headers: { Authorization: 'Bearer COOKIE_EXCHANGE' },
-      credentials: 'include',
-    });
+    res = await fetch('/api/auth/token', { credentials: 'include' });
   } catch (e) {
     throw new Error('网络异常，无法校验管理权限');
   }
@@ -76,8 +46,12 @@ export async function getAdminToken(force = false) {
     throw new Error(data.msg || '获取管理凭证失败');
   }
 
-  memory = { token: data.data.token, exp: Date.now() + TTL };
-  writeStorage(memory);
+  const ttlSeconds = Number(data.data.expiresIn);
+  const ttl = Number.isFinite(ttlSeconds) && ttlSeconds > 0
+    ? Math.min(ttlSeconds * 1000, MAX_TTL)
+    : FALLBACK_TTL;
+  // 提前 60 秒过期，避免卡在边界上
+  memory = { token: data.data.token, exp: Date.now() + Math.max(ttl - 60 * 1000, 30 * 1000) };
   return memory.token;
 }
 

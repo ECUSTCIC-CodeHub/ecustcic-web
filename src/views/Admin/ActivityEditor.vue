@@ -117,7 +117,7 @@
 
         <div class="side-card cic-card">
           <h6 class="side-title">封面图</h6>
-          <ImageUploader v-model="form.cover" :token="token" />
+          <ImageUploader v-model="form.cover" />
           <small class="field-hint">可选。首页列表不使用封面，封面用于详情页与活动回顾卡片。</small>
         </div>
 
@@ -139,16 +139,6 @@ import { uploadImage } from '@/api/upload';
 
 function today() {
   return new Date().toISOString().slice(0, 10);
-}
-
-// 正文渲染走 mavon-editor，会原样输出 HTML。后台虽只有管理员可写，
-// 仍在保存前去掉明显的脚本/事件注入，避免存储型 XSS 影响到前台访客。
-function sanitizeMarkdown(text) {
-  return String(text || '')
-    .replace(/<\s*(script|iframe|object|embed|style)\b[\s\S]*?<\s*\/\s*\1\s*>/gi, '')
-    .replace(/<\s*(script|iframe|object|embed|style)\b[^>]*>/gi, '')
-    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(/javascript\s*:/gi, '');
 }
 
 function emptyForm(kind) {
@@ -370,7 +360,7 @@ export default {
     async onImgAdd(pos, file) {
       this.uploadingCount += 1;
       try {
-        const url = await uploadImage(file, this.token);
+        const url = await uploadImage(file, await getAdminToken());
         this.$refs.md.$img2Url(pos, url);
         this.markDirty();
       } catch (e) {
@@ -408,11 +398,11 @@ export default {
           author: this.form.author,
           cover: this.form.cover,
           summary: this.form.summary,
-          content: sanitizeMarkdown(this.form.content),
+          content: this.form.content,
           link: this.form.link,
           hidden: this.form.hidden
         };
-        const saved = await saveActivity(payload, this.token);
+        const saved = await saveActivity(payload, await getAdminToken());
         this.justSaved = true;
         this.dirty = false;
         this.clearDraft();
@@ -432,7 +422,7 @@ export default {
       if (!confirm(`确认删除「${this.form.title}」吗？删除后不可恢复。`)) return;
       this.deleting = true;
       try {
-        await deleteActivity(this.form.id, this.token);
+        await deleteActivity(this.form.id, await getAdminToken());
         this.justSaved = true;
         this.dirty = false;
         this.clearDraft();

@@ -93,7 +93,7 @@
                     <a class="dropdown-item" href="/user/info">
                       <i class="fa fa-info-circle fa-fw mr-2"></i>个人信息
                     </a>
-                    <a class="dropdown-item" href="/admin/activity">
+                    <a v-if="bsUser.isAdmin" class="dropdown-item" href="/admin/activity">
                       <i class="fa fa-gear fa-fw mr-2"></i>活动管理
                     </a>
                     <div class="dropdown-divider"></div>

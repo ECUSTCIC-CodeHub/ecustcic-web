@@ -41,14 +41,13 @@
 
 <script>
 import { uploadImage } from '@/api/upload';
+import { getAdminToken, clearAdminToken } from '@/api/adminAuth';
 
 export default {
   name: 'ImageUploader',
   props: {
     // 已上传的图片 URL
-    value: { type: String, default: '' },
-    // 管理 token，由父组件保证非空
-    token: { type: String, default: '' }
+    value: { type: String, default: '' }
   },
   data() {
     return {
@@ -93,16 +92,21 @@ export default {
     async upload(file) {
       if (this.uploading) return;
       this.error = '';
-      if (!this.token) {
-        this.error = '缺少管理凭证，请刷新页面重试';
-        return;
-      }
       this.uploading = true;
       try {
-        const url = await uploadImage(file, this.token);
+        // 每次上传前取一次凭证：内存缓存命中时无额外请求，
+        // 过期会自动重新兑换，避免页面开太久后上传失败。
+        const token = await getAdminToken();
+        const url = await uploadImage(file, token);
         this.$emit('input', url);
       } catch (err) {
-        this.error = err.message || '上传失败';
+        if (err.status === 401) {
+          // 凭证失效：清掉内存缓存，用户再点一次就会重新兑换
+          clearAdminToken();
+          this.error = '管理凭证已刷新，请重新上传';
+        } else {
+          this.error = err.message || '上传失败';
+        }
       }
       this.uploading = false;
     },

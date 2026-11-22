@@ -184,7 +184,9 @@ export async function uploadImage(source, token) {
   });
 
   if (res.status === 401) {
-    throw new Error('管理凭证已失效，请刷新页面重试');
+    const err = new Error('管理凭证已失效，请重试');
+    err.status = 401;
+    throw err;
   }
 
   const data = await res.json().catch(() => ({ ret: 1, msg: '上传响应解析失败' }));

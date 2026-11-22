@@ -160,7 +160,7 @@ export default {
       } catch (e) {
         if (e.status === 401) {
           clearAdminToken();
-          this.error = '鉴权失败：管理凭证无效。请重新登录；若持续出现请检查后台 ADMIN_TOKEN 配置。';
+          this.error = '鉴权失败：管理凭证已失效。请重新登录后再试。';
         } else {
           this.error = e.message || '加载失败';
         }
