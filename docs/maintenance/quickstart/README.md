@@ -110,13 +110,13 @@ edge-functions/                 # V8 Edge Functions
 - 正文为 Markdown，前台由 `mavon-editor` 渲染，其内置 FilterXSS 负责过滤 HTML。更换渲染方式时必须接入等价的白名单清洗（DOMPurify / FilterXSS），不要直接 `v-html`
 - 图片被任意活动/快讯引用时，服务端会拒绝删除；引用校验失败会直接取消删除而不是放行
 - 管理员令牌 2 小时过期，后台操作会自动重新兑换；皮肤站 access_token 失效后需要重新登录
-- 部署前务必重新执行 `npm run build`：函数代码随 `dist/` 一起发布，旧 `dist/` 里的函数是上一版
+- 手动 `edgeone pages deploy ./dist` 前务必重新执行 `npm run build`（含函数副本）；推送 `master` 的 CI 会自动构建，无需手动
 
 ## 部署
 
 推送至 `master` 分支后自动触发构建部署：
 
-- **EdgeOne Pages**：由 `.cnb.yml` 流水线执行 `npm install` → `npm run build`，将 `dist/` 部署至 [www.ecustcic.com](https://www.ecustcic.com)。`dist/` 同时包含 `edge-functions/` 与 `cloud-functions/`，两类函数会一起发布；环境变量需在控制台预先配置（见上一节），否则登录与内容管理不可用
+- **EdgeOne Pages**：由 `.cnb.yml` 在 Node 22 容器内安装 EdgeOne CLI，再执行 `edgeone pages deploy -n ecustcic`；CLI 按 `edgeone.json` 自动执行 `npm install` 与 `npm run build:edge` 并部署至 [www.ecustcic.com](https://www.ecustcic.com)。函数由 CLI 从仓库根目录的 `edge-functions/`、`cloud-functions/` 打包，不再复制进 `dist/`；环境变量需在控制台预先配置（见上一节），否则登录与内容管理不可用
 - **GitHub Pages**：由 `.github/workflows/workflow.yml` 执行构建并发布。该环境没有函数与 `/api/*`，仅作静态站点使用
 
-注意：主站构建需要 Node.js 22，且因依赖 webpack 4，本地构建时需设置环境变量 `NODE_OPTIONS=--openssl-legacy-provider`（CI 镜像已内置 Node 22 自行处理）。
+注意：主站构建使用 Node.js 22。本地构建如遇 OpenSSL 报错，可临时设置 `NODE_OPTIONS=--openssl-legacy-provider`；CI 在 Node 22 容器内由 EdgeOne CLI 自动构建。

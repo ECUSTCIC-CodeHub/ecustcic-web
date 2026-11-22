@@ -3,6 +3,8 @@ const moment = require('moment');
 
 module.exports = {
   publicPath: '/',
+  // 不生成 .map，避免源码随静态资源公开，同时减小上传体积
+  productionSourceMap: false,
   lintOnSave: process.env.NODE_ENV !== 'production',
 
   devServer: {

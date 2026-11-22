@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build && npm run docs:build && node scripts/copy-edge-functions.js",
+    "build:edge": "vue-cli-service build && npm run docs:build",
     "lint": "vue-cli-service lint",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs && node scripts/docs-postbuild.js"

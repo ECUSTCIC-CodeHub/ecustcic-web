@@ -22,7 +22,7 @@ jobs:
       run: npm install
  
     - name: Build
-      run: npm run build
+      run: npm run build:edge
  
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4

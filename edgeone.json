@@ -1,5 +1,11 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build:edge",
   "outputDirectory": "dist",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/*",
+      "destination": "/index.html"
+    }
+  ]
 }

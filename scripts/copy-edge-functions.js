@@ -1,6 +1,8 @@
 // scripts/copy-edge-functions.js
 // 构建后处理：将 edge-functions/ 与 cloud-functions/ 复制到 dist/
 // 使 `edgeone pages deploy ./dist` 部署时能同时带上两类 Functions
+// 仅用于手动 `npm run build` + `deploy ./dist`；CI 使用 `npm run build:edge`，
+// 由 EdgeOne CLI 从仓库根目录打包函数，不经过这里。
 const fs = require('fs');
 const path = require('path');
 

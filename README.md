@@ -61,7 +61,7 @@
 
 确保你已安装以下工具：
 
-- Node.js（推荐 v14 或更高版本）
+- Node.js 22（与 CI 一致）
 - npm（通常随 Node.js 一起安装）
 
 ### 安装依赖
@@ -211,24 +211,24 @@ npm run lint
 
 ## 部署
 
-生产环境由 EdgeOne Pages 托管，推送 `master` 后由 `.cnb.yml` 自动执行 `npm install` → `npm run build` → `edgeone pages deploy -n ecustcic ./dist`。
+生产环境由 EdgeOne Pages 托管。推送 `master` 后，`.cnb.yml` 在 Node 22 容器内安装 EdgeOne CLI（`edgeone@1.7.6`），再执行 `edgeone pages deploy -n ecustcic`；CLI 读取 `edgeone.json`，自动执行 `npm install` 与 `npm run build:edge`，并从仓库根目录的 `edge-functions/`、`cloud-functions/` 打包两类函数一起部署。
 
-`npm run build` 生成：
+`npm run build:edge`（CI 使用）生成：
 
 ```
 dist/
 ├── index.html           # 主站入口
 ├── tech/                # 技术文档（VuePress 产物）
-├── js/ css/ ...         # 主站静态资源
-├── edge-functions/      # 由 scripts/copy-edge-functions.js 复制（V8 运行时）
-├── cloud-functions/     # 同上（Node.js 运行时，Blob SDK）
-└── package.json         # 被重写为只含 @edgeone/pages-blob 的极简版
+└── js/ css/ ...         # 主站静态资源
 ```
+
+函数不复制进 `dist`，避免源码被当作静态资源公开。需要手动 `edgeone pages deploy ./dist` 时改用 `npm run build`，它会把 `edge-functions/`、`cloud-functions/` 和只含 `@edgeone/pages-blob` 的极简 `package.json` 复制进 `dist`。
 
 注意：
 
-- **必须随 `dist/` 一起部署 `edge-functions/` 与 `cloud-functions/`**，否则 `/api/*` 全部 404，登录与内容管理不可用
-- **部署前必须重新构建**：旧 `dist/` 里保存的是上一版函数代码（例如旧的鉴权逻辑），直接 `edgeone pages deploy ./dist` 会把旧代码发上线
+- **CI 使用自动构建**：函数由 CLI 从仓库根目录读取，`dist` 只放静态资源；手动只传 `./dist` 时必须先执行 `npm run build`（含函数副本），否则 `/api/*` 会 404
+- **不要删除 `edgeone.json`**：它定义了 `npm run build:edge`、输出目录，以及 `/* → /index.html` 的 SPA 深链回退（否则 `/user/info` 等直接访问会 404）；手动只传 `./dist` 时 rewrites 不生效（实测），因此 CI 保持自动构建模式
+- 未注册的 `/api/*` 会被 SPA 回退接管并返回 HTML（平台行为）；排查接口问题时请直接请求具体路径
 - 环境变量在控制台配置，见下文「环境变量（EdgeOne Pages 控制台）」；缺少 `OAUTH_STATE_SECRET` / `SITE_URL` 会让登录直接返回 500
 - 只做纯静态托管（Nginx / GitHub Pages）时页面可正常浏览，但没有 `/api/*`，后台管理与动态内容不可用
 
