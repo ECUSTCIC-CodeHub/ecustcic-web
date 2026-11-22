@@ -19,7 +19,8 @@ import E_sports_detail from '@/views/E-sports/Detail.vue'
 
 // 服务
 import Service from "@/views/Service/Service.vue";
-import ServiceHome from "@/views/Service/Home.vue";
+import ServiceTools from "@/views/Service/Tools.vue";
+import ServiceSupport from "@/views/Service/Support.vue";
 import Repair from "@/views/Service/Repair.vue";
 
 // 组织宣传
@@ -171,11 +172,19 @@ const router = new Router({
           }
         },
         {
+          path: "support",
+          name: "service-support",
+          component: ServiceSupport,
+          meta: {
+            title: "CIC-服务部介绍"
+          }
+        },
+        {
           path: "",
           name: "service",
-          component: ServiceHome,
+          component: ServiceTools,
           meta: {
-            title: "CIC-服务"
+            title: "CIC-工具箱"
           }
         }
       ]

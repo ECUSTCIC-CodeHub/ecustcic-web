@@ -25,6 +25,11 @@
         <p>服务华理 · 免费维修 · 有问必答</p>
       </div>
     </div>
+    <div class="container support-nav">
+      <router-link to="/service" class="back-link">
+        <i class="fas fa-arrow-left fa-xs mr-1"></i>返回工具箱
+      </router-link>
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-md-9">
@@ -89,6 +94,30 @@
 </template>
 
 <style scoped>
+/* 返回工具箱 */
+.support-nav {
+  padding-top: 1.2rem;
+  padding-bottom: 1.1rem;
+  /* #app 全局是 text-align: center，这里需要左对齐 */
+  text-align: left;
+}
+
+.back-link {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--accent-dark);
+  text-decoration: none;
+}
+
+/* 标题与下划线对齐（#app 全局 text-align: center 会把标题挤到中间） */
+.section-title.cic-section-title {
+  text-align: left;
+}
+
 /* ---------- 服务信息卡 ---------- */
 .service-info-card {
   background: var(--accent-soft);
