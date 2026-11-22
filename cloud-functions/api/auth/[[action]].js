@@ -21,6 +21,14 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 天
 // 正式使用建议在控制台配置自定义密钥后此常量即被忽略。
 const DEFAULT_SECRET = 'CIC-2026-fallback-HMAC-key-7f4e9a2b81c35d06';
 
+// OAuth scope：Blessing Skin 注册的合法 scope 是 User.Read / Player.Read 等
+// （见皮肤站 app/Providers/AuthServiceProvider.php 的 Passport::tokensCan），
+// 并不存在 identify。传未知 scope 时授权端点会直接 302 回回调地址：
+//   error=invalid_scope&hint=Check the `identify` scope
+// /api/user 需要 User.Read，因此默认请求它；可用环境变量 BS_OAUTH_SCOPE 覆盖，
+// 设为空字符串则不带 scope 参数（皮肤站会使用默认 scope User.Read）。
+const DEFAULT_SCOPE = 'User.Read';
+
 function base64url(input) {
   return btoa(String.fromCharCode(...new TextEncoder().encode(input)))
     .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -63,7 +71,7 @@ async function verifySession(token, env) {
   if (!token) return null;
   const [payload, sig] = token.split('.');
   if (!payload || !sig) return null;
-  const expected = await sign(payload, env.OAUTH_STATE_SECRET);
+  const expected = await sign(payload, secret);
   // 防时序攻击的常数时间比较
   if (sig.length !== expected.length) return null;
   let diff = 0;
@@ -113,11 +121,13 @@ export async function onRequestGet(context) {
       n: Math.random().toString(36).slice(2),
     }));
     const redirectUri = `${siteOrigin()}/api/auth/callback`;
-    // 显式请求 identify scope，确保 /api/user 返回完整字段（含 permission）
+    // 请求 User.Read，/api/user 才能返回用户信息（含 permission）
+    const scope = env.BS_OAUTH_SCOPE === undefined ? DEFAULT_SCOPE : env.BS_OAUTH_SCOPE;
+    const scopeParam = scope ? `&scope=${encodeURIComponent(scope)}` : '&scope=';
     const authorizeUrl =
       `${baseUrl}/oauth/authorize?client_id=${encodeURIComponent(env.BS_CLIENT_ID)}` +
       `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-      `&response_type=code&scope=identify&state=${state}`;
+      `&response_type=code${scopeParam}&state=${state}`;
     return new Response(null, {
       status: 302,
       headers: {
@@ -130,8 +140,22 @@ export async function onRequestGet(context) {
 
   // ── 回调：用 code 换 token，拉用户信息 ──
   if (action === 'callback') {
+    const url = new URL(request.url);
     const code = url.searchParams.get('code');
     const state = url.searchParams.get('state');
+
+    // 皮肤站授权失败时会带着 error 直接跳回这里（如 invalid_scope），
+    // 此时没有 code，把真实原因回显出来便于排查，而不是笼统报状态校验失败。
+    const oauthError = url.searchParams.get('error');
+    if (oauthError) {
+      const desc = url.searchParams.get('error_description') || '';
+      const hint = url.searchParams.get('hint') || '';
+      return new Response(
+        `授权失败: ${oauthError}\n${desc}\n${hint}`.trim(),
+        { status: 400, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
+      );
+    }
+
     const cookieState = (request.headers.get('Cookie') || '')
       .split(';').map(s => s.trim())
       .find(s => s.startsWith('cic_oauth_state='));
