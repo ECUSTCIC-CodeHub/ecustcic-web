@@ -1,6 +1,24 @@
 <template>
   <div class="admin-container">
     <div class="cic-hero">
+      <vue-particles
+        color="#7fafec"
+        :particleOpacity="0.7"
+        :particlesNumber="80"
+        shapeType="circle"
+        :particleSize="6"
+        linesColor="#7fafec"
+        :linesWidth="3"
+        :lineLinked="true"
+        :lineOpacity="0.4"
+        :linesDistance="150"
+        :moveSpeed="3"
+        :hoverEffect="false"
+        hoverMode="grab"
+        :clickEffect="false"
+        clickMode="push"
+        class="cic-hero-particles"
+      ></vue-particles>
       <div class="cic-hero-overlay">
         <span class="cic-hero-tag">CIC · ADMIN</span>
         <h1>活动管理</h1>

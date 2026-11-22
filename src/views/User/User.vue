@@ -49,11 +49,25 @@
 }
 #user {
   width: 100%;
-  padding: 1rem;
+  /* 顶部与导航拉开距离，避免标题紧贴菜单 */
+  padding: 3.5rem 1rem 1rem;
   margin: 0 0 0 0;
   /* 相对定位抬高内容层级，避免被绝对定位的粒子背景层遮挡点击 */
   position: relative;
   z-index: 1;
+  /* 关键：让鼠标事件落在内容空白区域时穿透到粒子层触发特效 */
+  pointer-events: none;
+}
+/* 内容中的可交互元素恢复鼠标事件 */
+#user a,
+#user button,
+#user input,
+#user textarea,
+#user select,
+#user label,
+#user .form-control,
+#user .btn {
+  pointer-events: auto;
 }
 </style>
 
