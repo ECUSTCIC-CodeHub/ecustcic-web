@@ -111,7 +111,9 @@ export default {
   margin: 0 auto;
 }
 
-.gate i {
+/* 只作用于顶部大图标；否则按钮内的 fa-sign-in-alt
+   会被染成与按钮背景同色（--accent）而不可见 */
+.gate > i {
   font-size: 2.2rem;
   color: var(--accent, #3498db);
   margin-bottom: 1rem;

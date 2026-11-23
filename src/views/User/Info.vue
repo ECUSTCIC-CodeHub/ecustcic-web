@@ -67,7 +67,8 @@
   color: var(--ink-muted, #6b7280);
 }
 
-.not-logged-in i {
+/* 只作用于顶部大图标，避免误染按钮/链接内的小图标 */
+.not-logged-in > i {
   color: var(--line, #e5e7eb);
 }
 
