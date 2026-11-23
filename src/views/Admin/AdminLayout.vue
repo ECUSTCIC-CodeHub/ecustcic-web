@@ -38,7 +38,7 @@
         <i class="fas fa-user-lock"></i>
         <h4>需要登录</h4>
         <p class="text-muted">内容管理使用 ECUSTMC 账号登录，仅皮肤站管理员可编辑。</p>
-        <a href="/api/auth/login" class="btn btn-cic">
+        <a :href="loginHref" class="btn btn-cic">
           <i class="fas fa-sign-in-alt mr-2"></i>使用 ECUSTMC 登录
         </a>
       </div>
@@ -75,14 +75,16 @@
 </template>
 
 <script>
-import { fetchCurrentUser } from '@/api/adminAuth';
+import { fetchCurrentUser, loginUrl } from '@/api/adminAuth';
 
 export default {
   name: 'AdminLayout',
   data() {
     return {
       user: null,
-      loading: true
+      loading: true,
+      // 登录成功后跳回本页
+      loginHref: loginUrl()
     };
   },
   async created() {

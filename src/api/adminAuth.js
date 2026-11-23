@@ -66,3 +66,18 @@ export async function fetchCurrentUser() {
     return null;
   }
 }
+
+/**
+ * 构造登录入口地址。
+ * 把当前页面路径作为 ?redirect= 传给 /api/auth/login，
+ * 服务端会把它放进 OAuth state，登录成功后 302 跳回原页面。
+ * @param {string} [redirect] 目标路径，缺省为当前页面地址
+ * @returns {string} 登录链接
+ */
+export function loginUrl(redirect) {
+  const target =
+    typeof redirect === 'string' && redirect
+      ? redirect
+      : window.location.pathname + window.location.search + window.location.hash;
+  return `/api/auth/login?redirect=${encodeURIComponent(target)}`;
+}

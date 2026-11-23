@@ -158,6 +158,22 @@ function jsonNoStore(data, status = 200) {
   return Response.json(data, { status, headers: { 'Cache-Control': 'no-store' } });
 }
 
+// 登录成功后跳回的默认页面
+const AFTER_LOGIN_PATH = '/user/info';
+
+// 校验并归一化前端通过 ?redirect= 带入的回跳地址，防止开放重定向：
+//   - 必须是本站相对路径（以单个 / 开头，拒绝 //、/\、绝对 URL）
+//   - 不含空白字符与反斜杠，长度受限
+//   - 非可见 ASCII 字符（如中文）做百分号编码，保证 Location 头合法
+// 校验失败一律回退到 AFTER_LOGIN_PATH。
+function sanitizeRedirect(input) {
+  if (typeof input !== 'string') return AFTER_LOGIN_PATH;
+  if (input.length === 0 || input.length > 512) return AFTER_LOGIN_PATH;
+  if (/\s/.test(input) || input.includes('\\')) return AFTER_LOGIN_PATH;
+  if (input[0] !== '/' || input[1] === '/') return AFTER_LOGIN_PATH;
+  return input.replace(/[^\x21-\x7E]/g, ch => encodeURIComponent(ch));
+}
+
 function readCookie(request, name) {
   const cookie = (request.headers.get('Cookie') || '')
     .split(';').map(s => s.trim())
@@ -169,6 +185,27 @@ function randomState() {
   const bytes = new Uint8Array(24);
   crypto.getRandomValues(bytes);
   return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// 登录入口：把「用户从哪个页面跳来登录」放进 OAuth state，
+// 回调成功后原样带回，实现登录后跳回原页面。
+// state = <随机数>.<base64url(redirect)>
+function packState(redirect) {
+  return `${randomState()}.${base64url(redirect)}`;
+}
+
+// 拆包：格式非法或校验失败时回退到默认页面
+function unpackState(state) {
+  if (typeof state !== 'string') return AFTER_LOGIN_PATH;
+  const dot = state.indexOf('.');
+  if (dot <= 0 || dot === state.length - 1) return AFTER_LOGIN_PATH;
+  const rand = state.slice(0, dot);
+  if (!/^[0-9a-f]{48}$/.test(rand)) return AFTER_LOGIN_PATH;
+  try {
+    return sanitizeRedirect(fromBase64url(state.slice(dot + 1)));
+  } catch (e) {
+    return AFTER_LOGIN_PATH;
+  }
 }
 
 export async function onRequestGet(context) {
@@ -196,7 +233,7 @@ export async function onRequestGet(context) {
     if (!env.BS_CLIENT_ID || !baseUrl || !site) {
       return new Response('OAuth 未配置（缺少 BS_CLIENT_ID / BS_BASE_URL / SITE_URL）', { status: 500 });
     }
-    const state = randomState();
+    const state = packState(sanitizeRedirect(new URL(request.url).searchParams.get('redirect')));
     const redirectUri = `${site}/api/auth/callback`;
     // 请求 User.Read，/api/user 才能返回用户信息（含 permission）
     const scope = env.BS_OAUTH_SCOPE === undefined ? DEFAULT_SCOPE : env.BS_OAUTH_SCOPE;
@@ -204,7 +241,7 @@ export async function onRequestGet(context) {
     const authorizeUrl =
       `${baseUrl}/oauth/authorize?client_id=${encodeURIComponent(env.BS_CLIENT_ID)}` +
       `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-      `&response_type=code${scopeParam}&state=${state}`;
+      `&response_type=code${scopeParam}&state=${encodeURIComponent(state)}`;
     return new Response(null, {
       status: 302,
       headers: {
@@ -298,15 +335,15 @@ export async function onRequestGet(context) {
       isAdmin,
     }, accessToken, env);
 
-    // 跳回原页面
+    // 跳回登录前的页面（从 state 中解出）；state Cookie 本身 Max-Age 只有
+    // 600 秒，不必在这里清除。
     // 注意：这里只能用对象形式下发单个 Set-Cookie。
     // 平台适配层可能用 headers.entries() 拼头部，写成数组/多条 Set-Cookie 会被合并成一条，
     // 导致会话 Cookie 被浏览器丢弃（表现为登录后 /api/auth/me 仍然 401）。
-    // state Cookie 本身 Max-Age 只有 600 秒，不必在这里清除。
     return new Response(null, {
       status: 302,
       headers: {
-        Location: '/user/info',
+        Location: unpackState(state),
         'Set-Cookie': setCookieHeader(COOKIE_NAME, session, SESSION_MAX_AGE, request, env),
         'Cache-Control': 'no-store',
       },

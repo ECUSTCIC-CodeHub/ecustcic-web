@@ -25,7 +25,7 @@
         </div>
         <h4>需要登录</h4>
         <p class="gate-desc">AI 检测助手仅对已登录用户开放，请使用 ECUSTMC 用户中心账号登录。</p>
-        <a href="/api/auth/login" class="btn btn-cic gate-btn">
+        <a :href="loginHref" class="btn btn-cic gate-btn">
           <i class="fas fa-sign-in-alt"></i>
           <span>使用 ECUSTMC 登录</span>
         </a>
@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import { fetchCurrentUser } from '@/api/adminAuth';
+import { fetchCurrentUser, loginUrl } from '@/api/adminAuth';
 import { detectText } from '@/api/aiDetect';
 
 const MAX_TEXT = 5000;
@@ -142,6 +142,8 @@ export default {
       MAX_TEXT,
       user: null,
       authLoading: true,
+      // 登录成功后跳回本页
+      loginHref: loginUrl(),
       text: '',
       isMerge: true,
       loading: false,

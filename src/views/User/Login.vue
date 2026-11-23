@@ -6,7 +6,7 @@
       使用 ECUSTMC 账号登录
     </p>
     <div class="col-md-6 offset-md-3">
-      <a class="btn btn-primary btn-lg btn-block skin-login-btn" href="/api/auth/login">
+      <a class="btn btn-primary btn-lg btn-block skin-login-btn" :href="loginHref">
         <img class="plume-icon" src="@/assets/img/plume.svg" alt="" />
         使用 ECUSTMC 用户中心登录
       </a>
@@ -126,11 +126,20 @@
 <script>
 import Loading from "@/components/Loading.vue";
 import AnimWords from "@/components/AnimWords.vue";
+import { loginUrl } from "@/api/adminAuth";
 
 export default {
   components: {
     Loading,
     AnimWords
+  },
+  computed: {
+    // 登录成功后跳回的目标：优先取 ?redirect=，否则回原页面。
+    // 用 computed 以响应站内路由跳转带来的 query 变化
+    loginHref() {
+      const redirect = this.$route.query && this.$route.query.redirect;
+      return loginUrl(typeof redirect === "string" ? redirect : undefined);
+    }
   }
 };
 </script>

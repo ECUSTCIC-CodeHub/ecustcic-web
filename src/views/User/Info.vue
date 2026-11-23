@@ -12,7 +12,7 @@
       <i class="fas fa-user-circle fa-5x mb-4"></i>
       <h4>登录后可查看个人信息</h4>
       <p class="text-muted">使用 ECUSTMC 用户中心账号登录本站</p>
-      <a href="/api/auth/login" class="btn btn-cic mt-2">
+      <a :href="loginHref" class="btn btn-cic mt-2">
         <i class="fas fa-sign-in-alt mr-2"></i>登录
       </a>
     </div>
@@ -164,6 +164,7 @@
 
 <script>
 import AnimWords from '@/components/AnimWords.vue';
+import { loginUrl } from '@/api/adminAuth';
 
 export default {
   name: 'UserInfo',
@@ -172,7 +173,9 @@ export default {
     return {
       user: null,
       loading: true,
-      skinHome: 'https://mcskin.ecustvr.top'
+      skinHome: 'https://mcskin.ecustvr.top',
+      // 登录成功后跳回本页
+      loginHref: loginUrl()
     };
   },
   mounted() {
