@@ -79,6 +79,8 @@
   border-radius: var(--radius, 12px);
   box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
   padding: 2.2rem 2rem 1.5rem;
+  /* 配合 .field-value 的换行，保证窄屏也不出现横向溢出 */
+  max-width: min(480px, 100%);
 }
 
 .profile-top {
@@ -143,6 +145,7 @@
 .field-label {
   color: var(--ink-muted, #6b7280);
   font-size: 0.9rem;
+  flex: none;
 }
 
 .field-label i {
@@ -154,6 +157,10 @@
   color: var(--ink, #1f2937);
   font-weight: 500;
   text-align: right;
+  /* 允许在窄屏收缩换行，避免长邮箱把卡片撑出横向溢出 */
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .profile-actions {
