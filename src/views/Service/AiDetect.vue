@@ -301,8 +301,6 @@ export default {
 }
 
 .gate:hover {
-  transform: none;
-  box-shadow: var(--shadow-sm);
   cursor: default;
 }
 
@@ -350,6 +348,8 @@ export default {
 .gate-btn i {
   font-size: 0.85rem;
   line-height: 1;
+  /* 不在此处染 color，继承 .btn-cic 的白色，避免与按钮背景同色 */
+  color: inherit;
 }
 
 .input-card {

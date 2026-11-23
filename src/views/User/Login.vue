@@ -115,6 +115,9 @@
 .plume-icon {
   width: 24px;
   height: 24px;
+  /* SVG 原图为深蓝色渐变，直接放在深蓝渐变按钮上几乎看不见：
+     提亮 + 轻微投影拉开与按钮底色的对比 */
+  filter: brightness(1.85) saturate(0.85) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
 }
 /* 让粒子背景撑满剩余视口高度 */
 #login {
