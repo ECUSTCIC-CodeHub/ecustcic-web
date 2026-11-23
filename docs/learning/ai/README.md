@@ -261,6 +261,50 @@ curl https://ai.ecustcic.com/api/v1/chat/completions \
   }'
 ```
 
+## 网页版 AI 操练场
+
+如果你不想安装任何客户端，可以用社团站点上的 **AI 操练场** 直接对话：
+
+🔗 **地址**：<https://www.ecustcic.com/service/ai-playground>
+
+它完全在浏览器里运行，请求由你的浏览器直接发往网关，配置只保存在本机，不需要登录，也不会经过社团服务器。
+
+**首次使用：**
+
+1. 打开页面，Base URL 已默认填好 `https://ai.ecustcic.com/api/v1`
+2. 填入你的 API Key（点右侧眼睛图标可核对）
+3. 填入模型名，如 `deepseek-v4-flash`；也可点旁边的按钮从 `/models` 端点拉取可用列表
+4. 输入消息开始对话
+
+**通过链接快速配置：**
+
+在页面地址 <https://www.ecustcic.com/service/ai-playground> 后面拼接参数，可以把接入信息直接带进来。支持三个参数（`api` 可省略 `https://`，填到版本根即可，浏览器能正确识别）：
+
+- `?api=ai.ecustcic.com/api/v1`
+- `&key=你的API Key`
+- `&model=deepseek-v4-flash`（可选）
+
+三个参数依次用 `&` 连接。以社团网关为例，完整地址为
+`https://www.ecustcic.com/service/ai-playground?api=ai.ecustcic.com/api/v1&key=你的API Key&model=deepseek-v4-flash`，
+粘贴到浏览器地址栏即可打开。
+
+如果 `api` 里需要保留 `https://`，也可以把地址做 URL 编码后再填，效果相同。
+
+| 参数 | 说明 |
+|---|---|
+| `api` | 接口地址，支持 `api` / `endpoint` / `base` 三种写法，可省略 `https://`，填到版本根即可 |
+| `key` | 你的 API Key，支持 `key` / `apikey` / `k` 三种写法 |
+| `model` | 可选，模型名称 |
+
+打开后对话区上方会出现提示条，点 **一键导入** 才会写入配置，同时地址栏里的参数会被自动清除。**请不要把带 `key` 的链接分享给他人**，链接本身即等同密钥；页面里的「复制本配置链接」按钮生成的链接不含密钥，适合分享。
+
+**其他功能：**
+
+- **图片输入**：开启「图片地址」开关后可添加图片 URL，或直接在输入框粘贴图片（自动转为 Base64）
+- **采样参数**：Temperature、Top P、Frequency/Presence Penalty、Max Tokens、Seed，每项都可单独启用或停用
+- **调试面板**：点右上角虫子图标，可查看实际发送的请求体与 SSE 事件流，排查接入问题很方便
+- **导出导入**：对话与配置可导出为 JSON 备份，或分享给他人
+
 ## 常见问题
 
 ### 提示认证失败
