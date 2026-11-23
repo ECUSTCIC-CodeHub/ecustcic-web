@@ -21,6 +21,7 @@ import E_sports_detail from '@/views/E-sports/Detail.vue'
 import Service from "@/views/Service/Service.vue";
 import ServiceTools from "@/views/Service/Tools.vue";
 import ServiceAiDetect from "@/views/Service/AiDetect.vue";
+import AiPlayground from "@/views/Service/AiPlayground.vue";
 import ServiceSupport from "@/views/Service/Support.vue";
 import Repair from "@/views/Service/Repair.vue";
 
@@ -188,6 +189,15 @@ const router = new Router({
           component: ServiceAiDetect,
           meta: {
             title: "CIC-AI 检测助手"
+          }
+        },
+        {
+          // 免登录：配置保存在浏览器 localStorage，由前端直连用户自己的 API
+          path: "ai-playground",
+          name: "service-ai-playground",
+          component: AiPlayground,
+          meta: {
+            title: "CIC-AI 操练场"
           }
         },
         {

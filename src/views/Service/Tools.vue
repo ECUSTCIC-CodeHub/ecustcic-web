@@ -107,6 +107,13 @@ export default {
           login: true
         },
         {
+          name: "AI 操练场",
+          desc: "接入自己的 API 免登录对话，配置保存在本机",
+          url: "/service/ai-playground",
+          icon: "fas fa-comment-dots",
+          internal: true
+        },
+        {
           name: "校内测速",
           desc: "信息办提供的校园网测速站点，测一下宿舍网速",
           url: "http://172.20.17.6/",
