@@ -87,6 +87,19 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow);
 }
 
+/* 静态提示卡片（如后台/服务的“需要登录”面板）不参与卡片 hover 抬升，
+   避免纯文字提示看起来像可点击的卡片 */
+.cic-card.cic-card-static,
+.gate.cic-card {
+  cursor: default;
+}
+
+.cic-card.cic-card-static:hover,
+.gate.cic-card:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
 /* ---------- 统一按钮 ---------- */
 .btn-cic {
   background: var(--accent);
