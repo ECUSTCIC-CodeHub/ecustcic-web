@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <p class="img-help">启用后可添加图片URL进行多模态对话</p>
+    <p class="img-help">启用后可添加图片 URL 进行多模态对话；在对话输入框直接粘贴图片会自动开启并转为 Base64</p>
 
     <!-- 图片列表 -->
     <div v-if="rows.length" class="img-list" :class="{ dim: !enabled }">
@@ -35,7 +35,10 @@
             v-model.trim="row.value"
             type="text"
             class="img-input"
+            :class="{ invalid: !isValid(row.value) }"
             :placeholder="'https://example.com/image' + (idx + 1) + '.jpg 或 data:image/…;base64,…'"
+            :title="isValid(row.value) ? '' : '地址需为 http(s) 链接或 data:image Base64'"
+            :aria-invalid="isValid(row.value) ? 'false' : 'true'"
             :disabled="!enabled"
             @change="onChange"
           />
@@ -54,6 +57,8 @@
 </template>
 
 <script>
+import { validImageUrl } from '@/api/aiPlayground';
+
 let rowSeq = 0;
 
 export default {
@@ -91,6 +96,10 @@ export default {
     makeRow(value) {
       rowSeq += 1;
       return { key: 'img-row-' + rowSeq, value: value || '' };
+    },
+    isValid(value) {
+      const text = String(value || '').trim();
+      return !text || validImageUrl(text);
     },
     notify() {
       const values = this.rows.map(r => String(r.value || '').trim()).filter(Boolean);
@@ -280,6 +289,12 @@ export default {
 
 .img-input:disabled {
   cursor: not-allowed;
+}
+
+.img-input.invalid,
+.img-input.invalid:focus:not(:disabled) {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.14);
 }
 
 /* ---------- 删除按钮 ---------- */

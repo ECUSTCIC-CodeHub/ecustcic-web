@@ -218,7 +218,7 @@ function detectEventType(message) {
 }
 
 /** 校验图片地址：允许 http(s) 链接或 data: Base64 URL */
-function validImageUrl(value) {
+export function validImageUrl(value) {
   const v = String(value || '').trim();
   return /^https?:\/\//i.test(v) || /^data:image\/[a-z0-9.+-]+;base64,/i.test(v);
 }

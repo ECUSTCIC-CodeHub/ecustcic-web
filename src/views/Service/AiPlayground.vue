@@ -86,22 +86,45 @@
                 <div class="side-section">
                   <div class="section-title">模型</div>
                   <div class="model-input-row">
-                    <input v-model="config.model" type="text" class="form-control field-input field-mono" placeholder="例如：DeepSeek-V3" @change="saveNow" />
+                    <div class="model-input-wrap">
+                      <i class="fas fa-magnifying-glass model-input-icon"></i>
+                      <input
+                        v-model="config.model"
+                        type="text"
+                        class="form-control field-input field-mono"
+                        placeholder="填写模型名，或输入关键字筛选"
+                        @input="modelFilterActive = true"
+                        @change="saveNow"
+                      />
+                      <button
+                        v-if="config.model"
+                        type="button"
+                        class="model-clear-btn"
+                        title="清空模型名"
+                        aria-label="清空模型名"
+                        @click="resetModel"
+                      ><i class="fas fa-times"></i></button>
+                    </div>
                     <button type="button" class="icon-btn" :disabled="modelsLoading" title="拉取模型列表" aria-label="拉取模型列表" @click="loadModels">
                       <span v-if="modelsLoading" class="spinner-border spinner-border-sm"></span>
                       <i v-else class="fas fa-rotate"></i>
                     </button>
                   </div>
-                  <div v-if="models.length" class="model-list">
+                  <p v-if="modelFilterActive && modelQuery && filteredModels.length" class="model-count">
+                    匹配 {{ filteredModels.length }} / {{ models.length }} 个模型
+                  </p>
+                  <div v-if="filteredModels.length" class="model-list">
                     <button
-                      v-for="m in models"
+                      v-for="m in filteredModels"
                       :key="m"
                       type="button"
                       class="model-item"
                       :class="{ active: m === config.model }"
-                      @click="config.model = m; saveNow()"
+                      :title="m"
+                      @click="selectModel(m)"
                     >{{ m }}</button>
                   </div>
+                  <p v-else-if="models.length" class="model-none">没有匹配的模型，可直接使用输入的名称</p>
                 </div>
 
                 <div class="side-section">
@@ -237,6 +260,33 @@
                 <template v-if="msg.role === 'user'">
                   <div class="msg-main">
                     <div class="bubble user-bubble">
+                      <div v-if="msg.images && msg.images.length" class="bubble-images">
+                        <template v-for="(url, i) in msg.images">
+                          <a
+                            v-if="isHttpUrl(url)"
+                            :key="'link-' + i"
+                            :href="url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="bubble-image"
+                            :title="'查看原图 ' + (i + 1)"
+                          ><img
+                            :src="url"
+                            :alt="'图片附件 ' + (i + 1)"
+                            loading="lazy"
+                            referrerpolicy="no-referrer"
+                          /></a>
+                          <img
+                            v-else
+                            :key="'img-' + i"
+                            :src="url"
+                            class="bubble-image"
+                            :alt="'图片附件 ' + (i + 1)"
+                            loading="lazy"
+                            referrerpolicy="no-referrer"
+                          />
+                        </template>
+                      </div>
                       <div class="msg-text" v-html="renderMarkdown(msg.content)"></div>
                     </div>
                     <div class="msg-tools">
@@ -292,6 +342,24 @@
             <!-- 输入区 -->
             <div class="chat-input-wrap">
               <p v-if="configError" class="error-text" role="alert"><i class="fas fa-circle-exclamation mr-1"></i>{{ configError }}</p>
+              <div v-if="composerImages.length" class="input-images">
+                <div v-for="(item, i) in composerImages" :key="'att-' + item.index" class="input-image">
+                  <img
+                    :src="item.url"
+                    :alt="'待发送图片 ' + (i + 1)"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  />
+                  <button
+                    type="button"
+                    class="input-image-del"
+                    :disabled="generating"
+                    :title="'移除第' + (i + 1) + '张图片'"
+                    :aria-label="'移除第' + (i + 1) + '张图片'"
+                    @click="removeImage(item.index)"
+                  ><i class="fas fa-times"></i></button>
+                </div>
+              </div>
               <div class="input-box">
                 <textarea
                   ref="input"
@@ -308,8 +376,8 @@
                 ></textarea>
                 <div class="input-bar">
                   <span class="input-hint">
-                    <i class="fas fa-image" :class="{ on: config.imagesEnabled }"></i>
-                    Enter 发送 / Shift+Enter 换行{{ config.imagesEnabled ? ' · 可粘贴图片' : '' }}
+                    <i class="fas fa-image" :class="{ on: composerImages.length }"></i>
+                    Enter 发送 / Shift+Enter 换行 · 可直接粘贴图片
                   </span>
                   <span class="input-count" :class="{ over: overLimit }">{{ input.trim().length }}</span>
                   <button
@@ -396,6 +464,8 @@ import {
   buildPreviewRequest,
   buildActualRequest,
   isCompatibleValue,
+  sanitizeImages,
+  validImageUrl,
   SAMPLING_PARAMS,
   SEED_RANGE
 } from '@/api/aiPlayground';
@@ -444,6 +514,8 @@ export default {
       savingTimer: null,
       models: [],
       modelsLoading: false,
+      // 模型输入框是否处于筛选态（点击列表项后回到完整列表）
+      modelFilterActive: false,
       // 对话
       messages: [],
       input: '',
@@ -492,6 +564,28 @@ export default {
     },
     visibleHistory() {
       return this.messages.length > 0;
+    },
+    // 输入区缩略图：只渲染合法且去重后的图片地址（与发送时的 sanitizeImages 一致），保留原始下标用于删除
+    composerImages() {
+      if (!this.config.imagesEnabled) return [];
+      const seen = {};
+      const list = [];
+      (this.config.images || []).forEach((url, index) => {
+        const value = String(url || '').trim();
+        if (!validImageUrl(value) || seen[value]) return;
+        seen[value] = true;
+        list.push({ url: value, index });
+      });
+      return list;
+    },
+    modelQuery() {
+      return String(this.config.model || '').trim();
+    },
+    filteredModels() {
+      if (!this.models.length) return [];
+      if (!this.modelFilterActive || !this.modelQuery) return this.models;
+      const query = this.modelQuery.toLowerCase();
+      return this.models.filter(name => name.toLowerCase().indexOf(query) !== -1);
     },
     // 宽屏始终展开，窄屏由 showConfig 控制
     configVisible() {
@@ -627,6 +721,7 @@ export default {
       this.config = defaultConfig();
       this.persistConfig();
       this.models = [];
+      this.modelFilterActive = false;
       this.configError = '';
     },
     applyImport() {
@@ -646,6 +741,7 @@ export default {
       if (this.config.model && !source.model) next.model = this.config.model;
       this.config = next;
       this.persistConfig();
+      this.modelFilterActive = false;
       this.showConfig = false;
       this.configError = '';
       this.clearUrlParams();
@@ -683,6 +779,19 @@ export default {
         this.modelsLoading = false;
       }
     },
+    selectModel(name) {
+      this.config.model = name;
+      this.modelFilterActive = false;
+      this.saveNow();
+    },
+    resetModel() {
+      this.config.model = '';
+      this.modelFilterActive = false;
+      this.saveNow();
+    },
+    isHttpUrl(url) {
+      return /^https?:\/\//i.test(String(url || '').trim());
+    },
     copyPresetUrl() {
       if (!this.presetUrl) return;
       this.doCopy(this.presetUrl).catch(() => {
@@ -700,21 +809,36 @@ export default {
       this.config.images = values;
       this.saveNow();
     },
-    // 粘贴图片：转 Base64 追加到图片列表
+    removeImage(index) {
+      if (this.generating) return;
+      if (!(index >= 0 && index < this.config.images.length)) return;
+      this.config.images.splice(index, 1);
+      this.saveNow();
+    },
+    // 粘贴图片：自动开启图片开关，转 Base64 追加到图片列表
     onPasteImage(event) {
-      if (!this.config.imagesEnabled) return;
-      const items = event.clipboardData && event.clipboardData.items;
+      if (this.generating) return;
+      const clipboard = event.clipboardData;
+      const items = clipboard && clipboard.items;
       if (!items) return;
-      let found = false;
+      const files = [];
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (item.type && item.type.indexOf('image/') === 0) {
           const file = item.getAsFile();
-          if (file) this.importImageFile(file);
-          if (!found) event.preventDefault();
-          found = true;
+          if (file) files.push(file);
         }
       }
+      if (!files.length) return;
+      // 剪贴板同时带文本时保留默认粘贴（文字照常插入），图片仍会被附加
+      const text = String(clipboard.getData('text/plain') || '').trim();
+      if (!text) event.preventDefault();
+      if (!this.config.imagesEnabled) {
+        this.config.imagesEnabled = true;
+        this.saveNow();
+        this.$nextTick(this.autoGrow);
+      }
+      files.forEach(file => this.importImageFile(file));
     },
     importImageFile(file) {
       if (!/^image\//.test(file.type)) {
@@ -725,6 +849,7 @@ export default {
         this.configError = '粘贴的图片过大（超过 4MB），请压缩后再试或改用图片 URL';
         return;
       }
+      this.configError = '';
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = String(reader.result || '');
@@ -785,7 +910,9 @@ export default {
         return;
       }
       this.configError = '';
-      this.messages.push({ id: nextMsgId(), role: 'user', content: text, ts: Date.now() });
+      // 随消息快照本轮图片，用于气泡展示（请求体由 api 层注入最后一条 user 消息）
+      const images = this.config.imagesEnabled ? sanitizeImages(this.config.images) : [];
+      this.messages.push({ id: nextMsgId(), role: 'user', content: text, images, ts: Date.now() });
       this.input = '';
       this.autoGrow();
       await this.generate();
@@ -886,7 +1013,7 @@ export default {
       const content = msg.content;
       this.messages = this.messages.slice(0, idx + (isUser ? 1 : 0));
       if (!isUser) {
-        this.messages.push({ id: nextMsgId(), role: 'user', content, ts: Date.now() });
+        this.messages.push({ id: nextMsgId(), role: 'user', content, images: msg.images || [], ts: Date.now() });
       }
       this.generate();
     },
@@ -1444,9 +1571,66 @@ export default {
   gap: 0.35rem;
 }
 
-.model-input-row .field-input {
+.model-input-wrap {
+  position: relative;
   flex: 1;
   min-width: 0;
+}
+
+.model-input-wrap .field-input {
+  width: 100%;
+  padding-left: 1.65rem;
+  padding-right: 1.65rem;
+}
+
+.model-input-icon {
+  position: absolute;
+  left: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.64rem;
+  color: var(--ink-muted);
+  pointer-events: none;
+}
+
+.model-clear-btn {
+  position: absolute;
+  right: 0.3rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 0.58rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.model-clear-btn:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.model-count {
+  margin: 0.35rem 0 0;
+  font-size: 0.64rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.model-none {
+  margin: 0.35rem 0 0;
+  padding: 0.35rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  font-size: 0.68rem;
+  color: var(--ink-muted);
 }
 
 .icon-btn {
@@ -1970,6 +2154,32 @@ export default {
   text-decoration: underline;
 }
 
+/* 气泡内图片 */
+.bubble-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.bubble-image {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.16);
+  object-fit: cover;
+}
+
+.bubble-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .msg-assistant .msg-text {
   font-size: 0.83rem;
   line-height: 1.75;
@@ -2184,6 +2394,61 @@ export default {
   background: var(--surface-alt);
   padding: 0.45rem 0.5rem 0.4rem 0.7rem;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+/* 输入区图片缩略图 */
+.input-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+  max-height: 132px;
+  overflow-y: auto;
+}
+
+.input-image {
+  position: relative;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surface-alt);
+}
+
+.input-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.input-image-del {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.62);
+  color: #fff;
+  font-size: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.input-image-del:hover:not(:disabled) {
+  background: #ef4444;
+}
+
+.input-image-del:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .input-box:focus-within {
