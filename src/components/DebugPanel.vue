@@ -1,17 +1,38 @@
 <template>
-  <div class="debug-panel">
+  <div
+    ref="root"
+    class="debug-panel"
+    :class="{ maximized }"
+    tabindex="-1"
+    :role="maximized ? 'dialog' : null"
+    :aria-modal="maximized ? 'true' : null"
+    :aria-label="maximized ? '调试信息' : null"
+  >
     <!-- Tab 切换 -->
-    <div class="dbg-tabs">
+    <div class="dbg-head-row">
+      <div class="dbg-tabs">
+        <button
+          v-for="tab in tabs"
+          :key="tab.key"
+          type="button"
+          class="dbg-tab"
+          :class="{ active: activeTab === tab.key }"
+          @click="activeTab = tab.key"
+        >
+          <i :class="tab.icon" class="dbg-tab-icon"></i>{{ tab.label }}
+          <span v-if="tab.key === 'response' && events.length" class="dbg-tab-badge">{{ events.length }}</span>
+        </button>
+      </div>
       <button
-        v-for="tab in tabs"
-        :key="tab.key"
+        ref="toggleBtn"
         type="button"
-        class="dbg-tab"
-        :class="{ active: activeTab === tab.key }"
-        @click="activeTab = tab.key"
+        class="dbg-icon-btn"
+        :title="maximized ? '退出放大' : '放大面板'"
+        :aria-label="maximized ? '退出放大' : '放大面板'"
+        :aria-pressed="maximized ? 'true' : 'false'"
+        @click="toggleMaximize"
       >
-        <i :class="tab.icon" class="dbg-tab-icon"></i>{{ tab.label }}
-        <span v-if="tab.key === 'response' && events.length" class="dbg-tab-badge">{{ events.length }}</span>
+        <i :class="maximized ? 'fas fa-compress' : 'fas fa-expand'"></i>
       </button>
     </div>
 
@@ -20,13 +41,13 @@
       <!-- 预览请求体 -->
       <div v-if="activeTab === 'preview'" class="dbg-pane">
         <p v-if="!previewPayload" class="dbg-empty">暂无对话内容，发送消息后可预览下一轮请求体</p>
-        <code-block v-else :code="pretty(previewPayload)"></code-block>
+        <code-block v-else :code="prettyPreview"></code-block>
       </div>
 
       <!-- 实际请求体 -->
       <div v-if="activeTab === 'actual'" class="dbg-pane">
         <p v-if="!actualPayload" class="dbg-empty">发送消息后可查看仅含当前问题的请求体</p>
-        <code-block v-else :code="pretty(actualPayload)"></code-block>
+        <code-block v-else :code="prettyActual"></code-block>
       </div>
 
       <!-- SSE 响应流 -->
@@ -34,7 +55,7 @@
         <div class="dbg-response-head">
           <span class="dbg-stream-title">SSE数据流</span>
           <span class="dbg-badge dbg-badge-lg">{{ events.length }}</span>
-          <span class="flex-fill"></span>
+          <span class="dbg-spacer"></span>
           <button type="button" class="dbg-mini-btn" :disabled="!events.length" @click="copyAll">
             <i class="fas fa-copy"></i> 复制全部
           </button>
@@ -85,6 +106,8 @@ export default {
     return {
       activeTab: 'preview',
       expandedSet: {},
+      maximized: false,
+      bodyOverflow: null,
       tabs: [
         { key: 'preview', label: '预览请求体', icon: 'fas fa-eye' },
         { key: 'actual', label: '仅当前消息', icon: 'fas fa-paper-plane' },
@@ -95,15 +118,53 @@ export default {
   computed: {
     allExpanded() {
       return this.events.length > 0 && this.events.every(ev => this.expandedSet[ev.seq]);
+    },
+    // 请求体含 Base64 图片时可能很大，避免模板内每次渲染都重新序列化
+    prettyPreview() {
+      return this.previewPayload ? this.pretty(this.previewPayload) : '';
+    },
+    prettyActual() {
+      return this.actualPayload ? this.pretty(this.actualPayload) : '';
     }
   },
   watch: {
     // 新请求产生的新事件流默认全部收起
     streamEpoch() {
       this.expandedSet = {};
+    },
+    maximized(on) {
+      if (on) document.addEventListener('keydown', this.onKeydown);
+      else document.removeEventListener('keydown', this.onKeydown);
+      this.lockPageScroll(on);
+      // 放大态会脱离 sticky 祖先，父级需要解除该层叠上下文
+      this.$emit('maximize', on);
+      this.$nextTick(() => {
+        const target = on ? this.$refs.root : this.$refs.toggleBtn;
+        if (target && target.focus) target.focus();
+      });
     }
   },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.onKeydown);
+    this.lockPageScroll(false);
+  },
   methods: {
+    lockPageScroll(on) {
+      if (on) {
+        if (this.bodyOverflow === null) this.bodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+      } else if (this.bodyOverflow !== null) {
+        document.body.style.overflow = this.bodyOverflow;
+        this.bodyOverflow = null;
+      }
+    },
+    onKeydown(event) {
+      if (event.defaultPrevented || event.key !== 'Escape') return;
+      this.maximized = false;
+    },
+    toggleMaximize() {
+      this.maximized = !this.maximized;
+    },
     pretty(value) {
       try {
         return JSON.stringify(value, null, 2);
@@ -154,16 +215,75 @@ export default {
   overflow: hidden;
 }
 
+.debug-panel:focus {
+  outline: none;
+}
+
+/* 放大：脱离右侧栏，铺满视口留出边距，给展开的事件流足够空间 */
+.debug-panel.maximized {
+  position: fixed;
+  top: 12px;
+  right: clamp(10px, 3vw, 56px);
+  bottom: 12px;
+  left: clamp(10px, 3vw, 56px);
+  z-index: 1080;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28);
+}
+
+@media (min-width: 992px) {
+  /* 桌面端导航栏悬浮在顶部（约 68px），放大后避开 */
+  .debug-panel.maximized {
+    top: 84px;
+  }
+}
+
+.debug-panel.maximized .dbg-event ::v-deep .code-pre {
+  max-height: none;
+}
+
 /* ---------- Tab 切换（分段饼样式） ---------- */
+.dbg-head-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.6rem 0.7rem 0;
+  flex-shrink: 0;
+}
+
 .dbg-tabs {
+  flex: 1;
+  min-width: 0;
   display: flex;
   gap: 0.15rem;
-  margin: 0.6rem 0.7rem 0;
   padding: 0.15rem;
   border-radius: 9px;
   background: var(--surface-alt);
   border: 1px solid var(--line);
+}
+
+.dbg-icon-btn {
   flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-size: 0.66rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dbg-icon-btn:hover {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand-dark);
 }
 
 .dbg-tab {
@@ -278,7 +398,7 @@ export default {
   color: var(--ink);
 }
 
-.flex-fill {
+.dbg-spacer {
   flex: 1;
 }
 
@@ -312,12 +432,35 @@ export default {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding-right: 0.15rem;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
 }
 
+.dbg-events::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dbg-events::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.22);
+  border-radius: 999px;
+}
+
+.dbg-events::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.36);
+}
+
+.dbg-events::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.05);
+  border-radius: 999px;
+}
+
 .dbg-event {
+  /* 关键：展开后保持自身高度，由 .dbg-events 滚动，避免被 flex 压缩成一条 */
+  flex-shrink: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);

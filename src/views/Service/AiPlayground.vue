@@ -12,7 +12,7 @@
     </div>
 
     <div class="container pg-body">
-      <div class="pg-shell" :class="{ 'with-debug': showDebug }">
+      <div class="pg-shell" :class="{ 'with-debug': showDebug, 'debug-maximized': debugMaximized }">
         <!-- 左：模型配置 -->
         <aside class="pg-side">
           <div class="side-card">
@@ -350,6 +350,7 @@
               :last-request-at="lastRequestAt"
               :stream-epoch="streamEpoch"
               @copy="copyText"
+              @maximize="debugMaximized = $event"
             />
           </div>
         </aside>
@@ -458,6 +459,8 @@ export default {
       mediaHandler: null,
       // 调试
       showDebug: false,
+      // 调试面板放大态：需解除右栏 sticky 形成的层叠上下文
+      debugMaximized: false,
       // 使用提示默认收起，避免挤占对话高度
       showTips: false,
       configError: '',
@@ -1054,6 +1057,10 @@ export default {
     }
   },
   watch: {
+    // 隐藏调试栏时退出放大态，避免残留的定位类
+    showDebug(on) {
+      if (!on) this.debugMaximized = false;
+    },
     // 流式输出时始终滚到底部
     streamText() {
       this.$nextTick(this.scrollBottom);
@@ -1187,6 +1194,11 @@ export default {
 .pg-debug {
   position: sticky;
   top: 84px;
+}
+
+/* 调试面板放大为 fixed 覆盖层时，解除 sticky 造成的层叠上下文，否则会被导航栏压住 */
+.pg-shell.debug-maximized .pg-debug {
+  position: static;
 }
 
 /* ---------- 通用卡片 ---------- */
