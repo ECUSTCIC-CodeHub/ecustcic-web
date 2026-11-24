@@ -102,7 +102,12 @@ export default {
       return !text || validImageUrl(text);
     },
     notify() {
-      const values = this.rows.map(r => String(r.value || '').trim()).filter(Boolean);
+      // 去重后再上报，保证列表里同一地址只有一条，缩略图删除语义才明确
+      const values = [];
+      this.rows.forEach(row => {
+        const value = String(row.value || '').trim();
+        if (value && values.indexOf(value) === -1) values.push(value);
+      });
       this.$emit('change', values);
     },
     onChange() {

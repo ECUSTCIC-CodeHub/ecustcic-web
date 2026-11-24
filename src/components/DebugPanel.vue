@@ -5,7 +5,6 @@
     :class="{ maximized }"
     tabindex="-1"
     :role="maximized ? 'dialog' : null"
-    :aria-modal="maximized ? 'true' : null"
     :aria-label="maximized ? '调试信息' : null"
   >
     <!-- Tab 切换 -->
@@ -147,6 +146,8 @@ export default {
   beforeDestroy() {
     document.removeEventListener('keydown', this.onKeydown);
     this.lockPageScroll(false);
+    // 销毁时补发一次退出事件，避免父级的定位类残留
+    if (this.maximized) this.$emit('maximize', false);
   },
   methods: {
     lockPageScroll(on) {

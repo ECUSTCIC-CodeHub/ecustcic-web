@@ -741,6 +741,8 @@ export default {
       if (this.config.model && !source.model) next.model = this.config.model;
       this.config = next;
       this.persistConfig();
+      // 接入地址可能已更换，旧模型列表不再可信
+      this.models = [];
       this.modelFilterActive = false;
       this.showConfig = false;
       this.configError = '';
@@ -829,6 +831,13 @@ export default {
           if (file) files.push(file);
         }
       }
+      // 个别浏览器粘贴文件时 items 为空，退回 clipboard.files
+      if (!files.length && clipboard.files) {
+        for (let i = 0; i < clipboard.files.length; i++) {
+          const file = clipboard.files[i];
+          if (file.type && file.type.indexOf('image/') === 0) files.push(file);
+        }
+      }
       if (!files.length) return;
       // 剪贴板同时带文本时保留默认粘贴（文字照常插入），图片仍会被附加
       const text = String(clipboard.getData('text/plain') || '').trim();
@@ -853,10 +862,15 @@ export default {
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = String(reader.result || '');
-        if (this.config.images.indexOf(dataUrl) === -1) {
-          this.config.images.push(dataUrl);
-          this.saveNow();
+        if (this.config.images.indexOf(dataUrl) !== -1) {
+          this.configError = '该图片已在图片列表中';
+          setTimeout(() => {
+            if (this.configError === '该图片已在图片列表中') this.configError = '';
+          }, 2500);
+          return;
         }
+        this.config.images.push(dataUrl);
+        this.saveNow();
       };
       reader.onerror = () => {
         this.configError = '读取图片失败，请重试';
@@ -1126,6 +1140,8 @@ export default {
               });
               this.config = next;
               this.persistConfig();
+              this.models = [];
+              this.modelFilterActive = false;
             }
             this.configError = '导入完成';
             setTimeout(() => { this.configError = ''; }, 2500);
